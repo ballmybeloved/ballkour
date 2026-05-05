@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "Ball Parkour — Watchpoint: Gibraltar (v1.0.0-rc.3f)"
-		Mode Name: "Ballkour"
+		Description: "Ball Parkour • v1.0.0-rc.3"
+		Mode Name: "Wrecking Ballkour — Watchpoint: Gibraltar"
 	}
 
 	lobby
