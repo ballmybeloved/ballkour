@@ -238,6 +238,7 @@ rule("2.1: Player Joins")
 		Disable Kill Feed(Event Player);
 		Disable Game Mode In-World UI(Event Player);
 		Disable Nameplates(Event Player, All Players(All Teams));
+		Disable Nameplates(All Players(All Teams), Event Player);
         Disable Movement Collision With Players(Event Player);
 		If (Event Player.isInLobby == False);
 			Call Subroutine(loadLobby);
