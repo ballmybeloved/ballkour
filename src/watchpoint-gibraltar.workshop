@@ -140,8 +140,8 @@ rule("0: Contact & Course Info")
 			"This route was slightly adjusted for quality purposes, and also because this map was updated in Feb, 2026."));
 		Log To Inspector(Custom String("Any feedback or issues? Want to join our Discord or beat the time to beat? Visit ballkour.com!"));
 		Log To Inspector(Custom String("Course run: ballkour.com/playthrough"));
-		Global.timeToBeat = Custom String("5:19.05");
-		Global.timeToBeatMs = 319050;
+		Global.timeToBeat = Custom String("14:38.48");
+		Global.timeToBeatMs = 878480;
 	}
 }
 
@@ -565,7 +565,7 @@ rule("4.2.1: Load CP Objects")
 		Event Player.cpIcons = Array();
 		Create Effect(Event Player, Ring, Color(Green), Event Player.cpData[0], 2, Position and Radius);
 		Event Player.cpEffects[0] = Last Created Entity;
-		If(Event Player.cpData[1] != Null);
+		If(Event Player.cpData[1] != False);
 			Create Effect(Event Player, Ring, Color(Orange), Event Player.cpData[1], 2, Position and Radius);
 			Event Player.cpEffects[1] = Last Created Entity;
 			Create Icon(Event Player, Event Player.cpData[1], Arrow: Up, Position, Color(Yellow), False);
@@ -827,7 +827,10 @@ rule("6.3: Grapple Use")
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[5] = True;
-			Wait Until(Is Firing Secondary(Event Player) == False, 100000000);
+			Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Speed Of(Event Player) >= 15, 100000000);
+			If (Speed Of(Event Player) >= 15);
+				Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 8);
+			End;
 			Event Player.cpData[6] = True;
 		End;
 	}
@@ -883,6 +886,8 @@ rule("7.1: CP Mistake")
 
 	actions
 	{
+		"Race condition :("
+		Wait(0.02, Abort When False);
 		Event Player.runMistakes += 1;
 		Call Subroutine(cpResetPlayer);
 	}
@@ -925,6 +930,7 @@ rule("8.1: Bounce CP Mistake: No Grapple")
 		Event Player.cpData[5] == False;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
 		Event Player.isLoading == False;
 	}
 
@@ -953,6 +959,7 @@ rule("8.2: Bounce CP Mistake: Too Slow")
 		Speed Of(Event Player) <= 10;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
 		Event Player.isLoading == False;
 	}
 
@@ -963,7 +970,7 @@ rule("8.2: Bounce CP Mistake: Too Slow")
 	}
 }
 
-rule("8.3: Bounce CP: Player Jump")
+rule("8.3: Bounce CP: Bounce Used Properly")
 {
 	event
 	{
@@ -976,9 +983,10 @@ rule("8.3: Bounce CP: Player Jump")
 	{
 		Event Player.cpData[1] != False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[1]) < 2.200;
-		Altitude Of(Event Player) > 0;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) > 1) == True;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
 		Event Player.isLoading == False;
 	}
 
@@ -988,7 +996,7 @@ rule("8.3: Bounce CP: Player Jump")
 	}
 }
 
-rule("8.4: Bounce CP Mistake: Improper Bounce")
+rule("8.4: Bounce CP Mistake: Improperly Airborne")
 {
 	event
 	{
@@ -1001,11 +1009,12 @@ rule("8.4: Bounce CP Mistake: Improper Bounce")
 	{
 		Event Player.cpData[1] != False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		Altitude Of(Event Player) > 0;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) > 1) == True;
 		Event Player.cpData[2] == False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[1]) > 2.200;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
 		Event Player.isLoading == False;
 	}
 
@@ -1034,7 +1043,7 @@ rule("9: CP Reset Player")
 			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cpLocations[Event Player.runCurrentCp + 1]),
 				To World);
 		End;
-		If (Event Player.cpData[1] != Null);
+		If (Event Player.cpData[1] != False);
 			Event Player.cpData[2] = False;
 			Event Player.cpData[5] = False;
 			Event Player.cpData[6] = False;
