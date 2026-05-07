@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "Ball Parkour • v1.0.0-rc.3"
-		Mode Name: "Wrecking Ballkour — Watchpoint: Gibraltar"
+		Description: "v1.0.0-rc.3"
+		Mode Name: "Ball Parkour v1 — ballkour.com"
 	}
 
 	lobby
@@ -364,15 +364,15 @@ rule("3.3: Load Leaderboard Area")
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[3] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"2. GAMINGCHAIR ({0}6:00.79, {1}29)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.500, 68.085), 0.850, Do Not Clip,
+			"2. COLDSKIN ({0}5:54.12, {1}22)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.500, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[4] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"3. COLDSKIN ({0}6:23.41, {1}34)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2, 68.085), 0.850, Do Not Clip,
+			"3. GAMINGCHAIR ({0}6:00.79, {1}29)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[5] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"4. ROLLYPOLY ({0}0:00.00, {1}0)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.500, 68.085), 0.850, Do Not Clip,
+			"4. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.500, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[6] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
@@ -538,13 +538,15 @@ rule("4.1: Load CP Data")
 
 	actions
 	{
-		"{0: Current CP; 1: Bounce Ring; 2: Bounce Used; 3: Next CP; 4: Grapple Allowed}"
+		"{0: Current CP; 1: Bounce Ring; 2: Bounce Used; 3: Next CP; 4: Grapple Allowed; 5: Grapple Engaged; 6: Grapple Used}"
 		Event Player.cpData = Array();
 		Event Player.cpData[0] = Global.cpLocations[Event Player.runCurrentCp];
 		Event Player.cpData[1] = Global.cpBounceRings[Event Player.runCurrentCp];
 		Event Player.cpData[2] = False;
 		Event Player.cpData[3] = Global.cpLocations[Event Player.runCurrentCp + 1];
 		Event Player.cpData[4] = Global.cpIsGrappleAllowed[Event Player.runCurrentCp];
+		Event Player.cpData[5] = False;
+		Event Player.cpData[6] = False;
 		Set Secondary Fire Enabled(Event Player, Event Player.cpData[4]);
 	}
 }
@@ -563,7 +565,7 @@ rule("4.2.1: Load CP Objects")
 		Event Player.cpIcons = Array();
 		Create Effect(Event Player, Ring, Color(Green), Event Player.cpData[0], 2, Position and Radius);
 		Event Player.cpEffects[0] = Last Created Entity;
-		If(Event Player.cpData[1] != False);
+		If(Event Player.cpData[1] != Null);
 			Create Effect(Event Player, Ring, Color(Orange), Event Player.cpData[1], 2, Position and Radius);
 			Event Player.cpEffects[1] = Last Created Entity;
 			Create Icon(Event Player, Event Player.cpData[1], Arrow: Up, Position, Color(Yellow), False);
@@ -821,7 +823,39 @@ rule("6.3: Grapple Use")
 
 	actions
 	{
-		Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
+		If (Event Player.cpData[1] == Null);
+			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
+		Else;
+			Event Player.cpData[5] = True;
+			Wait Until(Is Firing Secondary(Event Player) == False, 100000000);
+			Event Player.cpData[6] = True;
+		End;
+	}
+}
+
+rule("6.4: Bounce CPs: Reset Useless Grapple")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.cpData[6] == True;
+	}
+
+	actions
+	{
+		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 100000000);
+		If (Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+			Event Player.cpData[6] = False;
+			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
+		Else;
+			Set Secondary Fire Enabled(Event Player, False);
+		End;
 	}
 }
 
@@ -837,7 +871,7 @@ rule("7.1: CP Mistake")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		(Event Player.cpData[1] == False || Event Player.cpData[2] == True) == True;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
 		Is On Ground(Event Player) == True;
 		Event Player.runIsPaused == False;
@@ -875,7 +909,7 @@ rule("7.2: Environment Death")
 	}
 }
 
-rule("7.3.1: Bounce Ring CP Mistake: Too Slow")
+rule("8.1: Bounce CP Mistake: No Grapple")
 {
 	event
 	{
@@ -887,11 +921,8 @@ rule("7.3.1: Bounce Ring CP Mistake: Too Slow")
 	conditions
 	{
 		Event Player.cpData[1] != False;
-		Event Player.cpData[2] == False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		Speed Of(Event Player) < 10;
-		Is Button Held(Event Player, Button(Secondary Fire)) == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Event Player.cpData[5] == False;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
 		Event Player.isLoading == False;
@@ -904,7 +935,7 @@ rule("7.3.1: Bounce Ring CP Mistake: Too Slow")
 	}
 }
 
-rule("7.3.2: Bounce CP Mistake: Improper Bounce")
+rule("8.2: Bounce CP Mistake: Too Slow")
 {
 	event
 	{
@@ -917,7 +948,9 @@ rule("7.3.2: Bounce CP Mistake: Improper Bounce")
 	{
 		Event Player.cpData[1] != False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		Is Jumping(Event Player) == True;
+		Event Player.cpData[2] == False;
+		Event Player.cpData[6] == True;
+		Speed Of(Event Player) <= 10;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
 		Event Player.isLoading == False;
@@ -925,16 +958,65 @@ rule("7.3.2: Bounce CP Mistake: Improper Bounce")
 
 	actions
 	{
-		If(Distance Between(Position Of(Event Player), Event Player.cpData[1]) < 2.200);
-			Event Player.cpData[2] = True;
-		Else;
-			Event Player.runMistakes += 1;
-			Call Subroutine(cpResetPlayer);
-		End;
+		Event Player.runMistakes += 1;
+		Call Subroutine(cpResetPlayer);
 	}
 }
 
-rule("8: CP Reset Player")
+rule("8.3: Bounce CP: Player Jump")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.cpData[1] != False;
+		Distance Between(Position Of(Event Player), Event Player.cpData[1]) < 2.200;
+		Altitude Of(Event Player) > 0;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		Event Player.cpData[2] = True;
+	}
+}
+
+rule("8.4: Bounce CP Mistake: Improper Bounce")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.cpData[1] != False;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Altitude Of(Event Player) > 0;
+		Event Player.cpData[2] == False;
+		Distance Between(Position Of(Event Player), Event Player.cpData[1]) > 2.200;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		Event Player.runMistakes += 1;
+		Call Subroutine(cpResetPlayer);
+	}
+}
+
+rule("9: CP Reset Player")
 {
 	event
 	{
@@ -945,19 +1027,25 @@ rule("8: CP Reset Player")
 	actions
 	{
 		Event Player.isLoading = True;
-		Set Status(Event Player, Null, Stunned, 0.016);
 		Teleport(Event Player, Event Player.cpData[0]);
+		Apply Impulse(Event Player, Velocity Of(Event Player) * -1, Magnitude Of(Velocity Of(Event Player)), To World, Incorporate Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
 		If(Event Player.runCurrentCp <= 99);
 			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cpLocations[Event Player.runCurrentCp + 1]),
 				To World);
 		End;
-		Event Player.cpData[2] = False;
+		If (Event Player.cpData[1] != Null);
+			Event Player.cpData[2] = False;
+			Event Player.cpData[5] = False;
+			Event Player.cpData[6] = False;
+			Set Secondary Fire Enabled(Event Player, True);
+			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
+		End;
 		Event Player.isLoading = False;
 	}
 }
 
-rule("9: CP Completed (No Skipping)")
+rule("10: CP Completed (No Skipping)")
 {
 	event
 	{
@@ -987,7 +1075,7 @@ rule("9: CP Completed (No Skipping)")
 	}
 }
 
-rule("9.1: Final CP Reached")
+rule("10.1: Final CP Reached")
 {
 	event
 	{
@@ -1021,7 +1109,7 @@ rule("9.1: Final CP Reached")
 	}
 }
 
-rule("9.2: Final CP Completed (No Skipping)")
+rule("10.2: Final CP Completed (No Skipping)")
 {
 	event
 	{
@@ -1043,7 +1131,7 @@ rule("9.2: Final CP Completed (No Skipping)")
 	}
 }
 
-rule("9.3.1: Load Run Completion Text")
+rule("10.3.1: Load Run Completion Text")
 {
 	event
 	{
@@ -1087,7 +1175,7 @@ rule("9.3.1: Load Run Completion Text")
 	}
 }
 
-rule("9.3.2: Auto Unload Run Completion Text")
+rule("10.3.2: Auto Unload Run Completion Text")
 {
 	event
 	{
@@ -1109,7 +1197,7 @@ rule("9.3.2: Auto Unload Run Completion Text")
 	}
 }
 
-rule("9.3.3.3: Unload Run Completion Text")
+rule("10.3.3.3: Unload Run Completion Text")
 {
 	event
 	{
@@ -1125,7 +1213,7 @@ rule("9.3.3.3: Unload Run Completion Text")
 	}
 }
 
-rule("10.1.1: Controls HUD Input")
+rule("11.1.1: Controls HUD Input")
 {
 	event
 	{
@@ -1146,14 +1234,14 @@ rule("10.1.1: Controls HUD Input")
         Disallow Button(Event Player, Button(Primary Fire));
 		Disallow Button(Event Player, Button(Secondary Fire));
         Disallow Button(Event Player, Button(Ability 2));
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Event Player.isInLobby == True, 999999);
+		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Event Player.isInLobby == True, 100000000);
 		Allow Button(Event Player, Button(Primary Fire));
 		Allow Button(Event Player, Button(Secondary Fire));
         Allow Button(Event Player, Button(Ability 2));
 	}
 }
 
-rule("10.1.2: Load Controls HUD")
+rule("11.1.2: Load Controls HUD")
 {
 	event
 	{
@@ -1192,7 +1280,7 @@ rule("10.1.2: Load Controls HUD")
 	}
 }
 
-rule("10.1.3: Auto Unload Controls HUD")
+rule("11.1.3: Auto Unload Controls HUD")
 {
 	event
 	{
@@ -1208,13 +1296,13 @@ rule("10.1.3: Auto Unload Controls HUD")
 
 	actions
 	{
-		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || Event Player.isInLobby, 9999999.000);
+		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || Event Player.isInLobby, 100000000);
 		Call Subroutine(unloadCtrlsHud);
 		Event Player.ctrlsHudActive = False;
 	}
 }
 
-rule("10.1.4: Unload Controls HUD")
+rule("11.1.4: Unload Controls HUD")
 {
 	event
 	{
@@ -1230,7 +1318,7 @@ rule("10.1.4: Unload Controls HUD")
 	}
 }
 
-rule("10.2: Go Back CP Input")
+rule("11.2: Go Back CP Input")
 {
 	event
 	{
@@ -1276,7 +1364,7 @@ rule("10.2: Go Back CP Input")
 			Call Subroutine(cpResetPlayer);
 			Wait(0.02, Ignore Condition);
 		End;
-        Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 999999);
+        Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 100000000);
         If(Event Player.isInFreemode == True);
 			Set Secondary Fire Enabled(Event Player, True);
 		End;
@@ -1285,7 +1373,7 @@ rule("10.2: Go Back CP Input")
 	}
 }
 
-rule("10.3: Skip CP Input")
+rule("11.3: Skip CP Input")
 {
 	event
 	{
@@ -1325,7 +1413,7 @@ rule("10.3: Skip CP Input")
 			Call Subroutine(cpResetPlayer);
 			Wait(0.020, Ignore Condition);
 		End;
-        Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 999999);
+        Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 100000000);
         If(Event Player.isInFreemode == True);
 			Set Secondary Fire Enabled(Event Player, True);
 		End;
@@ -1334,7 +1422,7 @@ rule("10.3: Skip CP Input")
 	}
 }
 
-rule("10.4: Restart Input")
+rule("11.4: Restart Input")
 {
 	event
 	{
@@ -1363,7 +1451,7 @@ rule("10.4: Restart Input")
 	}
 }
 
-rule("10.5: Freemode Input")
+rule("11.5: Freemode Input")
 {
 	event
 	{
@@ -1404,7 +1492,7 @@ rule("10.5: Freemode Input")
 	}
 }
 
-rule("10.5.1: Load Freemode HUD")
+rule("11.5.1: Load Freemode HUD")
 {
 	event
 	{
@@ -1442,7 +1530,7 @@ rule("10.5.1: Load Freemode HUD")
 	}
 }
 
-rule("10.5.2: Unload Freemode HUD")
+rule("11.5.2: Unload Freemode HUD")
 {
 	event
 	{
@@ -1458,7 +1546,7 @@ rule("10.5.2: Unload Freemode HUD")
 	}
 }
 
-rule("10.6: Lobby Input")
+rule("11.6: Lobby Input")
 {
 	event
 	{
