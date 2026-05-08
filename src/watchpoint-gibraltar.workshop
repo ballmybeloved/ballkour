@@ -40,6 +40,7 @@ settings
 		{
 			Wrecking Ball
 			{
+				Adaptive Shield Cooldown Time: 0%
 				Grappling Claw Cooldown Time: 0%
 				No Ammunition Requirement: On
 				Piledriver Cooldown Time: 0%
@@ -74,7 +75,7 @@ variables
 		2: nameplate
 		3: nameplateObject
 		4: runIsLoaded
-        5: hud
+		5: hud
 		6: runCurrentCp
 		7: runMistakes
 		8: runTime
@@ -90,15 +91,15 @@ variables
 		18: cpData
 		19: cpEffects
 		20: cpIcons
-        21: runIsPaused
+		21: runIsPaused
 		22: runIsFinished
-        23: isInFreemode
+		23: isInFreemode
 		24: freemodeHud
 		25: runCompletionText
 		26: runCompletionTextActive
 		27: ctrlsHud
 		28: ctrlsHudActive
-        29: cpCtrlsInputLocked
+		29: cpCtrlsInputLocked
 		100: index
 }
 
@@ -106,11 +107,10 @@ subroutines
 {
 	0: loadNameplate
 	1: loadLobby
-	2: unloadLobby
 	3: loadCp
 	4: newRun
 	5: loadHud
-    6: formatRunTime
+	6: formatRunTime
 	7: loadCpData
 	8: loadCpObjects
 	9: cpResetPlayer
@@ -120,7 +120,7 @@ subroutines
 	13: unloadFreemodeHud
 	14: loadRunCompletionText
 	15: unloadRunCompletionText
-    16: loadCtrlsHud
+	16: loadCtrlsHud
 	17: unloadCtrlsHud
 }
 
@@ -179,23 +179,23 @@ rule("1.2: Initialize Checkpoints (CPs)")
 			Vector(27.370, 4, -88.810), Vector(16.181, 3.046, -67.936), Vector(27.890, 3.050, -70.120), Vector(28.072, 3.998, -105.300),
 			Vector(60.854, 1, -113.372), Vector(44.855, 4.010, -131.473), Vector(39.700, 1, -144.094), Vector(44.910, 1, -138.610), Vector(
 			44.350, 4.010, -130.820), Vector(33.830, 4, -90), Vector(30.991, 3, -72.417), Vector(39.055, -4.947, -75.702), Vector(45.022,
-			-5, -69.766), Vector(47.22, 6.00, -67.50), Vector(45.640, 4.830, -52.480), Vector(36.368, -2.134, -56.973), Vector(45.662, 3,
+			-5, -69.766), Vector(47.220, 6, -67.500), Vector(45.640, 4.830, -52.480), Vector(36.368, -2.134, -56.973), Vector(45.662, 3,
 			-36.151), Vector(65.850, 13.140, -38.910), Vector(41.770, 3, -73.610), Vector(36.668, -2.134, -57.072), Vector(53.683, 8.908,
 			-36.387), Vector(82.606, 3, -33.352), Vector(86.119, 3.010, -29.821), Vector(77.563, 6, 6.752), Vector(101.210, -0.940,
 			40.440), Vector(91.745, 6, 9.719), Vector(83.100, 1, 56.160), Vector(81.151, 2.845, 28.890), Vector(71.210, 1, 18.590), Vector(
-			77.622, 6.010, 6.080), Vector(75.526, 10, 7.506), Vector(69.811, 9.010, 12.958), Vector(66.62, 8.32, 26.39), Vector(98.874,
+			77.622, 6.010, 6.080), Vector(75.526, 10, 7.506), Vector(69.811, 9.010, 12.958), Vector(66.620, 8.320, 26.390), Vector(98.874,
 			2.745, -16.184), Vector(67.245, -2.905, -13.682), Vector(64.361, -2.993, -16.969), Vector(65.850, 13.140, -38.910), Vector(
 			53.419, 8.734, -38.662), Vector(36.260, -0.260, -47.190), Vector(45.993, 3, -36.446), Vector(57.496, 3, -54.121), Vector(
 			47.490, 6, -67.970), Vector(32.380, -5.150, -57.330), Vector(34.290, 1.190, -53.240), Vector(40.600, -5.010, -51.200), Vector(
-			43.110, -0.510, -49.171), Vector(65.056, -3.141, -26.305), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
-			Vector(74.748, 2.107, -34.640), Vector(50.720, 8.720, -47.450), Vector(46.340, 3, -35.780), Vector(47.22, 6.00, -67.50), Vector(
+			43.110, -0.510, -49.171), Vector(65.13, -3.14, -26.44), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
+			Vector(74.748, 2.107, -34.640), Vector(50.720, 8.720, -47.450), Vector(45.49, 3.00, -36.66), Vector(47.220, 6, -67.500), Vector(
 			39.460, -5.020, -75.880), Vector(14.081, 3.045, -70.069), Vector(27.170, 0, -104.230), Vector(29.240, 4, -106.270), Vector(
 			42.742, -6.137, -119.077), Vector(36.423, 0, -112.203), Vector(33.015, 6.561, -109.607), Vector(38.880, 0, -99.490), Vector(
-			31.760, 5.510, -92.420), Vector(39.957, 3.998, -102.764), Vector(33.417, 4.010, -86.090), Vector(43.86, 4.33, -130.51),
+			31.760, 5.510, -92.420), Vector(39.957, 3.998, -102.764), Vector(33.417, 4.010, -86.090), Vector(43.860, 4.330, -130.510),
 			Vector(35.776, 5, -144.535), Vector(16.589, -2, -133.052), Vector(37.649, 4.010, -124.211), Vector(61.452, -7.192, -141.705),
 			Vector(60.992, 1, -115.213), Vector(27.284, 3.013, -84.642), Vector(16.503, -5, -70.262), Vector(29.458, 6.938, -90.962),
 			Vector(38.373, -5.020, -77.208), Vector(56.069, 3, -52.942), Vector(47.966, -5, -68.898), Vector(36.260, -0.260, -47.190),
-			Vector(62.694, -3.003, -16.511), Vector(83.645, 6, 1.309), Vector(97.334, 1, 12.426), Vector(82.130, 10.360, 14.070), Vector(
+			Vector(62.694, -3.003, -16.511), Vector(83.645, 6, 1.309), Vector(97.81, 1.00, 12.53), Vector(82.130, 10.360, 14.070), Vector(
 			75.569, 9, 22.556), Vector(59.696, 8.354, 20.334), Vector(51.531, 9, 9.279), Vector(41.032, 3, 7.798), Vector(46.180, 9,
 			10.570), Vector(45.060, 3, 3.140), Vector(48.646, 9, 7.999), Vector(81.852, 1, 23.622), Vector(79.799, 9, 21.207), Vector(
 			86.008, -3.141, -1.915), Vector(83.702, 6.010, 0.450), Vector(90.713, -3.045, -5.413), Vector(83.375, 6, 0.473));
@@ -203,9 +203,9 @@ rule("1.2: Initialize Checkpoints (CPs)")
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
-			False, False, False, False, False, Vector(21.742, -1.910, -129.950), False, Vector(63.864, -6.380, -131.746), Vector(36.918,
+			False, False, False, False, False, Vector(21.742, -1.910, -129.950), False, Vector(64.37, -6.31, -131.28), Vector(36.918,
 			0.092, -95.332), False, Vector(23.858, -5.068, -82.402), False, Vector(44.188, -5.058, -60.366), False, Vector(41.762, -5.059,
-			-62.347), False, Vector(74.739, -3.006, -9.533), False, False, False, False, False, False, False, False, False, False, False,
+			-62.347), False, Vector(74.99, -2.09, -9.26), False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, Vector(85.500, -3.150, -1.500));
 		Global.cpIsGrappleAllowed = Array(False, False, True, True, True, True, True, True, False, True, True, True, False, False, False,
 			True, True, True, False, True, False, False, True, True, True, False, True, True, False, True, True, True, True, True, True,
@@ -239,8 +239,8 @@ rule("2.1: Player Joins")
 		Disable Game Mode In-World UI(Event Player);
 		Disable Nameplates(Event Player, All Players(All Teams));
 		Disable Nameplates(All Players(All Teams), Event Player);
-        Disable Movement Collision With Players(Event Player);
-		If (Event Player.isInLobby == False);
+		Disable Movement Collision With Players(Event Player);
+		If(Event Player.isInLobby == False);
 			Call Subroutine(loadLobby);
 		End;
 		Wait(0.250, Ignore Condition);
@@ -286,8 +286,8 @@ rule("2.2: Player Leaves")
 	actions
 	{
 		If(Event Player.runIsLoaded == True);
-			Event Player.runIsPaused = True;
 			Stop Chasing Player Variable(Event Player, runTime);
+			Event Player.runIsPaused = True;
 		End;
 	}
 }
@@ -306,6 +306,7 @@ rule("3.1.1: Load Lobby")
 		Teleport(Event Player, Global.lobbySpawn);
 		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Vector(103.325, 1, 75.955)), To World);
 		Event Player.isInFreemode = False;
+		Set Secondary Fire Enabled(Event Player, True);
 		Call Subroutine(loadNameplate);
 	}
 }
@@ -328,7 +329,7 @@ rule("3.1.1.1: Lobby Boundary")
 
 	actions
 	{
-		Apply Impulse(Event Player, Direction Towards(Position Of(Event Player), Global.lobbySpawn), 10, To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Direction Towards(Position Of(Event Player), Global.lobbySpawn), 20, To World, Cancel Contrary Motion);
 	}
 }
 
@@ -341,8 +342,8 @@ rule("3.2: Load Welcome Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Welcome to Ballkour!"), Vector(103.325, 1.800, 75.955), 1.500, Do Not Clip, Visible To,
-			Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
+			"Welcome to Ballkour!"), Vector(103.325, 1.800, 75.955), 1.500, Do Not Clip, Visible To, Color(Orange), Default Visibility);
 		Global.lobbyText[0] = Last Text ID;
 	}
 }
@@ -411,12 +412,14 @@ rule("3.4.1: Load Start Run Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"), Vector(103.805, -0.300, 75.480), 1, Do Not Clip, Visible To, Color(
-			Turquoise), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"),
+			Vector(103.805, -0.300, 75.480), 1, Do Not Clip, Visible To, Color(Turquoise), Default Visibility);
 		Global.lobbyText[13] = Last Text ID;
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Turquoise), Vector(103.805, -1.990, 75.480), 1.600, Visible To);
+		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Turquoise), Vector(
+			103.805, -1.990, 75.480), 1.600, Visible To);
 		Global.lobbyEffects[0] = Last Created Entity;
-		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Vector(103.805, -2.400, 75.480), Flag, Visible To, Color(Green), True);
+		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Vector(103.805, -2.400, 75.480), Flag,
+			Visible To, Color(Green), True);
 		Global.lobbyIcons[0] = Last Created Entity;
 	}
 }
@@ -453,26 +456,19 @@ rule("3.5.1: Load Resume Run Area")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.isInLobby == True;
-		Event Player.runIsLoaded == True;
-		Event Player.runIsFinished == False;
+		Ongoing - Global;
 	}
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Resume Run"), Vector(101.360, -0.300, 73.035), 1, Do Not Clip, Visible To, Color(Blue),
-			Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"),
+			Vector(101.360, -0.300, 73.035), 1, Do Not Clip, Visible To, Color(Blue), Default Visibility);
 		Global.lobbyText[14] = Last Text ID;
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Blue), Vector(101.360, -1.990, 73.035), 1.600, Visible To);
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Blue), Vector(101.360,
+			-1.990, 73.035), 1.600, Visible To);
 		Global.lobbyEffects[1] = Last Created Entity;
-		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Vector(101.360, -2.400, 73.035), Recycle, Visible To, Color(Purple), True);
+		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Vector(101.360, -2.400, 73.035),
+			Recycle, Visible To, Color(Purple), True);
 		Global.lobbyIcons[1] = Last Created Entity;
 	}
 }
@@ -501,7 +497,11 @@ rule("3.5.2: Resume Run Circle Entry")
 		Event Player.isInLobby = False;
 		Wait(0.016, Ignore Condition);
 		Call Subroutine(cpResetPlayer);
-		Set Secondary Fire Enabled(Event Player, Event Player.cpData[4]);
+		If (Event Player.cpData[4] == True);
+			Set Secondary Fire Enabled(Event Player, True);
+		Else;
+			Set Secondary Fire Enabled(Event Player, False);
+		End;
 		Call Subroutine(loadCpObjects);
 		Call Subroutine(loadHud);
 		Call Subroutine(loadNameplate);
@@ -609,42 +609,59 @@ rule("5.1.1: Load Global Run HUD")
 	actions
 	{
 		Global.hud = Array();
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 0, Null, Null, Color(White), Visible To, Default Visibility);
-		Global.hud[0] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 1, Null, Null, Color(White), Visible To, Default Visibility);
-		Global.hud[1] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 2, Null, Null, Color(White), Visible To, Default Visibility);
-		Global.hud[2] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 3, Null, Null, Color(White), Visible To, Default Visibility);
-		Global.hud[3] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 4, Null, Null, Color(White), Visible To, Default Visibility);
-		Global.hud[4] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String("ballkour.com"), Top, 0, Null, Null, Custom Color(165, 42, 42, 255), Visible To,
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 0, Null, Null, Color(White), Visible To,
 			Default Visibility);
+		Global.hud[0] = Last Text ID;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 1, Null, Null, Color(White), Visible To,
+			Default Visibility);
+		Global.hud[1] = Last Text ID;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 2, Null, Null, Color(White), Visible To,
+			Default Visibility);
+		Global.hud[2] = Last Text ID;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 3, Null, Null, Color(White), Visible To,
+			Default Visibility);
+		Global.hud[3] = Last Text ID;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 4, Null, Null, Color(White), Visible To,
+			Default Visibility);
+		Global.hud[4] = Last Text ID;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("ballkour.com"), Top, 0, Null, Null, Custom Color(165, 42, 42,
+			255), Visible To, Default Visibility);
 		Global.hud[5] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 0, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 0, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[6] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 1, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 1, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[7] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 2, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 2, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[8] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 3, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 3, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[9] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 4, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 4, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[10] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 5, Null, Null, Color(White), Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 5, Null, Null, Color(White), Visible To,
+			Default Visibility);
 		Global.hud[11] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 2, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 2, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[12] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 3, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 3, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[13] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 4, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 4, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[14] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 6, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 6, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[15] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 10, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 10, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[16] = Last Text ID;
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 15, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 15, Null, Color(White), Null, Visible To,
+			Default Visibility);
 		Global.hud[17] = Last Text ID;
 	}
 }
@@ -660,8 +677,8 @@ rule("5.1.2: Load Local Run HUD")
 	actions
 	{
 		Event Player.hud = Array();
-		Create HUD Text(Event Player, Null, Null, Custom String("Controls: {0}", Input Binding String(Button(Ultimate))), Left, 4, Null, Null,
-			Color(Orange), String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Controls: {0}", Input Binding String(Button(Ultimate))), Left, 4, Null,
+			Null, Color(Orange), String, Default Visibility);
 		Event Player.hud[0] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String("{0}/100", Event Player.runCurrentCp), Top, 1, Null, Null, Color(Orange),
 			String, Default Visibility);
@@ -740,7 +757,6 @@ rule("6: Start/Resume Run")
 		Chase Player Variable At Rate(Event Player, runTime, 100000000, 1, Destination and Rate);
 	}
 }
-
 
 rule("6.1: Update Timer")
 {
@@ -823,12 +839,12 @@ rule("6.3: Grapple Use")
 
 	actions
 	{
-		If (Event Player.cpData[1] == Null);
+		If(Event Player.cpData[1] == Null || Event Player.isInFreemode == True);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[5] = True;
 			Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Speed Of(Event Player) >= 15, 100000000);
-			If (Speed Of(Event Player) >= 15);
+			If(Speed Of(Event Player) >= 15);
 				Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 8);
 			End;
 			Event Player.cpData[6] = True;
@@ -853,7 +869,8 @@ rule("6.4: Bounce CPs: Reset Useless Grapple")
 	actions
 	{
 		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 100000000);
-		If (Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+			Event Player.cpData[5] = False;
 			Event Player.cpData[6] = False;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
@@ -874,7 +891,7 @@ rule("7.1: CP Mistake")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True) == True;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
 		Is On Ground(Event Player) == True;
 		Event Player.runIsPaused == False;
@@ -887,7 +904,7 @@ rule("7.1: CP Mistake")
 	actions
 	{
 		"Race condition :("
-		Wait(0.02, Abort When False);
+		Wait(0.020, Abort When False);
 		Event Player.runMistakes += 1;
 		Call Subroutine(cpResetPlayer);
 	}
@@ -1037,13 +1054,14 @@ rule("9: CP Reset Player")
 	{
 		Event Player.isLoading = True;
 		Teleport(Event Player, Event Player.cpData[0]);
-		Apply Impulse(Event Player, Velocity Of(Event Player) * -1, Magnitude Of(Velocity Of(Event Player)), To World, Incorporate Contrary Motion);
+		Apply Impulse(Event Player, Velocity Of(Event Player) * -1, Magnitude Of(Velocity Of(Event Player)), To World,
+			Incorporate Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
 		If(Event Player.runCurrentCp <= 99);
 			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cpLocations[Event Player.runCurrentCp + 1]),
 				To World);
 		End;
-		If (Event Player.cpData[1] != False);
+		If(Event Player.cpData[1] != False);
 			Event Player.cpData[2] = False;
 			Event Player.cpData[5] = False;
 			Event Player.cpData[6] = False;
@@ -1135,8 +1153,8 @@ rule("10.2: Final CP Completed (No Skipping)")
 
 	actions
 	{
-		Event Player.runIsPaused = True;
 		Stop Chasing Player Variable(Event Player, runTime);
+		Event Player.runIsPaused = True;
 	}
 }
 
@@ -1157,8 +1175,8 @@ rule("10.3.1: Load Run Completion Text")
 		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 7, Null, Color(Orange),
 			Null, None, Default Visibility);
 		Event Player.runCompletionText[1] = Last Text ID;
-        Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeToBeat), Null, Top, 8, Null, Color(Orange),
-				Null, None, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeToBeat), Null, Top, 8, Null, Color(Orange),
+			Null, None, Default Visibility);
 		Event Player.runCompletionText[2] = Last Text ID;
 		Create HUD Text(Event Player, Null, Custom String("Mistakes: {0}", Event Player.runMistakes), Null, Top, 9, Null, Color(Orange),
 			Null, None, Default Visibility);
@@ -1240,13 +1258,13 @@ rule("11.1.1: Controls HUD Input")
 	actions
 	{
 		Call Subroutine(loadCtrlsHud);
-        Disallow Button(Event Player, Button(Primary Fire));
+		Disallow Button(Event Player, Button(Primary Fire));
 		Disallow Button(Event Player, Button(Secondary Fire));
-        Disallow Button(Event Player, Button(Ability 2));
+		Disallow Button(Event Player, Button(Ability 2));
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Event Player.isInLobby == True, 100000000);
 		Allow Button(Event Player, Button(Primary Fire));
 		Allow Button(Event Player, Button(Secondary Fire));
-        Allow Button(Event Player, Button(Ability 2));
+		Allow Button(Event Player, Button(Ability 2));
 	}
 }
 
@@ -1349,7 +1367,7 @@ rule("11.2: Go Back CP Input")
 	actions
 	{
 		Event Player.cpCtrlsInputLocked = True;
-        Event Player.isLoading = True;
+		Event Player.isLoading = True;
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
@@ -1366,19 +1384,22 @@ rule("11.2: Go Back CP Input")
 		End;
 		Call Subroutine(loadCp);
 		Call Subroutine(cpResetPlayer);
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False, 0.150);
-		While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp >= 1);
+		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False,
+			0.150);
+		While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire))
+			&& Event Player.runCurrentCp >= 1);
 			Event Player.runCurrentCp -= 1;
 			Call Subroutine(loadCp);
 			Call Subroutine(cpResetPlayer);
-			Wait(0.02, Ignore Condition);
+			Wait(0.020, Ignore Condition);
 		End;
-        Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 100000000);
-        If(Event Player.isInFreemode == True);
+		Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False,
+			100000000);
+		If(Event Player.isInFreemode == True);
 			Set Secondary Fire Enabled(Event Player, True);
 		End;
 		Event Player.cpCtrlsInputLocked = False;
-        Event Player.isLoading = False;
+		Event Player.isLoading = False;
 	}
 }
 
@@ -1397,14 +1418,14 @@ rule("11.3: Skip CP Input")
 		Is Button Held(Event Player, Button(Secondary Fire)) == True;
 		Event Player.runCurrentCp <= 99;
 		Event Player.isInLobby == False;
-        Event Player.cpCtrlsInputLocked == False;
+		Event Player.cpCtrlsInputLocked == False;
 		Event Player.isLoading == False;
 	}
 
 	actions
 	{
 		Event Player.isLoading = True;
-        Event Player.cpCtrlsInputLocked = True;
+		Event Player.cpCtrlsInputLocked = True;
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
@@ -1415,19 +1436,22 @@ rule("11.3: Skip CP Input")
 		Event Player.runCurrentCp += 1;
 		Call Subroutine(loadCp);
 		Call Subroutine(cpResetPlayer);
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.150);
-		While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp <= 99);
+		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire))
+			== False, 0.150);
+		While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire))
+			&& Event Player.runCurrentCp <= 99);
 			Event Player.runCurrentCp += 1;
 			Call Subroutine(loadCp);
 			Call Subroutine(cpResetPlayer);
 			Wait(0.020, Ignore Condition);
 		End;
-        Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Is Button Held(Event Player, Button(Ultimate)) == False, 100000000);
-        If(Event Player.isInFreemode == True);
+		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Is Button Held(Event Player, Button(Ultimate))
+			== False, 100000000);
+		If(Event Player.isInFreemode == True);
 			Set Secondary Fire Enabled(Event Player, True);
 		End;
 		Event Player.cpCtrlsInputLocked = False;
-        Event Player.isLoading = False;
+		Event Player.isLoading = False;
 	}
 }
 
@@ -1449,13 +1473,13 @@ rule("11.4: Restart Input")
 
 	actions
 	{
-		Event Player.isLoading = True;
 		Stop Chasing Player Variable(Event Player, runTime);
+		Event Player.isLoading = True;
 		Call Subroutine(newRun);
 		Call Subroutine(unloadFreemodeHud);
 		Call Subroutine(unloadRunCompletionText);
-        Call Subroutine(unloadCtrlsHud);
-        Call Subroutine(loadCtrlsHud);
+		Call Subroutine(unloadCtrlsHud);
+		Call Subroutine(loadCtrlsHud);
 		Event Player.isLoading = False;
 	}
 }
