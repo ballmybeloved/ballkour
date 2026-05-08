@@ -456,27 +456,18 @@ rule("3.5.1: Load Resume Run Area")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.isInLobby == True;
-		Event Player.runIsLoaded == True;
-		Event Player.runIsFinished == False;
+		Ongoing - Global;
 	}
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Resume Run"),
+		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"),
 			Vector(101.360, -0.300, 73.035), 1, Do Not Clip, Visible To, Color(Blue), Default Visibility);
 		Global.lobbyText[14] = Last Text ID;
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Blue), Vector(101.360,
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Blue), Vector(101.360,
 			-1.990, 73.035), 1.600, Visible To);
 		Global.lobbyEffects[1] = Last Created Entity;
-		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Vector(101.360, -2.400, 73.035),
+		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Vector(101.360, -2.400, 73.035),
 			Recycle, Visible To, Color(Purple), True);
 		Global.lobbyIcons[1] = Last Created Entity;
 	}
@@ -1163,7 +1154,6 @@ rule("10.2: Final CP Completed (No Skipping)")
 	{
 		Stop Chasing Player Variable(Event Player, runTime);
 		Event Player.runIsPaused = True;
-		Event Player.runIsFinished = True;
 	}
 }
 
