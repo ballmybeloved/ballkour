@@ -138,7 +138,9 @@ rule("0: Contact & Course Info")
 			"This updated version of code \"W1RWY\" is developed by ballmybeloved, with lobby help from Kalaziel64."));
 		Log To Inspector(Custom String(
 			"This route was slightly adjusted for quality purposes, and also because this map was updated in Feb, 2026."));
-		Log To Inspector(Custom String("Have issues or feedback? Want to join our Discord or beat the time to beat? Visit ballkour.com!"));
+		Log To Inspector(Custom String("Discord: ballkour.com/discord"));
+		Log To Inspector(Custom String("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!"));
+		Log To Inspector(Custom String("Set a top-10 time? Submit a video with your run in our Discord!"));
 		Log To Inspector(Custom String("Course playthrough: ballkour.com/run"));
 		Global.timeToBeat = Custom String("14:38.48");
 		Global.timeToBeatMs = 878480;
