@@ -187,15 +187,15 @@ rule("1.2: Initialize Checkpoints (CPs)")
 			2.745, -16.184), Vector(67.245, -2.905, -13.682), Vector(64.361, -2.993, -16.969), Vector(65.850, 13.140, -38.910), Vector(
 			53.419, 8.734, -38.662), Vector(36.260, -0.260, -47.190), Vector(45.993, 3, -36.446), Vector(57.496, 3, -54.121), Vector(
 			47.490, 6, -67.970), Vector(32.380, -5.150, -57.330), Vector(34.290, 1.190, -53.240), Vector(40.600, -5.010, -51.200), Vector(
-			43.110, -0.510, -49.171), Vector(65.056, -3.141, -26.305), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
-			Vector(74.748, 2.107, -34.640), Vector(50.720, 8.720, -47.450), Vector(46.340, 3, -35.780), Vector(47.220, 6, -67.500), Vector(
+			43.110, -0.510, -49.171), Vector(65.13, -3.14, -26.44), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
+			Vector(74.748, 2.107, -34.640), Vector(50.720, 8.720, -47.450), Vector(45.49, 3.00, -36.66), Vector(47.220, 6, -67.500), Vector(
 			39.460, -5.020, -75.880), Vector(14.081, 3.045, -70.069), Vector(27.170, 0, -104.230), Vector(29.240, 4, -106.270), Vector(
 			42.742, -6.137, -119.077), Vector(36.423, 0, -112.203), Vector(33.015, 6.561, -109.607), Vector(38.880, 0, -99.490), Vector(
 			31.760, 5.510, -92.420), Vector(39.957, 3.998, -102.764), Vector(33.417, 4.010, -86.090), Vector(43.860, 4.330, -130.510),
 			Vector(35.776, 5, -144.535), Vector(16.589, -2, -133.052), Vector(37.649, 4.010, -124.211), Vector(61.452, -7.192, -141.705),
 			Vector(60.992, 1, -115.213), Vector(27.284, 3.013, -84.642), Vector(16.503, -5, -70.262), Vector(29.458, 6.938, -90.962),
 			Vector(38.373, -5.020, -77.208), Vector(56.069, 3, -52.942), Vector(47.966, -5, -68.898), Vector(36.260, -0.260, -47.190),
-			Vector(62.694, -3.003, -16.511), Vector(83.645, 6, 1.309), Vector(97.334, 1, 12.426), Vector(82.130, 10.360, 14.070), Vector(
+			Vector(62.694, -3.003, -16.511), Vector(83.645, 6, 1.309), Vector(97.81, 1.00, 12.53), Vector(82.130, 10.360, 14.070), Vector(
 			75.569, 9, 22.556), Vector(59.696, 8.354, 20.334), Vector(51.531, 9, 9.279), Vector(41.032, 3, 7.798), Vector(46.180, 9,
 			10.570), Vector(45.060, 3, 3.140), Vector(48.646, 9, 7.999), Vector(81.852, 1, 23.622), Vector(79.799, 9, 21.207), Vector(
 			86.008, -3.141, -1.915), Vector(83.702, 6.010, 0.450), Vector(90.713, -3.045, -5.413), Vector(83.375, 6, 0.473));
@@ -203,9 +203,9 @@ rule("1.2: Initialize Checkpoints (CPs)")
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
-			False, False, False, False, False, Vector(21.742, -1.910, -129.950), False, Vector(63.864, -6.380, -131.746), Vector(36.918,
+			False, False, False, False, False, Vector(21.742, -1.910, -129.950), False, Vector(64.37, -6.31, -131.28), Vector(36.918,
 			0.092, -95.332), False, Vector(23.858, -5.068, -82.402), False, Vector(44.188, -5.058, -60.366), False, Vector(41.762, -5.059,
-			-62.347), False, Vector(74.739, -3.006, -9.533), False, False, False, False, False, False, False, False, False, False, False,
+			-62.347), False, Vector(74.99, -2.09, -9.26), False, False, False, False, False, False, False, False, False, False, False,
 			False, False, False, Vector(85.500, -3.150, -1.500));
 		Global.cpIsGrappleAllowed = Array(False, False, True, True, True, True, True, True, False, True, True, True, False, False, False,
 			True, True, True, False, True, False, False, True, True, True, False, True, True, False, True, True, True, True, True, True,
@@ -839,7 +839,7 @@ rule("6.3: Grapple Use")
 
 	actions
 	{
-		If(Event Player.cpData[1] == Null);
+		If(Event Player.cpData[1] == Null || Event Player.isInFreemode == True);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[5] = True;
