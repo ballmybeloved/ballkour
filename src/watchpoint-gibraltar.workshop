@@ -329,7 +329,7 @@ rule("3.1.1.1: Lobby Boundary")
 
 	actions
 	{
-		Apply Impulse(Event Player, Direction Towards(Position Of(Event Player), Global.lobbySpawn), 10, To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Direction Towards(Position Of(Event Player), Global.lobbySpawn), 20, To World, Cancel Contrary Motion);
 	}
 }
 
