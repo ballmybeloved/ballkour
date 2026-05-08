@@ -870,6 +870,7 @@ rule("6.4: Bounce CPs: Reset Useless Grapple")
 	{
 		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 100000000);
 		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+			Event Player.cpData[5] = False;
 			Event Player.cpData[6] = False;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
@@ -890,7 +891,7 @@ rule("7.1: CP Mistake")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True) == True;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
 		Is On Ground(Event Player) == True;
 		Event Player.runIsPaused == False;
