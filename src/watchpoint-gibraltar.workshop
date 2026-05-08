@@ -135,11 +135,11 @@ rule("0: Contact & Course Info")
 	{
 		Log To Inspector(Custom String("Hello! Welcome to Ballkour's Watchpoint: Gibraltar course!"));
 		Log To Inspector(Custom String(
-			"This updated version of code \"DQGPG\" is developed by ballmybeloved, with lobby help from Kalaziel64."));
+			"This updated version of code \"W1RWY\" is developed by ballmybeloved, with lobby help from Kalaziel64."));
 		Log To Inspector(Custom String(
 			"This route was slightly adjusted for quality purposes, and also because this map was updated in Feb, 2026."));
-		Log To Inspector(Custom String("Any feedback or issues? Want to join our Discord or beat the time to beat? Visit ballkour.com!"));
-		Log To Inspector(Custom String("Course run: ballkour.com/playthrough"));
+		Log To Inspector(Custom String("Have issues or feedback? Want to join our Discord or beat the time to beat? Visit ballkour.com!"));
+		Log To Inspector(Custom String("Course playthrough: ballkour.com/run"));
 		Global.timeToBeat = Custom String("14:38.48");
 		Global.timeToBeatMs = 878480;
 	}
