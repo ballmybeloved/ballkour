@@ -540,7 +540,7 @@ rule("4.1: Load CP Data")
 
 	actions
 	{
-		"{0: Current CP; 1: Bounce Ring; 2: Bounce Used; 3: Next CP; 4: Grapple Allowed; 5: Grapple Engaged; 6: Grapple Used}"
+		"{0: Current CP; 1: Bounce Ring; 2: Bounce Used; 3: Next CP; 4: Grapple Allowed; 5: Grapple Engaged; 6: Grapple Used; 7: Jumped; 8: Bhopped}"
 		Event Player.cpData = Array();
 		Event Player.cpData[0] = Global.cpLocations[Event Player.runCurrentCp];
 		Event Player.cpData[1] = Global.cpBounceRings[Event Player.runCurrentCp];
@@ -549,6 +549,8 @@ rule("4.1: Load CP Data")
 		Event Player.cpData[4] = Global.cpIsGrappleAllowed[Event Player.runCurrentCp];
 		Event Player.cpData[5] = False;
 		Event Player.cpData[6] = False;
+		Event Player.cpData[7] = False;
+		Event Player.cpData[8] = False;
 		Set Secondary Fire Enabled(Event Player, Event Player.cpData[4]);
 	}
 }
@@ -881,6 +883,122 @@ rule("6.4: Bounce CPs: Reset Useless Grapple")
 	}
 }
 
+rule("6.5: Jump Used")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Jumping(Event Player) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200;
+		Event Player.runIsPaused == False;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		Event Player.cpData[7] = True;
+	}
+}
+
+rule("6.5: Bhop Used")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Is Jumping(Event Player) == True;
+		Event Player.runIsPaused == False;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		If(Event Player.cpData[8] == False);
+			Wait Until(Is On Ground(Event Player) == True, 100000000);
+			Event Player.cpData[8] = True;
+		Else;
+			Event Player.runMistakes += 1;
+			Call Subroutine(cpResetPlayer);
+		End;
+
+	}
+}
+
+rule("6.6: CP Mistake: Already Bhopped")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Is Jumping(Event Player) == True;
+		Event Player.cpData[8] == True;
+		Event Player.runIsPaused == False;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		Event Player.runMistakes += 1;
+		Call Subroutine(cpResetPlayer);
+	}
+}
+
+rule("6.7: Reset Useless Jump/Bhop")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.cpData[7] || Event Player.cpData[8]) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200;
+	}
+
+	actions
+	{
+		Wait Until(Is On Ground(Event Player) == True, 100000000);
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+			Event Player.cpData[7] = False;
+			Event Player.cpData[8] = False;
+		End;
+	}
+}
+
 rule("7.1: CP Mistake")
 {
 	event
@@ -1056,8 +1174,7 @@ rule("9: CP Reset Player")
 	{
 		Event Player.isLoading = True;
 		Teleport(Event Player, Event Player.cpData[0]);
-		Apply Impulse(Event Player, Velocity Of(Event Player) * -1, Magnitude Of(Velocity Of(Event Player)), To World,
-			Incorporate Contrary Motion);
+		Apply Impulse(Event Player, Velocity Of(Event Player) * -0.001, 0.001, To World, Cancel Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
 		If(Event Player.runCurrentCp <= 99);
 			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cpLocations[Event Player.runCurrentCp + 1]),
@@ -1070,6 +1187,8 @@ rule("9: CP Reset Player")
 			Set Secondary Fire Enabled(Event Player, True);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		End;
+		Event Player.cpData[7] = False;
+		Event Player.cpData[8] = False;
 		Event Player.isLoading = False;
 	}
 }
