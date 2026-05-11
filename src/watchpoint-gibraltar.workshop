@@ -58,16 +58,23 @@ settings
 variables
 {
 	global:
-		0: lobbySpawn
-		1: lobbyText
-		2: lobbyEffects
-		3: lobbyIcons
-		4: hud
-		5: cpLocations
-		6: cpBounceRings
-		7: cpIsGrappleAllowed
-		8: timeToBeat
-		9: timeToBeatMs
+		0: settings
+		1: lobbySpawn
+		2: lobbyText
+		3: lobbyEffects
+		4: lobbyIcons
+		5: hud
+		6: cpLocations
+		7: cpBounceRings
+		8: cpIsGrappleAllowed
+		9: timeToBeat
+		10: timeToBeatMs
+		100: players
+		101: playersAmnt
+		102: rejoinsAmnt
+		103: runs
+		104: avgRunTime
+		105: totalRunTime
 
 	player:
 		0: isLoading
@@ -91,16 +98,17 @@ variables
 		18: cpData
 		19: cpEffects
 		20: cpIcons
-		21: runIsPaused
-		22: runIsFinished
-		23: isInFreemode
-		24: freemodeHud
-		25: runCompletionText
-		26: runCompletionTextActive
-		27: ctrlsHud
-		28: ctrlsHudActive
-		29: cpCtrlsInputLocked
-		100: index
+		21: runIsLegit
+		22: runIsPaused
+		23: runIsFinished
+		24: isInFreemode
+		25: freemodeHud
+		26: runCompletionText
+		27: runCompletionTextActive
+		28: ctrlsHud
+		29: ctrlsHudActive
+		30: cpCtrlsInputLocked
+		90: index
 }
 
 subroutines
@@ -147,6 +155,20 @@ rule("0: Contact & Course Info")
 	}
 }
 
+rule("1.1: Settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.settings = Array();
+		Global.settings[0] = Workshop Setting Toggle(Custom String("Settings"), Custom String("Player & Run Stats"), False, 0);
+	}
+}
+
 rule("1.1: Initialize Match")
 {
 	event
@@ -163,10 +185,15 @@ rule("1.1: Initialize Match")
 		Global.lobbyText = Array();
 		Global.lobbyEffects = Array();
 		Global.lobbyIcons = Array();
+		Global.players = Array();
+		Global.playersAmnt = 0;
+		Global.runs = 0;
+		Global.totalRunTime = 0;
+		Global.avgRunTime = 0;
 	}
 }
 
-rule("1.2: Initialize Checkpoints (CPs)")
+rule("1.2: Checkpoints (CPs)")
 {
 	event
 	{
@@ -235,6 +262,12 @@ rule("2.1: Player Joins")
 	actions
 	{
 		Event Player.isLoading = True;
+		If(Array Contains(Global.players, Custom String("{0}", Event Player)) == False);
+			Global.playersAmnt += 1;
+			Global.players[Count Of(Global.players)] = Custom String("{0}", Event Player);
+		Else;
+			Global.rejoinsAmnt += 1;
+		End;
 		Wait(0.016, Ignore Condition);
 		Disable Game Mode HUD(Event Player);
 		Disable Kill Feed(Event Player);
@@ -250,7 +283,30 @@ rule("2.1: Player Joins")
 	}
 }
 
-rule("2.1.1: Load Nameplate")
+rule("2.2: Load Stats")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.settings[0] == True;
+	}
+
+	actions
+	{
+		Create In-World Text(Host Player, Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
+		Create In-World Text(Host Player, Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Host Player, Custom String("Rejoins: {0}", Global.rejoinsAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Host Player, Custom String("Runs: {0}", Global.runs), Vector(101.52, 2.150, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Host Player, Custom String("Avg Run Time: {0}", Global.avgRunTime), Vector(101.52, 1.600, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Host Player, Custom String("Total Run Time: {0}", Global.totalRunTime), Vector(101.52, 1.050, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+	}
+}
+
+rule("2.3.1: Load Nameplate")
 {
 	event
 	{
@@ -273,24 +329,6 @@ rule("2.1.1: Load Nameplate")
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Event Player.nameplate,
 			Event Player, 1, Clip Against Surfaces, Visible To Position and String, Color(White), Default Visibility);
 		Event Player.nameplateObject = Last Text ID;
-	}
-}
-
-rule("2.2: Player Leaves")
-{
-	event
-	{
-		Player Left Match;
-		All;
-		All;
-	}
-
-	actions
-	{
-		If(Event Player.runIsLoaded == True);
-			Stop Chasing Player Variable(Event Player, runTime);
-			Event Player.runIsPaused = True;
-		End;
 	}
 }
 
@@ -363,23 +401,23 @@ rule("3.3: Load Leaderboard Area")
 			Vector(98.245, 4, 68.085), 1.200, Do Not Clip, Visible To, Color(Yellow), Default Visibility);
 		Global.lobbyText[2] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"1. BACKLINEREIN ({0}4:57.86, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 3, 68.085), 0.850, Do Not Clip,
+			"1. BALLMYBLOVED ({0}4:36.32, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 3.250, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[3] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"2. BALLMYBLOVED ({0}4:59.07, {1}19)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.500, 68.085), 0.850, Do Not Clip,
+			"2. BACKLINEREIN ({0}4:57.86, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.70, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[4] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"3. DVD ({0}5:02.50, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2, 68.085), 0.850, Do Not Clip,
+			"3. DVD ({0}5:02.50, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[5] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"4. GAMINGCHAIR ({0}5:08.37, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.500, 68.085), 0.850, Do Not Clip,
+			"4. GAMINGCHAIR ({0}5:08.37, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.600, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[6] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"5. COLDSKIN ({0}5:54.12, {1}22)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1, 68.085), 0.850, Do Not Clip,
+			"5. COLDSKIN ({0}5:54.12, {1}22)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.050, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[7] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
@@ -387,19 +425,19 @@ rule("3.3: Load Leaderboard Area")
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[8] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"7. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 0, 68.085), 0.850, Do Not Clip,
+			"7. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.050, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[9] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"8. DUMBBALL ({0}0:00.00, {1}0)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.500, 68.085), 0.850, Do Not Clip,
+			"8. --- ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.600, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[10] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"9. BALLER10 ({0}0:00.00, {1}0)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1, 68.085), 0.850, Do Not Clip,
+			"9. --- ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[11] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"10. HAMTER ({0}0:00.00, {1}0)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1.500, 68.085), 0.850, Do Not Clip,
+			"10. --- ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1.700, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[12] = Last Text ID;
 	}
@@ -711,6 +749,7 @@ rule("5.2: Initialize New Run")
 		Event Player.runIsPaused = True;
 		Event Player.isInFreemode = False;
 		Event Player.runIsFinished = False;
+		Event Player.runIsLegit = True;
 		Event Player.runCurrentCp = 0;
 		Event Player.runTime = 0;
 		Event Player.runTimeFormatted = Custom String("0.00");
@@ -1279,7 +1318,31 @@ rule("10.2: Final CP Completed (No Skipping)")
 	}
 }
 
-rule("10.3.1: Load Run Completion Text")
+rule("10.3: Final CP Completed (Run Without Freemode, Skipping, or Going Back)")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.runCurrentCp == 100;
+		Event Player.runIsPaused == False;
+		Event Player.runIsLegit == True;
+	}
+
+	actions
+	{
+		Global.runs += 1;
+		Global.totalRunTime += Event Player.runTime;
+		Global.avgRunTime = Global.totalRunTime / Global.runs;
+	}
+}
+
+rule("10.4.1: Load Run Completion Text")
 {
 	event
 	{
@@ -1323,7 +1386,7 @@ rule("10.3.1: Load Run Completion Text")
 	}
 }
 
-rule("10.3.2: Auto Unload Run Completion Text")
+rule("10.4.2: Auto Unload Run Completion Text")
 {
 	event
 	{
@@ -1345,7 +1408,7 @@ rule("10.3.2: Auto Unload Run Completion Text")
 	}
 }
 
-rule("10.3.3.3: Unload Run Completion Text")
+rule("10.4.3.3: Unload Run Completion Text")
 {
 	event
 	{
@@ -1487,8 +1550,9 @@ rule("11.2: Go Back CP Input")
 
 	actions
 	{
-		Event Player.cpCtrlsInputLocked = True;
 		Event Player.isLoading = True;
+		Event Player.cpCtrlsInputLocked = True;
+		Event Player.runIsLegit = False;
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
@@ -1547,6 +1611,7 @@ rule("11.3: Skip CP Input")
 	{
 		Event Player.isLoading = True;
 		Event Player.cpCtrlsInputLocked = True;
+		Event Player.runIsLegit = False;
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
@@ -1627,6 +1692,7 @@ rule("11.5: Freemode Input")
 		If(Event Player.isInFreemode == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
+			Event Player.runIsLegit = False;
 			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200);
 				Event Player.runMistakes += 1;
 			End;
