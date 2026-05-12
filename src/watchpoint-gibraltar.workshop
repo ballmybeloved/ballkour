@@ -124,7 +124,6 @@ variables
 		31: ctrlsHudActive
 		32: cpCtrlsInputLocked
 		90: index
-		100: testRing_disabled
 }
 
 subroutines
@@ -182,35 +181,9 @@ rule("1.1: Settings")
 
 	actions
 	{
-		disabled Disable Inspector Recording;
+		Disable Inspector Recording;
 		Global.settings = Array();
 		Global.settings[0] = Workshop Setting Toggle(Custom String("Settings"), Custom String("Player & Run Stats"), False, 0);
-	}
-}
-
-rule("Current & CP Location")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Button(Ultimate)) == True;
-		Is Button Held(Event Player, Button(Crouch)) == True;
-	}
-
-	actions
-	{
-		Destroy Effect(Event Player.testRing_disabled);
-		"[disabled]"
-		Log To Inspector(Custom String("CP: {0}", Event Player.cpData[0]));
-		Log To Inspector(Custom String("Current: {0}", Position Of(Event Player)));
-		Create Effect(Event Player, Ring, Color(Red), Position Of(Event Player), 2, None);
-		Event Player.testRing_disabled = Last Created Entity;
 	}
 }
 
