@@ -59,22 +59,35 @@ variables
 {
 	global:
 		0: settings
-		1: lobbySpawn
-		2: lobbyText
-		3: lobbyEffects
-		4: lobbyIcons
-		5: hud
-		6: cpLocations
-		7: cpBounceRings
-		8: cpIsGrappleAllowed
-		9: timeToBeat
-		10: timeToBeatMs
-		100: players
-		101: playersAmnt
-		102: rejoinsAmnt
-		103: runs
-		104: avgRunTime
-		105: totalRunTime
+		1: hostPlayer
+		2: time
+		3: timeFormatted
+		4: hr
+		5: remainingSec
+		6: min
+		7: minText
+		8: sec
+		9: secText
+		10: hundredths
+		11: hundredthsText
+		12: players
+		13: playersAmnt
+		14: rejoinsAmnt
+		15: runs
+		16: totalRunTime
+		17: totalRunTimeFormatted
+		18: avgRunTime
+		19: avgRunTimeFormatted
+		20: lobbySpawn
+		21: lobbyText
+		22: lobbyEffects
+		23: lobbyIcons
+		24: hud
+		25: cpLocations
+		26: cpBounceRings
+		27: cpIsGrappleAllowed
+		28: timeToBeat
+		29: timeToBeatMs
 
 	player:
 		0: isLoading
@@ -105,9 +118,11 @@ variables
 		25: freemodeHud
 		26: runCompletionText
 		27: runCompletionTextActive
-		28: ctrlsHud
-		29: ctrlsHudActive
-		30: cpCtrlsInputLocked
+		28: statToFormat
+		29: statFormatted
+		30: ctrlsHud
+		31: ctrlsHudActive
+		32: cpCtrlsInputLocked
 		90: index
 }
 
@@ -128,8 +143,10 @@ subroutines
 	13: unloadFreemodeHud
 	14: loadRunCompletionText
 	15: unloadRunCompletionText
-	16: loadCtrlsHud
-	17: unloadCtrlsHud
+	16: updateStats
+	17: formatStats
+	18: loadCtrlsHud
+	19: unloadCtrlsHud
 }
 
 rule("0: Contact & Course Info")
@@ -164,32 +181,9 @@ rule("1.1: Settings")
 
 	actions
 	{
+		Disable Inspector Recording;
 		Global.settings = Array();
 		Global.settings[0] = Workshop Setting Toggle(Custom String("Settings"), Custom String("Player & Run Stats"), False, 0);
-	}
-}
-
-rule("1.1: Initialize Match")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		Disable Inspector Recording;
-		Disable Built-In Game Mode Announcer;
-		Disable Built-In Game Mode Completion;
-		Set Match Time(0);
-		Global.lobbyText = Array();
-		Global.lobbyEffects = Array();
-		Global.lobbyIcons = Array();
-		Global.players = Array();
-		Global.playersAmnt = 0;
-		Global.runs = 0;
-		Global.totalRunTime = 0;
-		Global.avgRunTime = 0;
 	}
 }
 
@@ -245,7 +239,92 @@ rule("1.2: Checkpoints (CPs)")
 	}
 }
 
-rule("2.1: Player Joins")
+rule("2: Initialize Match")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Chase Global Variable At Rate(time, 100000000, 1, Destination and Rate);
+		Global.timeFormatted = Custom String("00:00");
+		Disable Built-In Game Mode Announcer;
+		Disable Built-In Game Mode Completion;
+		Set Match Time(0);
+		Global.lobbyText = Array();
+		Global.lobbyEffects = Array();
+		Global.lobbyIcons = Array();
+		Global.players = Array();
+		Global.playersAmnt = 0;
+		Global.runs = 0;
+		Global.avgRunTime = 0;
+		Global.avgRunTimeFormatted = Custom String("00:00.00");
+		Global.totalRunTime = 0;
+		Global.totalRunTimeFormatted = Custom String("00:00.00");
+	}
+}
+
+rule("2.1: Update Elapsed Time Formatting")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.hr = Round To Integer(Global.time / 3600, Down);
+		Global.remainingSec = Global.time % 3600;
+		Global.min = Round To Integer(Global.remainingSec / 60, Down);
+		Global.sec = Round To Integer(Global.remainingSec % 60, Down);
+		If(Global.sec < 10);
+			Global.secText = Custom String("0{0}", Global.sec);
+		Else;
+			Global.secText = Custom String("{0}", Global.sec);
+		End;
+		If(Global.min < 10);
+			Global.minText = Custom String("0{0}", Global.min);
+		Else;
+			Global.minText = Custom String("{0}", Global.min);
+		End;
+		If(Global.hr > 0);
+			Global.timeFormatted = Custom String("{0}:{1}:{2}", Global.hr, Global.minText, Global.secText);
+		Else If(Global.min > 0);
+			Global.timeFormatted = Custom String("{0}:{1}", Global.min, Global.secText);
+		Else;
+			Global.timeFormatted = Custom String("{0}", Global.sec);
+		End;
+		Wait(0.030, Ignore Condition);
+		Loop;
+	}
+}
+
+rule("3.1.1: Player Joins")
+{
+	event
+	{
+		Player Joined Match;
+		All;
+		All;
+	}
+
+	actions
+	{
+		If(Array Contains(Global.players, Custom String("{0}", Event Player)) == False);
+			If(Global.hostPlayer == Null);
+				Global.hostPlayer = Custom String("{0}", Event Player);
+			End;
+			Global.playersAmnt += 1;
+			Global.players[Count Of(Global.players)] = Custom String("{0}", Event Player);
+		Else;
+			Global.rejoinsAmnt += 1;
+		End;
+	}
+}
+
+rule("3.1.2: Player Picks Hero")
 {
 	event
 	{
@@ -262,12 +341,6 @@ rule("2.1: Player Joins")
 	actions
 	{
 		Event Player.isLoading = True;
-		If(Array Contains(Global.players, Custom String("{0}", Event Player)) == False);
-			Global.playersAmnt += 1;
-			Global.players[Count Of(Global.players)] = Custom String("{0}", Event Player);
-		Else;
-			Global.rejoinsAmnt += 1;
-		End;
 		Wait(0.016, Ignore Condition);
 		Disable Game Mode HUD(Event Player);
 		Disable Kill Feed(Event Player);
@@ -283,30 +356,34 @@ rule("2.1: Player Joins")
 	}
 }
 
-rule("2.2: Load Stats")
+rule("3.2: Load Stats")
 {
 	event
 	{
-		Ongoing - Global;
+		Ongoing - Each Player;
+		All;
+		All;
 	}
 
 	conditions
 	{
 		Global.settings[0] == True;
+		Global.hostPlayer == Custom String("{0}", Event Player);
 	}
 
 	actions
 	{
-		Create In-World Text(Host Player, Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
-		Create In-World Text(Host Player, Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Host Player, Custom String("Rejoins: {0}", Global.rejoinsAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Host Player, Custom String("Runs: {0}", Global.runs), Vector(101.52, 2.150, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Host Player, Custom String("Avg Run Time: {0}", Global.avgRunTime), Vector(101.52, 1.600, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Host Player, Custom String("Total Run Time: {0}", Global.totalRunTime), Vector(101.52, 1.050, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Elapsed Time: {0}", Global.timeFormatted), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Rejoins: {0}", Global.rejoinsAmnt), Vector(101.52, 2.150, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Legit Runs: {0}", Global.runs), Vector(101.52, 1.600, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Total Run Time: {0}", Global.totalRunTimeFormatted), Vector(101.52, 1.050, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Avg Run Time: {0}", Global.avgRunTimeFormatted), Vector(101.52, 0.500, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 	}
 }
 
-rule("2.3.1: Load Nameplate")
+rule("3.3: Load Nameplate")
 {
 	event
 	{
@@ -332,7 +409,7 @@ rule("2.3.1: Load Nameplate")
 	}
 }
 
-rule("3.1.1: Load Lobby")
+rule("4.1.1: Load Lobby")
 {
 	event
 	{
@@ -351,7 +428,7 @@ rule("3.1.1: Load Lobby")
 	}
 }
 
-rule("3.1.1.1: Lobby Boundary")
+rule("4.1.1.1: Lobby Boundary")
 {
 	event
 	{
@@ -373,7 +450,7 @@ rule("3.1.1.1: Lobby Boundary")
 	}
 }
 
-rule("3.2: Load Welcome Area")
+rule("4.2: Load Welcome Area")
 {
 	event
 	{
@@ -388,7 +465,7 @@ rule("3.2: Load Welcome Area")
 	}
 }
 
-rule("3.3: Load Leaderboard Area")
+rule("4.3: Load Leaderboard Area")
 {
 	event
 	{
@@ -443,7 +520,7 @@ rule("3.3: Load Leaderboard Area")
 	}
 }
 
-rule("3.4.1: Load Start Run Area")
+rule("4.4.1: Load Start Run Area")
 {
 	event
 	{
@@ -464,7 +541,7 @@ rule("3.4.1: Load Start Run Area")
 	}
 }
 
-rule("3.4.2: Start Run Circle Entry")
+rule("4.4.2: Start Run Circle Entry")
 {
 	event
 	{
@@ -492,7 +569,7 @@ rule("3.4.2: Start Run Circle Entry")
 	}
 }
 
-rule("3.5.1: Load Resume Run Area")
+rule("4.5.1: Load Resume Run Area")
 {
 	event
 	{
@@ -513,7 +590,7 @@ rule("3.5.1: Load Resume Run Area")
 	}
 }
 
-rule("3.5.2: Resume Run Circle Entry")
+rule("4.5.2: Resume Run Circle Entry")
 {
 	event
 	{
@@ -549,7 +626,7 @@ rule("3.5.2: Resume Run Circle Entry")
 	}
 }
 
-rule("4: Load CP")
+rule("5: Load CP")
 {
 	event
 	{
@@ -568,7 +645,7 @@ rule("4: Load CP")
 	}
 }
 
-rule("4.1: Load CP Data")
+rule("5.1: Load CP Data")
 {
 	event
 	{
@@ -593,7 +670,7 @@ rule("4.1: Load CP Data")
 	}
 }
 
-rule("4.2.1: Load CP Objects")
+rule("5.2.1: Load CP Objects")
 {
 	event
 	{
@@ -622,7 +699,7 @@ rule("4.2.1: Load CP Objects")
 	}
 }
 
-rule("4.2.2: Unload CP Objects")
+rule("5.2.2: Unload CP Objects")
 {
 	event
 	{
@@ -641,7 +718,7 @@ rule("4.2.2: Unload CP Objects")
 	}
 }
 
-rule("5.1.1: Load Global Run HUD")
+rule("6.1.1: Load Global Run HUD")
 {
 	event
 	{
@@ -708,7 +785,7 @@ rule("5.1.1: Load Global Run HUD")
 	}
 }
 
-rule("5.1.2: Load Local Run HUD")
+rule("6.1.2: Load Local Run HUD")
 {
 	event
 	{
@@ -734,7 +811,7 @@ rule("5.1.2: Load Local Run HUD")
 	}
 }
 
-rule("5.2: Initialize New Run")
+rule("6.2: Initialize New Run")
 {
 	event
 	{
@@ -759,7 +836,7 @@ rule("5.2: Initialize New Run")
 	}
 }
 
-rule("5.3: Unload Run HUD")
+rule("6.3: Unload Run HUD")
 {
 	event
 	{
@@ -775,7 +852,7 @@ rule("5.3: Unload Run HUD")
 	}
 }
 
-rule("6: Start/Resume Run")
+rule("7: Start/Resume Run")
 {
 	event
 	{
@@ -801,7 +878,7 @@ rule("6: Start/Resume Run")
 	}
 }
 
-rule("6.1: Update Timer")
+rule("7.1: Update Timer")
 {
 	event
 	{
@@ -825,7 +902,7 @@ rule("6.1: Update Timer")
 	}
 }
 
-rule("6.2: Format Run Time String")
+rule("7.2: Format Run Time String")
 {
 	event
 	{
@@ -866,7 +943,7 @@ rule("6.2: Format Run Time String")
 	}
 }
 
-rule("6.3: Grapple Use")
+rule("7.3: Grapple Use")
 {
 	event
 	{
@@ -895,7 +972,7 @@ rule("6.3: Grapple Use")
 	}
 }
 
-rule("6.4: Bounce CPs: Reset Useless Grapple")
+rule("7.4: Bounce CPs: Reset Useless Grapple")
 {
 	event
 	{
@@ -922,7 +999,7 @@ rule("6.4: Bounce CPs: Reset Useless Grapple")
 	}
 }
 
-rule("6.5: Jump Used")
+rule("7.5.1: Jump Used")
 {
 	event
 	{
@@ -948,7 +1025,7 @@ rule("6.5: Jump Used")
 	}
 }
 
-rule("6.5: Bhop Used")
+rule("7.5.2.1: Bhop Used")
 {
 	event
 	{
@@ -983,37 +1060,7 @@ rule("6.5: Bhop Used")
 	}
 }
 
-rule("6.6: CP Mistake: Already Bhopped")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
-		Is Jumping(Event Player) == True;
-		Event Player.cpData[8] == True;
-		Event Player.runIsPaused == False;
-		Event Player.isInFreemode == False;
-		Has Status(Event Player, Rooted) == False;
-		Event Player.isInLobby == False;
-		Event Player.isLoading == False;
-	}
-
-	actions
-	{
-		Event Player.runMistakes += 1;
-		Call Subroutine(cpResetPlayer);
-	}
-}
-
-rule("6.7: Reset Useless Jump/Bhop")
+rule("7.5.3: Reset Useless Jump/Bhop")
 {
 	event
 	{
@@ -1038,7 +1085,7 @@ rule("6.7: Reset Useless Jump/Bhop")
 	}
 }
 
-rule("7.1: CP Mistake")
+rule("8.1: CP Mistake: Missed CP")
 {
 	event
 	{
@@ -1069,7 +1116,38 @@ rule("7.1: CP Mistake")
 	}
 }
 
-rule("7.2: Environment Death")
+
+rule("8.2: CP Mistake: Already Bhopped")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Is Jumping(Event Player) == True;
+		Event Player.cpData[8] == True;
+		Event Player.runIsPaused == False;
+		Event Player.isInFreemode == False;
+		Has Status(Event Player, Rooted) == False;
+		Event Player.isInLobby == False;
+		Event Player.isLoading == False;
+	}
+
+	actions
+	{
+		Event Player.runMistakes += 1;
+		Call Subroutine(cpResetPlayer);
+	}
+}
+
+rule("8.3: CP Mistake: Environment Death")
 {
 	event
 	{
@@ -1090,7 +1168,7 @@ rule("7.2: Environment Death")
 	}
 }
 
-rule("8.1: Bounce CP Mistake: No Grapple")
+rule("9.1: Bounce CP Mistake: No Grapple")
 {
 	event
 	{
@@ -1117,7 +1195,7 @@ rule("8.1: Bounce CP Mistake: No Grapple")
 	}
 }
 
-rule("8.2: Bounce CP Mistake: Too Slow")
+rule("9.2: Bounce CP Mistake: Too Slow")
 {
 	event
 	{
@@ -1146,7 +1224,7 @@ rule("8.2: Bounce CP Mistake: Too Slow")
 	}
 }
 
-rule("8.3: Bounce CP: Bounce Used Properly")
+rule("9.3: Bounce CP: Bounce Used Properly")
 {
 	event
 	{
@@ -1172,7 +1250,7 @@ rule("8.3: Bounce CP: Bounce Used Properly")
 	}
 }
 
-rule("8.4: Bounce CP Mistake: Improperly Airborne")
+rule("9.4: Bounce CP Mistake: Improperly Airborne")
 {
 	event
 	{
@@ -1201,7 +1279,7 @@ rule("8.4: Bounce CP Mistake: Improperly Airborne")
 	}
 }
 
-rule("9: CP Reset Player")
+rule("10: CP Reset Player")
 {
 	event
 	{
@@ -1232,7 +1310,7 @@ rule("9: CP Reset Player")
 	}
 }
 
-rule("10: CP Completed (No Skipping)")
+rule("11: CP Completed (No Skipping)")
 {
 	event
 	{
@@ -1262,7 +1340,7 @@ rule("10: CP Completed (No Skipping)")
 	}
 }
 
-rule("10.1: Final CP Reached")
+rule("11.1: Final CP Reached")
 {
 	event
 	{
@@ -1293,56 +1371,43 @@ rule("10.1: Final CP Reached")
 			Call Subroutine(unloadCtrlsHud);
 			Call Subroutine(loadCtrlsHud);
 		End;
+		If(Event Player.runIsPaused == False);
+			Stop Chasing Player Variable(Event Player, runTime);
+			Event Player.runIsPaused = True;
+			If(Event Player.runIsLegit == True);
+				Call Subroutine(updateStats);
+			End;
+		End;
 	}
 }
 
-rule("10.2: Final CP Completed (No Skipping)")
+rule("11.1.1: Update Lobby Stats")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.runCurrentCp == 100;
-		Event Player.runIsPaused == False;
-	}
-
-	actions
-	{
-		Stop Chasing Player Variable(Event Player, runTime);
-		Event Player.runIsPaused = True;
-	}
-}
-
-rule("10.3: Final CP Completed (Run Without Freemode, Skipping, or Going Back)")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.runCurrentCp == 100;
-		Event Player.runIsPaused == False;
-		Event Player.runIsLegit == True;
+		Subroutine;
+		updateStats;
 	}
 
 	actions
 	{
 		Global.runs += 1;
 		Global.totalRunTime += Event Player.runTime;
-		Global.avgRunTime = Global.totalRunTime / Global.runs;
+		Event Player.statToFormat = Global.totalRunTime;
+		Call Subroutine(formatStats);
+		Global.totalRunTimeFormatted = Event Player.statFormatted;
+		If (Global.runs == 0);
+			Global.avgRunTime = Global.totalRunTimeFormatted;
+		Else;
+			Global.avgRunTime = Global.totalRunTime / Global.runs;
+			Event Player.statToFormat = Global.avgRunTime;
+			Call Subroutine(formatStats);
+			Global.avgRunTimeFormatted = Event Player.statFormatted;
+		End;
 	}
 }
 
-rule("10.4.1: Load Run Completion Text")
+rule("11.1.2: Load Run Completion Text")
 {
 	event
 	{
@@ -1386,7 +1451,7 @@ rule("10.4.1: Load Run Completion Text")
 	}
 }
 
-rule("10.4.2: Auto Unload Run Completion Text")
+rule("11.1.3: Auto Unload Run Completion Text")
 {
 	event
 	{
@@ -1408,7 +1473,7 @@ rule("10.4.2: Auto Unload Run Completion Text")
 	}
 }
 
-rule("10.4.3.3: Unload Run Completion Text")
+rule("11.1.4: Unload Run Completion Text")
 {
 	event
 	{
@@ -1424,7 +1489,49 @@ rule("10.4.3.3: Unload Run Completion Text")
 	}
 }
 
-rule("11.1.1: Controls HUD Input")
+rule("11.1.5: Format Stats")
+{
+	event
+	{
+		Subroutine;
+		formatStats;
+	}
+
+	actions
+	{
+		Event Player.hr = Round To Integer(Event Player.statToFormat / 3600, Down);
+		Event Player.remainingSec = Event Player.statToFormat % 3600;
+		Event Player.min = Round To Integer(Event Player.remainingSec / 60, Down);
+		Event Player.sec = Round To Integer(Event Player.remainingSec % 60, Down);
+		Event Player.hundredths = Round To Integer((Event Player.statToFormat - Round To Integer(Event Player.statToFormat, Down)) * 100, Down);
+		If(Event Player.sec < 10);
+			Event Player.secText = Custom String("0{0}", Event Player.sec);
+		Else;
+			Event Player.secText = Custom String("{0}", Event Player.sec);
+		End;
+		If(Event Player.hundredths < 10);
+			Event Player.hundredthsText = Custom String("0{0}", Event Player.hundredths);
+		Else;
+			Event Player.hundredthsText = Custom String("{0}", Event Player.hundredths);
+		End;
+		If(Event Player.min < 10);
+			Event Player.minText = Custom String("0{0}", Event Player.min);
+		Else;
+			Event Player.minText = Custom String("{0}", Event Player.min);
+		End;
+		If(Event Player.hr > 0);
+			Event Player.statFormatted = Custom String("{0}:{1}:{2}", Event Player.hr, Event Player.minText, Custom String("{0}.{1}",
+				Event Player.secText, Event Player.hundredthsText));
+		Else If(Event Player.min > 0);
+			Event Player.statFormatted = Custom String("{0}:{1}.{2}", Event Player.min, Event Player.secText, Event Player.hundredthsText);
+		Else;
+			Event Player.statFormatted = Custom String("{0}.{1}", Event Player.sec, Event Player.hundredthsText);
+		End;
+
+	}
+}
+
+rule("12.1.1: Controls HUD Input")
 {
 	event
 	{
@@ -1452,7 +1559,7 @@ rule("11.1.1: Controls HUD Input")
 	}
 }
 
-rule("11.1.2: Load Controls HUD")
+rule("12.1.2: Load Controls HUD")
 {
 	event
 	{
@@ -1491,7 +1598,7 @@ rule("11.1.2: Load Controls HUD")
 	}
 }
 
-rule("11.1.3: Auto Unload Controls HUD")
+rule("12.1.3: Auto Unload Controls HUD")
 {
 	event
 	{
@@ -1513,7 +1620,7 @@ rule("11.1.3: Auto Unload Controls HUD")
 	}
 }
 
-rule("11.1.4: Unload Controls HUD")
+rule("12.1.4: Unload Controls HUD")
 {
 	event
 	{
@@ -1529,7 +1636,7 @@ rule("11.1.4: Unload Controls HUD")
 	}
 }
 
-rule("11.2: Go Back CP Input")
+rule("12.2: Go Back CP Input")
 {
 	event
 	{
@@ -1588,7 +1695,7 @@ rule("11.2: Go Back CP Input")
 	}
 }
 
-rule("11.3: Skip CP Input")
+rule("12.3: Skip CP Input")
 {
 	event
 	{
@@ -1641,7 +1748,7 @@ rule("11.3: Skip CP Input")
 	}
 }
 
-rule("11.4: Restart Input")
+rule("12.4: Restart Input")
 {
 	event
 	{
@@ -1670,7 +1777,7 @@ rule("11.4: Restart Input")
 	}
 }
 
-rule("11.5: Freemode Input")
+rule("12.5: Freemode Input")
 {
 	event
 	{
@@ -1712,7 +1819,7 @@ rule("11.5: Freemode Input")
 	}
 }
 
-rule("11.5.1: Load Freemode HUD")
+rule("12.5.1: Load Freemode HUD")
 {
 	event
 	{
@@ -1750,7 +1857,7 @@ rule("11.5.1: Load Freemode HUD")
 	}
 }
 
-rule("11.5.2: Unload Freemode HUD")
+rule("12.5.2: Unload Freemode HUD")
 {
 	event
 	{
@@ -1766,7 +1873,7 @@ rule("11.5.2: Unload Freemode HUD")
 	}
 }
 
-rule("11.6: Lobby Input")
+rule("12.6: Lobby Input")
 {
 	event
 	{
