@@ -498,15 +498,15 @@ rule("4.3: Load Leaderboard Area")
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[7] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"6. PETUNCA ({0}9:58.47, {1}65)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 0.500, 68.085), 0.850, Do Not Clip,
+			"6. CHESSISFUN ({0}7:54.96, {1}85)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 0.500, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[8] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"7. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.050, 68.085), 0.850, Do Not Clip,
+			"7. PETUNCA ({0}9:58.47, {1}65)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.050, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[9] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"8. --- ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.600, 68.085), 0.850, Do Not Clip,
+			"8. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.600, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Global.lobbyText[10] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
