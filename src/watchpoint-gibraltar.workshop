@@ -124,6 +124,7 @@ variables
 		31: ctrlsHudActive
 		32: cpCtrlsInputLocked
 		90: index
+		100: testRing_disabled
 }
 
 subroutines
@@ -181,9 +182,35 @@ rule("1.1: Settings")
 
 	actions
 	{
-		Disable Inspector Recording;
+		disabled Disable Inspector Recording;
 		Global.settings = Array();
 		Global.settings[0] = Workshop Setting Toggle(Custom String("Settings"), Custom String("Player & Run Stats"), False, 0);
+	}
+}
+
+rule("Current & CP Location")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.testRing_disabled);
+		"[disabled]"
+		Log To Inspector(Custom String("CP: {0}", Event Player.cpData[0]));
+		Log To Inspector(Custom String("Current: {0}", Position Of(Event Player)));
+		Create Effect(Event Player, Ring, Color(Red), Position Of(Event Player), 2, None);
+		Event Player.testRing_disabled = Last Created Entity;
 	}
 }
 
@@ -207,10 +234,10 @@ rule("1.2: Checkpoints (CPs)")
 			-36.387), Vector(82.606, 3, -33.352), Vector(86.119, 3.010, -29.821), Vector(77.563, 6, 6.752), Vector(101.210, -0.940,
 			40.440), Vector(91.745, 6, 9.719), Vector(83.100, 1, 56.160), Vector(81.151, 2.845, 28.890), Vector(71.210, 1, 18.590), Vector(
 			77.622, 6.010, 6.080), Vector(75.526, 10, 7.506), Vector(69.811, 9.010, 12.958), Vector(66.620, 8.320, 26.390), Vector(98.874,
-			2.745, -16.184), Vector(67.245, -2.905, -13.682), Vector(64.361, -2.993, -16.969), Vector(65.850, 13.140, -38.910), Vector(
+			2.745, -16.184), Vector(67.245, -2.905, -13.682), Vector(64.54, -3.00, -17.90), Vector(65.850, 13.140, -38.910), Vector(
 			53.419, 8.734, -38.662), Vector(36.260, -0.260, -47.190), Vector(45.993, 3, -36.446), Vector(57.496, 3, -54.121), Vector(
 			47.490, 6, -67.970), Vector(32.380, -5.150, -57.330), Vector(34.290, 1.190, -53.240), Vector(40.600, -5.010, -51.200), Vector(
-			43.110, -0.510, -49.171), Vector(65.13, -3.14, -26.44), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
+			43.110, -0.510, -49.171), Vector(65.46, -3.14, -26.55), Vector(62.097, 2.028, -22.853), Vector(73.600, -3.140, -38.120),
 			Vector(74.748, 2.107, -34.640), Vector(50.720, 8.720, -47.450), Vector(45.49, 3.00, -36.66), Vector(47.220, 6, -67.500), Vector(
 			39.460, -5.020, -75.880), Vector(14.081, 3.045, -70.069), Vector(27.170, 0, -104.230), Vector(29.240, 4, -106.270), Vector(
 			42.742, -6.137, -119.077), Vector(36.423, 0, -112.203), Vector(33.015, 6.561, -109.607), Vector(38.880, 0, -99.490), Vector(
@@ -1116,7 +1143,6 @@ rule("8.1: CP Mistake: Missed CP")
 	}
 }
 
-
 rule("8.2: CP Mistake: Already Bhopped")
 {
 	event
@@ -1322,7 +1348,7 @@ rule("11: CP Completed (No Skipping)")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) < 2.200;
-		(Is On Ground(Event Player) == True || Altitude Of(Event Player) <= 0.1) == True;
+		(Is On Ground(Event Player) == True || Altitude Of(Event Player) <= 0.01) == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsPaused == False;
 		Event Player.isInFreemode == False;
