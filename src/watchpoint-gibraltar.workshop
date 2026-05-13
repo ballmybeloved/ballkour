@@ -552,7 +552,7 @@ rule("4.4.2: Start Run Circle Entry")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Vector(103.805, -1.990, 75.480)) < 2;
+		Distance Between(Position Of(Event Player), Vector(103.805, -1.990, 75.480)) <= 2;
 		Event Player.isInLobby == True;
 		Event Player.isLoading == False;
 	}
@@ -601,7 +601,7 @@ rule("4.5.2: Resume Run Circle Entry")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Vector(101.360, -1.990, 73.035)) < 2;
+		Distance Between(Position Of(Event Player), Vector(101.360, -1.990, 73.035)) <= 2;
 		Event Player.isInLobby == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsFinished == False;
@@ -865,7 +865,7 @@ rule("7: Start/Resume Run")
 	conditions
 	{
 		Event Player.runIsPaused == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
 		Event Player.isInLobby == False;
@@ -990,7 +990,7 @@ rule("7.4: Bounce CPs: Reset Useless Grapple")
 	actions
 	{
 		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 100000000);
-		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= 2.200);
 			Event Player.cpData[5] = False;
 			Event Player.cpData[6] = False;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
@@ -1039,9 +1039,9 @@ rule("7.5.2: Bhop Used")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) >= 2.200;
 		Is Jumping(Event Player) == True;
 		Event Player.runIsPaused == False;
 		Event Player.isInFreemode == False;
@@ -1075,13 +1075,13 @@ rule("7.5.3: Reset Useless Grapple/Jump/Bhop")
 	conditions
 	{
 		(Event Player.cpData[6] || Event Player.cpData[8] || Event Player.cpData[9]) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= 2.200;
 	}
 
 	actions
 	{
 		Wait Until(Is On Ground(Event Player) == True, 100000000);
-		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) < 2.200);
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= 2.200);
 			Event Player.cpData[2] = False;
 			Event Player.cpData[6] = False;
 			Set Secondary Fire Enabled(Event Player, True);
@@ -1102,9 +1102,9 @@ rule("8.1: CP Mistake: Missed CP")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) >= 2.200;
 		Is On Ground(Event Player) == True;
 		Event Player.runIsPaused == False;
 		Event Player.isInFreemode == False;
@@ -1133,9 +1133,9 @@ rule("8.2: CP Mistake: Already Bhopped")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		(Event Player.cpData[1] == Null || Event Player.cpData[2] == True || Event Player.cpData[5] == False) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) >= 2.200;
 		Is Jumping(Event Player) == True;
 		Event Player.cpData[9] == True;
 		Event Player.runIsPaused == False;
@@ -1185,7 +1185,7 @@ rule("9.1: Bounce CP Mistake: No Grapple")
 	conditions
 	{
 		Event Player.cpData[1] != False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		Event Player.cpData[5] == False;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
@@ -1212,7 +1212,7 @@ rule("9.2: Bounce CP Mistake: Too Slow")
 	conditions
 	{
 		Event Player.cpData[1] != False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
 		Event Player.cpData[2] == False;
 		Event Player.cpData[6] == True;
 		Speed Of(Event Player) <= 10;
@@ -1241,8 +1241,8 @@ rule("9.3: Bounce CP: Bounce Used Properly")
 	conditions
 	{
 		Event Player.cpData[1] != False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[1]) < 2.200;
-		(Is Jumping(Event Player) || Altitude Of(Event Player) > 1) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[1]) <= 2.200;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) >= 1) == True;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
 		Event Player.isInLobby == False;
@@ -1267,10 +1267,10 @@ rule("9.4: Bounce CP Mistake: Improperly Airborne")
 	conditions
 	{
 		Event Player.cpData[1] != False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200;
-		(Is Jumping(Event Player) || Altitude Of(Event Player) > 1) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) >= 1) == True;
 		Event Player.cpData[2] == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[1]) > 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[1]) >= 2.200;
 		Event Player.isInFreemode == False;
 		Has Status(Event Player, Rooted) == False;
 		Event Player.isInLobby == False;
@@ -1327,7 +1327,7 @@ rule("11: CP Completed (No Skipping)")
 
 	conditions
 	{
-		Distance Between(Position Of(Event Player), Event Player.cpData[3]) < 2.200;
+		Distance Between(Position Of(Event Player), Event Player.cpData[3]) <= 2.200;
 		(Is On Ground(Event Player) || Event Player.cpData[7]) == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsPaused == False;
@@ -1669,7 +1669,7 @@ rule("12.2: Go Back CP Input")
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200);
 				Event Player.runMistakes += 1;
 			End;
 		End;
@@ -1728,7 +1728,7 @@ rule("12.3: Skip CP Input")
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200);
 				Event Player.runMistakes += 1;
 			End;
 		End;
@@ -1806,7 +1806,7 @@ rule("12.5: Freemode Input")
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			Event Player.runIsLegit = False;
-			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200);
 				Event Player.runMistakes += 1;
 			End;
 			Set Secondary Fire Enabled(Event Player, True);
@@ -1816,7 +1816,7 @@ rule("12.5: Freemode Input")
 		Else;
 			Event Player.isInFreemode = False;
 			Call Subroutine(unloadFreemodeHud);
-			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) > 2.200);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= 2.200);
 				Call Subroutine(cpResetPlayer);
 			End;
 			Set Secondary Fire Enabled(Event Player, Event Player.cpData[4]);
