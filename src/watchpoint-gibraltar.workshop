@@ -1321,7 +1321,7 @@ rule("11: CP Completed (No Skipping)")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) < 2.200;
-		Ray Cast Hit Position(Position Of(Event Player), Vector(0, 0, 0), Null, Event Player, True) == True;
+		(Is On Ground(Event Player) || Is Jumping(Event Player)) == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsPaused == False;
 		Event Player.isInFreemode == False;
