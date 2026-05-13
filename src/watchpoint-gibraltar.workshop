@@ -1321,7 +1321,7 @@ rule("11: CP Completed (No Skipping)")
 	conditions
 	{
 		Distance Between(Position Of(Event Player), Event Player.cpData[3]) < 2.200;
-		(Is On Ground(Event Player) == True || Altitude Of(Event Player) <= 0.01) == True;
+		(Is On Ground(Event Player) || Is Jumping(Event Player)) == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsPaused == False;
 		Event Player.isInFreemode == False;
