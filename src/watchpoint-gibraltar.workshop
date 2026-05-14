@@ -1082,8 +1082,8 @@ rule("7.5.3: Reset Useless Grapple/Jump/Bhop")
 		Wait Until(Is On Ground(Event Player) == True, 100000000);
 		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= 2.200);
 			Event Player.cpData[2] = False;
+			Set Secondary Fire Enabled(Event Player, Event Player.cpData[4]);
 			Event Player.cpData[6] = False;
-			Set Secondary Fire Enabled(Event Player, True);
 			Event Player.cpData[8] = False;
 			Event Player.cpData[9] = False;
 		End;
