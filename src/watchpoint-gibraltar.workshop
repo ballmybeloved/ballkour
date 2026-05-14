@@ -313,7 +313,7 @@ rule("3.1.1: Player Joins")
 	actions
 	{
 		If(Array Contains(Global.players, Custom String("{0}", Event Player)) == False);
-			If(Global.hostPlayer == Null);
+			If(Event Player == Host Player);
 				Global.hostPlayer = Custom String("{0}", Event Player);
 			End;
 			Global.playersAmnt += 1;
@@ -368,18 +368,17 @@ rule("3.2: Load Stats")
 	conditions
 	{
 		Global.settings[0] == True;
-		Global.hostPlayer == Custom String("{0}", Event Player);
 	}
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Elapsed Time: {0}", Global.timeFormatted), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Rejoins: {0}", Global.rejoinsAmnt), Vector(101.52, 2.150, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Legit Runs: {0}", Global.runs), Vector(101.52, 1.600, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Total Run Time: {0}", Global.totalRunTimeFormatted), Vector(101.52, 1.050, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Avg Run Time: {0}", Global.avgRunTimeFormatted), Vector(101.52, 0.500, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Elapsed Time: {0}", Global.timeFormatted), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Rejoins: {0}", Global.rejoinsAmnt), Vector(101.52, 2.150, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Legit Runs: {0}", Global.runs), Vector(101.52, 1.600, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Total Run Time: {0}", Global.totalRunTimeFormatted), Vector(101.52, 1.050, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Avg Run Time: {0}", Global.avgRunTimeFormatted), Vector(101.52, 0.500, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 	}
 }
 
