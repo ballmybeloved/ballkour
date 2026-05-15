@@ -79,15 +79,11 @@ variables
 		18: avgRunTime
 		19: avgRunTimeFormatted
 		20: lobbySpawn
-		21: lobbyText
-		22: lobbyEffects
-		23: lobbyIcons
-		24: hud
-		25: cpLocations
-		26: cpBounceRings
-		27: cpIsGrappleAllowed
-		28: timeToBeat
-		29: timeToBeatMs
+		21: cpLocations
+		22: cpBounceRings
+		23: cpIsGrappleAllowed
+		24: timeToBeat
+		25: timeToBeatMs
 
 	player:
 		0: isLoading
@@ -253,9 +249,6 @@ rule("2: Initialize Match")
 		Disable Built-In Game Mode Announcer;
 		Disable Built-In Game Mode Completion;
 		Set Match Time(0);
-		Global.lobbyText = Array();
-		Global.lobbyEffects = Array();
-		Global.lobbyIcons = Array();
 		Global.players = Array();
 		Global.playersAmnt = 0;
 		Global.runs = 0;
@@ -460,7 +453,6 @@ rule("4.2: Load Welcome Area")
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"Welcome to Ballkour!"), Vector(103.325, 1.800, 75.955), 1.500, Do Not Clip, Visible To, Color(Orange), Default Visibility);
-		Global.lobbyText[0] = Last Text ID;
 	}
 }
 
@@ -475,47 +467,36 @@ rule("4.3: Load Leaderboard Area")
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Leaderboard"),
 			Vector(98.245, 4, 68.085), 1.200, Do Not Clip, Visible To, Color(Yellow), Default Visibility);
-		Global.lobbyText[2] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"1. BACKLINEREIN ({0}4:34.15, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 3.250, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[3] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"2. BALLMYBLOVED ({0}4:36.32, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.70, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[4] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"3. DVD ({0}5:02.50, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[5] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"4. GAMINGCHAIR ({0}5:08.37, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.600, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[6] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"5. COLDSKIN ({0}5:14.52, {1}20)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.050, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[7] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"6. CHESSISFUN ({0}7:54.96, {1}85)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 0.500, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[8] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"7. PETUNCA ({0}9:58.47, {1}65)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.050, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[9] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"8. KINGO ({0}13:11.17, {1}174)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -0.600, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[10] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"9. APPLEJACK ({0}14:38.48, {1}152)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[11] = Last Text ID;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"10. --- ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, -1.700, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
-		Global.lobbyText[12] = Last Text ID;
 	}
 }
 
@@ -530,13 +511,10 @@ rule("4.4.1: Load Start Run Area")
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"),
 			Vector(103.805, -0.300, 75.480), 1, Do Not Clip, Visible To, Color(Turquoise), Default Visibility);
-		Global.lobbyText[13] = Last Text ID;
 		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Turquoise), Vector(
 			103.805, -1.990, 75.480), 1.600, Visible To);
-		Global.lobbyEffects[0] = Last Created Entity;
 		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Vector(103.805, -2.400, 75.480), Flag,
 			Visible To, Color(Green), True);
-		Global.lobbyIcons[0] = Last Created Entity;
 	}
 }
 
@@ -579,13 +557,10 @@ rule("4.5.1: Load Resume Run Area")
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"),
 			Vector(101.360, -0.300, 73.035), 1, Do Not Clip, Visible To, Color(Blue), Default Visibility);
-		Global.lobbyText[14] = Last Text ID;
 		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Blue), Vector(101.360,
 			-1.990, 73.035), 1.600, Visible To);
-		Global.lobbyEffects[1] = Last Created Entity;
 		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Vector(101.360, -2.400, 73.035),
 			Recycle, Visible To, Color(Purple), True);
-		Global.lobbyIcons[1] = Last Created Entity;
 	}
 }
 
@@ -727,61 +702,42 @@ rule("6.1.1: Load Global Run HUD")
 
 	actions
 	{
-		Global.hud = Array();
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 0, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[0] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 1, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[1] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 2, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[2] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 3, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[3] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Left, 4, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[4] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("ballkour.com"), Top, 0, Null, Null, Custom Color(165, 42, 42,
 			255), Visible To, Default Visibility);
-		Global.hud[5] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 0, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[6] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 1, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[7] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 2, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[8] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 3, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[9] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 4, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[10] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 5, Null, Null, Color(White), Visible To,
 			Default Visibility);
-		Global.hud[11] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 2, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[12] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 3, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[13] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 4, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[14] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 6, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[15] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 10, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[16] = Last Text ID;
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 15, Null, Color(White), Null, Visible To,
 			Default Visibility);
-		Global.hud[17] = Last Text ID;
 	}
 }
 
@@ -1558,13 +1514,14 @@ rule("12.1.1: Controls HUD Input")
 		Disallow Button(Event Player, Button(Secondary Fire));
 		Disallow Button(Event Player, Button(Ability 2));
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Event Player.isInLobby == True, 100000000);
+		Call Subroutine(unloadCtrlsHud);
 		Allow Button(Event Player, Button(Primary Fire));
 		Allow Button(Event Player, Button(Secondary Fire));
 		Allow Button(Event Player, Button(Ability 2));
 	}
 }
 
-rule("12.1.2: Load Controls HUD")
+rule("12.1.2.1: Load Controls HUD")
 {
 	event
 	{
@@ -1577,55 +1534,32 @@ rule("12.1.2: Load Controls HUD")
 		Event Player.ctrlsHud = Array();
 		Create HUD Text(Event Player, Null, Custom String("Go Back:       {0} + {1}", Input Binding String(Button(Ultimate)),
 			Input Binding String(Button(Primary Fire))), Null, Left, 5, Null, Color(Aqua), Null, String, Default Visibility);
-		Event Player.ctrlsHud[1] = Last Text ID;
+		Event Player.ctrlsHud[0] = Last Text ID;
 		If(Event Player.runCurrentCp <= 99);
 			Create HUD Text(Event Player, Null, Custom String("Skip:                {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Secondary Fire))), Null, Left, 6, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[2] = Last Text ID;
+			Event Player.ctrlsHud[1] = Last Text ID;
 			Create HUD Text(Event Player, Null, Custom String("Restart:           {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Reload))), Null, Left, 7, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[3] = Last Text ID;
+			Event Player.ctrlsHud[2] = Last Text ID;
 			Create HUD Text(Event Player, Null, Custom String("Freemode:     {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Interact))), Null, Left, 8, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[4] = Last Text ID;
+			Event Player.ctrlsHud[3] = Last Text ID;
 			Create HUD Text(Event Player, Null, Custom String("Lobby/Pause: {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Ability 2))), Null, Left, 9, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[5] = Last Text ID;
+			Event Player.ctrlsHud[4] = Last Text ID;
 		Else;
 			Create HUD Text(Event Player, Null, Custom String("Restart:           {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Reload))), Null, Left, 6, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[2] = Last Text ID;
+			Event Player.ctrlsHud[1] = Last Text ID;
 			Create HUD Text(Event Player, Null, Custom String("Lobby:              {0} + {1}", Input Binding String(Button(Ultimate)),
 				Input Binding String(Button(Ability 2))), Null, Left, 7, Null, Color(Aqua), Null, String, Default Visibility);
-			Event Player.ctrlsHud[3] = Last Text ID;
+			Event Player.ctrlsHud[2] = Last Text ID;
 		End;
-		Event Player.ctrlsHudActive = True;
 	}
 }
 
-rule("12.1.3: Auto Unload Controls HUD")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.ctrlsHudActive == True;
-	}
-
-	actions
-	{
-		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || Event Player.isInLobby, 100000000);
-		Call Subroutine(unloadCtrlsHud);
-		Event Player.ctrlsHudActive = False;
-	}
-}
-
-rule("12.1.4: Unload Controls HUD")
+rule("12.1.2.2: Unload Controls HUD")
 {
 	event
 	{
