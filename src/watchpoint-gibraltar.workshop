@@ -353,9 +353,7 @@ rule("3.2: Load Stats")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
+		Ongoing - Global;
 	}
 
 	conditions
