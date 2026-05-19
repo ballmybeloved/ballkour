@@ -472,7 +472,7 @@ rule("4.3: Load Leaderboard Area")
 			"2. BALLMYBLOVED ({0}4:36.32, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.70, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"3. COLDSKIN ({0}5:01.32, {1}13)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
+			"3. COLDSKIN ({0}4:43.85, {1}10)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"4. DVD ({0}5:02.50, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.600, 68.085), 0.850, Do Not Clip,
