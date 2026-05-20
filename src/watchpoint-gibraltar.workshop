@@ -356,13 +356,12 @@ rule("3.2: Load Stats")
 		Ongoing - Global;
 	}
 
-	conditions
-	{
-		Global.settings[0] == True;
-	}
-
 	actions
 	{
+		Wait(1, Ignore Condition);
+		If(Global.settings[0] == False);
+			Abort;
+		End;
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Stats"), Vector(101.52, 4, 62.81), 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Elapsed Time: {0}", Global.timeFormatted), Vector(101.52, 3.25, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Players: {0}", Global.playersAmnt), Vector(101.52, 2.700, 62.81), 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
