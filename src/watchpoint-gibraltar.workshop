@@ -466,13 +466,13 @@ rule("4.3: Load Leaderboard Area")
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Leaderboard"),
 			Vector(98.245, 4, 68.085), 1.200, Do Not Clip, Visible To, Color(Yellow), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"1. BACKLINEREIN ({0}4:34.15, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 3.250, 68.085), 0.850, Do Not Clip,
+			"1. COLDSKIN ({0}4:30.11, {1}10)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 3.250, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"2. BALLMYBLOVED ({0}4:36.32, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.70, 68.085), 0.850, Do Not Clip,
+			"2. BACKLINEREIN ({0}4:34.15, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.70, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
-			"3. COLDSKIN ({0}4:43.85, {1}10)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
+			"3. BALLMYBLOVED ({0}4:36.32, {1}16)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 2.150, 68.085), 0.850, Do Not Clip,
 			Visible To, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String(
 			"4. DVD ({0}5:02.50, {1}15)", Icon String(Bolt), Icon String(Skull)), Vector(98.245, 1.600, 68.085), 0.850, Do Not Clip,
