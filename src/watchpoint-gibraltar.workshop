@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.22"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.22-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -73,14 +73,16 @@ variables
 		12: totalRunTimeFormatted
 		13: avgRunTime
 		14: avgRunTimeFormatted
-		15: lobbyData
-		16: lb
-		17: lbPos
-		18: lbObj
-		19: lbObjFormatted
-		20: cps
-		21: timeToBeat
-		22: timeToBeatMs
+		15: spawnpoint
+		16: spawnpointFacing
+		17: lobbyData
+		18: lb
+		19: lbPos
+		20: lbObj
+		21: lbObjFormatted
+		22: cps
+		23: timeToBeat
+		24: timeToBeatMs
 		90: index
 
 	player:
@@ -305,7 +307,7 @@ rule("3: Checkpoints (CPs)")
 		Global.cps[94] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(81.852, 1, 23.622), 2.2);
 		Global.cps[95] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(79.799, 9, 21.207), 2.2);
 		Global.cps[96] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(86.008, -3.141, -1.915), 2.2);
-		Global.cps[97] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, False, Null, Null, Vector(83.375, 6, 0.473), 2.2);
+		Global.cps[97] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(83.375, 6, 0.473), 2.2);
 		Global.cps[98] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(90.713, -3.045, -5.413), 2.2);
 		Global.cps[99] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(85.5, -3.15, -1.500), 2.2, Vector(83.375, 6, 0.473), 2.2);
 		Global.cps[100] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7]);
@@ -321,29 +323,29 @@ rule("4: Lobby")
 
 	actions
 	{
-		"Global.lobbyData[i]: [0]spawnpoint [1]facingDirection [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunSign [6]startRunRing [7]startRunIcon [8]resumeRunSign [9]resumeRunRing [10]resumeRunIcon [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]players [17]rejoins [18]legitRuns [19]totalRunTime [20]avgRunTime"
+		"Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]players [17]rejoins [18]legitRuns [19]totalRunTime [20]avgRunTime"
 		Global.lobbyData = Array();
         Global.lobbyData[0] = Vector(112.24, -2, 65.570);
-        Global.lobbyData[1] = Vector(103.805, 0.8, 75.480);
-        Global.lobbyData[2] = Global.lobbyData[1] + Vector(0, 1.1, 0);
+        Global.lobbyData[5] = Vector(103.805, -1.99, 75.480);
+        Global.lobbyData[6] = Global.lobbyData[5] + Vector(0, -1, 0);
+        Global.lobbyData[7] = Global.lobbyData[5] + Vector(0, 1.5, 0);
+        Global.lobbyData[1] = Global.lobbyData[5] + Vector(0, 2.75, 0);
+        Global.lobbyData[2] = Global.lobbyData[5] + Vector(0, 4, 0);
         Global.lobbyData[3] = Global.lobbyData[2] + Vector(0, -0.6, 0);
         Global.lobbyData[4] = 1.5;
-        Global.lobbyData[5] = Global.lobbyData[1] + Vector(0, -0.9, 0);
-        Global.lobbyData[6] = Global.lobbyData[5] + Vector(0, -1.7, 0);
-        Global.lobbyData[7] = Global.lobbyData[6] + Vector(0, -1, 0);
-        Global.lobbyData[8] = Vector(101.36, -0.3, 73.035);
-        Global.lobbyData[9] = Global.lobbyData[8] + Vector(0, -1.7, 0);
-        Global.lobbyData[10] = Global.lobbyData[9] + Vector(0, -1, 0);
+        Global.lobbyData[8] = Vector(101.36, -1.99, 73.035);
+        Global.lobbyData[9] = Global.lobbyData[8] + Vector(0, -1, 0);
+        Global.lobbyData[10] = Global.lobbyData[8] + Vector(0, 1.5, 0);
         Global.lobbyData[11] = Vector(99.18, 4, 68.07);
         Global.lobbyData[12] = 1.2;
         Global.lobbyData[13] = 0.85;
         Global.lobbyData[14] = Vector(101.52, 4, 62.81);
-		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.7, 0);
-		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, -0.5, 0);
-		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, -0.5, 0) * 2;
-		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, -0.5, 0) * 3;
-		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, -0.5, 0) * 4;
-		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, -0.5, 0) * 5;
+		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.65, 0);
+		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, -0.75, 0);
+		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 2;
+		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 3;
+		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 4;
+		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 5;
         "Top-10 Positions"
         Global.lbPos = Array();
         Global.lbPos[1] = Global.lobbyData[11] + Vector(0, -1, 0);
@@ -394,34 +396,7 @@ rule("5: Lobby Boundary")
 	}
 }
 
-rule("6: Break Disruptive Environment")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		"CP 39"
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-109.674, -4.25, 111.782), Direction Towards(Vector(-109.674, -4.25, 111.782), Vector(-98.37, -2.17, 114.92)));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-109.674, -4.25, 111.782), Direction Towards(Vector(-109.674, -4.25, 111.782), Vector(-94.55, -2.83, 103.54)));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-108.22, -4.13, 107.72), Direction Towards(Vector(-108.22, -4.13, 107.72), Vector(-104.33, -2.83, 101.10)));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-103.549, -2.25, 100.17), Direction Towards(Vector(-103.549, -2.25, 100.17), Vector(-108.92, -5.08, 120.59)));
-		"CP 45"
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-96.88, -1.25, 111.06), Direction Towards(Vector(-96.88, -1.25, 111.06), Vector(-112.62, -3.65, 107.32)));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-97.41, -1.25, 114.94), Direction Towards(Vector(-97.41, -1.25, 114.94), Vector(-111.90, 0.21, 111.15)));
-		"CP 46"
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-109.511, -4.25, 121.231), Direction Towards(Vector(-109.511, -4.25, 121.231), Vector(-97.74, -2.56, 114.55)));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, -1, Vector(-97.917, -1.253, 116.947), Direction Towards(Vector(-97.917, -1.253, 116.947), Vector(-112.85, 0.12, 112.92)));
-		Wait(0.016, Ignore Condition);
-		Press Button(Players On Hero(Hero(Reinhardt), All Teams), Button(Ability 1));
-		Wait(1, Ignore Condition);
-		Destroy All Dummy Bots;
-	}
-}
-
-rule("7.1: Initialize Match")
+rule("6.1: Initialize Match")
 {
 	event
 	{
@@ -448,7 +423,7 @@ rule("7.1: Initialize Match")
 	}
 }
 
-rule("7.2: Start Elapsed Time Timer")
+rule("6.2: Start Elapsed Time Timer")
 {
 	event
 	{
@@ -471,7 +446,7 @@ rule("7.2: Start Elapsed Time Timer")
 	}
 }
 
-rule("8: Player Joins")
+rule("7: Player Joins")
 {
 	event
 	{
@@ -511,7 +486,7 @@ rule("8: Player Joins")
 	}
 }
 
-rule("9: Load Nameplate")
+rule("8: Load Nameplate")
 {
 	event
 	{
@@ -535,7 +510,7 @@ rule("9: Load Nameplate")
 	}
 }
 
-rule("10.1: Load Lobby")
+rule("9.1: Load Lobby")
 {
 	event
 	{
@@ -550,13 +525,13 @@ rule("10.1: Load Lobby")
 		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.lobbyData[1]), To World);
 		Event Player.isInFreemode = False;
 		Set Secondary Fire Enabled(Event Player, True);
-		Set Ability 1 Enabled(Event Player, True);
+		Allow Button(Event Player, Button(Crouch));
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 	}
 }
 
-rule("10.2: Load Welcome Area")
+rule("9.2: Load Welcome Area")
 {
 	event
 	{
@@ -570,7 +545,7 @@ rule("10.2: Load Welcome Area")
 	}
 }
 
-rule("10.3: Load Leaderboard Area")
+rule("9.3: Load Leaderboard Area")
 {
 	event
 	{
@@ -593,7 +568,7 @@ rule("10.3: Load Leaderboard Area")
 	}
 }
 
-rule("10.3.1: Format Leaderboard String")
+rule("9.3.1: Format Leaderboard String")
 {
 	event
 	{
@@ -612,7 +587,7 @@ rule("10.3.1: Format Leaderboard String")
 	}
 }
 
-rule("10.4.1: Load Start Run Area")
+rule("9.4.1: Load Start Run Area")
 {
 	event
 	{
@@ -621,14 +596,14 @@ rule("10.4.1: Load Start Run Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"), Global.lobbyData[5], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Turquoise), Global.lobbyData[6], 1.6, Visible To);
-		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Global.lobbyData[7], Flag, Visible To, Color(Green), False);
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Sparkles, Color(Yellow), Global.lobbyData[6] + Vector(0, -0.85, 0), 1.6, Visible To); 
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"), Global.lobbyData[7], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
+		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Turquoise), Global.lobbyData[5], 1.6, Visible To);
+		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Global.lobbyData[6], Flag, Visible To, Color(Green), False);
+		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Sparkles, Color(Yellow), Global.lobbyData[5] + Vector(0, -0.85, 0), 1.6, Visible To); 
 	}
 }
 
-rule("10.4.2: Start Run Circle Entry")
+rule("9.4.2: Start Run Circle Entry")
 {
 	event
 	{
@@ -641,7 +616,7 @@ rule("10.4.2: Start Run Circle Entry")
 	{
 		(Has Spawned(Event Player) && Event Player.isLoading == False && Has Status(Event Player, Rooted) == False) == True;
 		Event Player.isInLobby == True;
-		Distance Between(Position Of(Event Player), Global.lobbyData[6]) <= 2;
+		Distance Between(Position Of(Event Player), Global.lobbyData[5]) <= 2;
 	}
 
 	actions
@@ -656,7 +631,7 @@ rule("10.4.2: Start Run Circle Entry")
 	}
 }
 
-rule("10.5.1: Load Resume Run Area")
+rule("9.5.1: Load Resume Run Area")
 {
 	event
 	{
@@ -665,14 +640,14 @@ rule("10.5.1: Load Resume Run Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"), Global.lobbyData[8], 1, Clip Against Surfaces, Visible To, Color(Blue), Default Visibility);
-		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Blue), Global.lobbyData[9], 1.6, Visible To);
-		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Global.lobbyData[10], Recycle, Visible To, Color(Purple), False);
-		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Sparkles, Color(Yellow), Global.lobbyData[9] + Vector(0, -0.85, 0), 1.6, Visible To);
+		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"), Global.lobbyData[10], 1, Clip Against Surfaces, Visible To, Color(Blue), Default Visibility);
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Blue), Global.lobbyData[8], 1.6, Visible To);
+		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Global.lobbyData[9], Recycle, Visible To, Color(Purple), False);
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Sparkles, Color(Yellow), Global.lobbyData[8] + Vector(0, -0.85, 0), 1.6, Visible To);
 	}
 }
 
-rule("10.5.2: Resume Run Circle Entry")
+rule("9.5.2: Resume Run Circle Entry")
 {
 	event
 	{
@@ -687,7 +662,7 @@ rule("10.5.2: Resume Run Circle Entry")
 		Event Player.isInLobby == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsFinished == False;
-		Distance Between(Position Of(Event Player), Global.lobbyData[8]) <= 2;
+		Distance Between(Position Of(Event Player), Global.lobbyData[10]) <= 2;
 	}
 
 	actions
@@ -704,7 +679,7 @@ rule("10.5.2: Resume Run Circle Entry")
 	}
 }
 
-rule("10.6: Load Stats")
+rule("9.6: Load Stats")
 {
 	event
 	{
@@ -728,7 +703,7 @@ rule("10.6: Load Stats")
 	}
 }
 
-rule("11: Clear Unused Variables")
+rule("10: Clear Unused Variables")
 {
 	event
 	{
@@ -744,7 +719,7 @@ rule("11: Clear Unused Variables")
 	}
 }
 
-rule("12.1: Load Global Run HUD")
+rule("11.1: Load Global Run HUD")
 {
 	event
 	{
@@ -774,7 +749,7 @@ rule("12.1: Load Global Run HUD")
 	}
 }
 
-rule("12.2.1: Load Local Run HUD")
+rule("11.2.1: Load Local Run HUD")
 {
 	event
 	{
@@ -797,7 +772,7 @@ rule("12.2.1: Load Local Run HUD")
 }
 
 
-rule("12.2.2: Unload Local Run HUD")
+rule("11.2.2: Unload Local Run HUD")
 {
 	event
 	{
@@ -813,7 +788,7 @@ rule("12.2.2: Unload Local Run HUD")
 	}
 }
 
-rule("13: Initialize New Run")
+rule("12: Initialize New Run")
 {
 	event
 	{
@@ -841,7 +816,7 @@ rule("13: Initialize New Run")
 }
 
 
-rule("14.1: Load Checkpoint")
+rule("13.1: Load Checkpoint")
 {
 	event
 	{
@@ -860,7 +835,7 @@ rule("14.1: Load Checkpoint")
 	}
 }
 
-rule("14.2: Load Checkpoint Data")
+rule("13.2: Load Checkpoint Data")
 {
 	event
 	{
@@ -881,7 +856,7 @@ rule("14.2: Load Checkpoint Data")
 	}
 }
 
-rule("14.3.1: Load Checkpoint Objects")
+rule("13.3.1: Load Checkpoint Objects")
 {
 	event
 	{
@@ -910,7 +885,7 @@ rule("14.3.1: Load Checkpoint Objects")
 	}
 }
 
-rule("14.3.2: Unload Checkpoint Objects")
+rule("13.3.2: Unload Checkpoint Objects")
 {
 	event
 	{
@@ -929,7 +904,7 @@ rule("14.3.2: Unload Checkpoint Objects")
 	}
 }
 
-rule("14.4: Set Checkpoint Abilities")
+rule("13.4: Set Checkpoint Abilities")
 {
 	event
 	{
@@ -941,15 +916,23 @@ rule("14.4: Set Checkpoint Abilities")
 	{
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1 && Event Player.isInFreemode == False);
 			Set Secondary Fire Enabled(Event Player, Global.cps[Event Player.runCurrentCp][2]);
-			Set Ability 1 Enabled(Event Player, Global.cps[Event Player.runCurrentCp][3]);
+			If(Global.cps[Event Player.runCurrentCp][3] == False);
+				Disallow Button(Event Player, Button(Crouch));
+			Else;
+				Allow Button(Event Player, Button(Crouch));
+			End;
 		Else;
 			Set Secondary Fire Enabled(Event Player, True);
-			Set Ability 1 Enabled(Event Player, True);
+			If(Global.cps[Event Player.runCurrentCp][3] == False);
+				Disallow Button(Event Player, Button(Crouch));
+			Else;
+				Allow Button(Event Player, Button(Crouch));
+			End;
 		End;
 	}
 }
 
-rule("15.1: Start/Resume Run")
+rule("14.1: Start/Resume Run")
 {
 	event
 	{
@@ -965,7 +948,7 @@ rule("15.1: Start/Resume Run")
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == True;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
 	}
 
 	actions
@@ -975,7 +958,7 @@ rule("15.1: Start/Resume Run")
 	}
 }
 
-rule("15.2: Update Run Timer")
+rule("14.2: Update Run Timer")
 {
 	event
 	{
@@ -1001,7 +984,7 @@ rule("15.2: Update Run Timer")
 	}
 }
 
-rule("16.1: Grapple Use")
+rule("15.1: Grapple Use")
 {
 	event
 	{
@@ -1031,7 +1014,7 @@ rule("16.1: Grapple Use")
 	}
 }
 
-rule("16.2.1: Jump Used")
+rule("15.2.1: Jump Used")
 {
 	event
 	{
@@ -1052,12 +1035,12 @@ rule("16.2.1: Jump Used")
 	{
 		Event Player.cpData[2] = True;
 		Event Player.cpData[3] = True;
-		Wait(0.032, Ignore Condition);
+		Wait Until(Is On Ground(Event Player), 0.1);
 		Event Player.cpData[2] = False;
 	}
 }
 
-rule("16.2.2: Bhop Used")
+rule("15.2.2: Bhop Used")
 {
 	event
 	{
@@ -1085,7 +1068,7 @@ rule("16.2.2: Bhop Used")
 	}
 }
 
-rule("16.3: Reset Useless Grapple/Jump/Bhop")
+rule("15.3: Reset Useless Grapple/Jump/Bhop")
 {
 	event
 	{
@@ -1099,12 +1082,12 @@ rule("16.3: Reset Useless Grapple/Jump/Bhop")
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		(Event Player.cpData[1] || Event Player.cpData[3] || Event Player.cpData[4]) == True;
 		Event Player.isInLobby == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1] == True;
 	}
 
 	actions
 	{
-		Wait Until(Update Every Frame(Is On Ground(Event Player)), 99999999);
+		Wait Until(Is On Ground(Event Player), 99999999);
 		If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1]);
 			If(Global.cps[Event Player.runCurrentCp][2] == True);
 				Event Player.cpData[1] = False;
@@ -1118,7 +1101,7 @@ rule("16.3: Reset Useless Grapple/Jump/Bhop")
 	}
 }
 
-rule("17.1: Checkpoint Mistake: Missed Checkpoint")
+rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 {
 	event
 	{
@@ -1147,7 +1130,7 @@ rule("17.1: Checkpoint Mistake: Missed Checkpoint")
 	}
 }
 
-rule("17.2: Checkpoint Mistake: Already Bhopped")
+rule("16.2: Checkpoint Mistake: Already Bhopped")
 {
 	event
 	{
@@ -1160,11 +1143,11 @@ rule("17.2: Checkpoint Mistake: Already Bhopped")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInFreemode == False;
-		Update Every Frame(Is Jumping(Event Player)) == True;
+		Is Jumping(Event Player) == True;
 		Event Player.cpData[4] == True;
 		(Global.cps[Event Player.runCurrentCp][4] == Null || Event Player.cpData[0] == False || Event Player.cpData[5] == True) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
 	actions
@@ -1176,7 +1159,7 @@ rule("17.2: Checkpoint Mistake: Already Bhopped")
 	}
 }
 
-rule("17.3: Checkpoint Mistake: Environment Death")
+rule("16.3: Checkpoint Mistake: Environment Death")
 {
 	event
 	{
@@ -1197,7 +1180,7 @@ rule("17.3: Checkpoint Mistake: Environment Death")
 	}
 }
 
-rule("18.1: Bounce Checkpoints: Reset Useless Grapple")
+rule("17.1: Bounce Checkpoints: Reset Useless Grapple")
 {
 	event
 	{
@@ -1213,7 +1196,7 @@ rule("18.1: Bounce Checkpoints: Reset Useless Grapple")
 
 	actions
 	{
-		Wait Until(Update Every Frame(Is Button Held(Event Player, Button(Secondary Fire))) == False, 99999999);
+		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 99999999);
 		If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1]);
 			Event Player.cpData[0] = False;
 			Event Player.cpData[1] = False;
@@ -1225,7 +1208,7 @@ rule("18.1: Bounce Checkpoints: Reset Useless Grapple")
 	}
 }
 
-rule("18.2: Bounce Checkpoint Mistake: No Grapple")
+rule("17.2: Bounce Checkpoint Mistake: No Grapple")
 {
 	event
 	{
@@ -1240,7 +1223,7 @@ rule("18.2: Bounce Checkpoint Mistake: No Grapple")
 		Event Player.isInFreemode == False;
 		Global.cps[Event Player.runCurrentCp][4] != Null;
 		Event Player.cpData[0] == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
 	}
 
 	actions
@@ -1252,7 +1235,7 @@ rule("18.2: Bounce Checkpoint Mistake: No Grapple")
 	}
 }
 
-rule("18.3: Bounce Checkpoint Mistake: Too Slow")
+rule("17.3: Bounce Checkpoint Mistake: Too Slow")
 {
 	event
 	{
@@ -1269,7 +1252,7 @@ rule("18.3: Bounce Checkpoint Mistake: Too Slow")
 		Event Player.cpData[5] == False;
 		Speed Of(Event Player) <= 10;
 		Event Player.isInFreemode == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
 	}
 
 	actions
@@ -1281,7 +1264,7 @@ rule("18.3: Bounce Checkpoint Mistake: Too Slow")
 	}
 }
 
-rule("18.4: Bounce Checkpoint: Bounce Used Properly")
+rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 {
 	event
 	{
@@ -1294,9 +1277,9 @@ rule("18.4: Bounce Checkpoint: Bounce Used Properly")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Global.cps[Event Player.runCurrentCp][4] != Null;
-		(Update Every Frame(Is Jumping(Event Player)) || Altitude Of(Event Player) < 0) == True;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) < 0) == True;
 		Event Player.isInFreemode == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5] == True;
 	}
 
 	actions
@@ -1305,7 +1288,7 @@ rule("18.4: Bounce Checkpoint: Bounce Used Properly")
 	}
 }
 
-rule("18.5: Bounce Checkpoint Mistake: Improperly Airborne")
+rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
 {
 	event
 	{
@@ -1320,9 +1303,9 @@ rule("18.5: Bounce Checkpoint Mistake: Improperly Airborne")
 		Event Player.isInFreemode == False;
 		Global.cps[Event Player.runCurrentCp][4] != Null;
 		Event Player.cpData[5] == False;
-		(Update Every Frame(Is Jumping(Event Player)) || Altitude Of(Event Player) < 0) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5]) == True;
+		(Is Jumping(Event Player) || Altitude Of(Event Player) < 0) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5] == True;
 	}
 
 	actions
@@ -1334,7 +1317,7 @@ rule("18.5: Bounce Checkpoint Mistake: Improperly Airborne")
 	}
 }
 
-rule("19: Checkpoint Reset Player")
+rule("18: Checkpoint Reset Player")
 {
 	event
 	{
@@ -1365,7 +1348,7 @@ rule("19: Checkpoint Reset Player")
 	}
 }
 
-rule("20.1: Checkpoint Completed (No Skipping)")
+rule("19.1: Checkpoint Completed (No Skipping)")
 {
 	event
 	{
@@ -1406,7 +1389,7 @@ rule("20.1: Checkpoint Completed (No Skipping)")
 	}
 }
 
-rule("20.2: Final Checkpoint Reached")
+rule("19.2: Final Checkpoint Reached")
 {
 	event
 	{
@@ -1443,7 +1426,7 @@ rule("20.2: Final Checkpoint Reached")
 	}
 }
 
-rule("20.3: Update Lobby Stats With New Run")
+rule("19.3: Update Lobby Stats With New Run")
 {
 	event
 	{
@@ -1471,7 +1454,7 @@ rule("20.3: Update Lobby Stats With New Run")
 	}
 }
 
-rule("20.4.1: Load Run Completion Text")
+rule("19.4.1: Load Run Completion Text")
 {
 	event
 	{
@@ -1518,7 +1501,7 @@ rule("20.4.1: Load Run Completion Text")
 	}
 }
 
-rule("20.4.2: Unload Run Completion Text")
+rule("19.4.2: Unload Run Completion Text")
 {
 	event
 	{
@@ -1534,7 +1517,7 @@ rule("20.4.2: Unload Run Completion Text")
 	}
 }
 
-rule("21.1: Controls HUD Input")
+rule("20.1: Controls HUD Input")
 {
 	event
 	{
@@ -1563,7 +1546,7 @@ rule("21.1: Controls HUD Input")
 	}
 }
 
-rule("21.2.1: Load Controls HUD")
+rule("20.2.1: Load Controls HUD")
 {
 	event
 	{
@@ -1594,7 +1577,7 @@ rule("21.2.1: Load Controls HUD")
 	}
 }
 
-rule("21.2.2: Unload Controls HUD")
+rule("20.2.2: Unload Controls HUD")
 {
 	event
 	{
@@ -1610,7 +1593,7 @@ rule("21.2.2: Unload Controls HUD")
 	}
 }
 
-rule("21.3: Go Back Checkpoint Input")
+rule("20.3: Go Back Checkpoint Input")
 {
 	event
 	{
@@ -1665,7 +1648,7 @@ rule("21.3: Go Back Checkpoint Input")
 	}
 }
 
-rule("21.4: Skip Checkpoint Input")
+rule("20.4: Skip Checkpoint Input")
 {
 	event
 	{
@@ -1718,7 +1701,7 @@ rule("21.4: Skip Checkpoint Input")
 	}
 }
 
-rule("21.5: Restart Input")
+rule("20.5: Restart Input")
 {
 	event
 	{
@@ -1749,7 +1732,7 @@ rule("21.5: Restart Input")
 	}
 }
 
-rule("21.6.1: Freemode Input")
+rule("20.6.1: Freemode Input")
 {
 	event
 	{
@@ -1787,7 +1770,11 @@ rule("21.6.1: Freemode Input")
 				Call Subroutine(cpResetPlayer);
 			End;
 			Set Secondary Fire Enabled(Event Player, Global.cps[Event Player.runCurrentCp][2]);
-			Set Ability 1 Enabled(Event Player, Global.cps[Event Player.runCurrentCp][3]);
+			If(Global.cps[Event Player.runCurrentCp][3] == False);
+				Disallow Button(Event Player, Button(Crouch));
+			Else;
+				Allow Button(Event Player, Button(Crouch));
+			End;
 			Event Player.isLoading = False;
 		End;
 		Destroy In-World Text(Event Player.nameplateObject);
@@ -1795,7 +1782,7 @@ rule("21.6.1: Freemode Input")
 	}
 }
 
-rule("21.6.2.1: Load Freemode HUD")
+rule("20.6.2.1: Load Freemode HUD")
 {
 	event
 	{
@@ -1830,7 +1817,7 @@ rule("21.6.2.1: Load Freemode HUD")
 	}
 }
 
-rule("21.6.3.2: Unload Freemode HUD")
+rule("20.6.3.2: Unload Freemode HUD")
 {
 	event
 	{
@@ -1846,7 +1833,7 @@ rule("21.6.3.2: Unload Freemode HUD")
 	}
 }
 
-rule("21.7: Lobby Input")
+rule("20.7: Lobby Input")
 {
 	event
 	{
@@ -1887,7 +1874,7 @@ rule("21.7: Lobby Input")
 	}
 }
 
-rule("22.1: Format Time String")
+rule("21.1: Format Time String")
 {
 	event
 	{
@@ -1937,7 +1924,7 @@ rule("22.1: Format Time String")
 	}
 }
 
-rule("22.2: Format Run Time String")
+rule("21.2: Format Run Time String")
 {
 	event
 	{
