@@ -1926,9 +1926,9 @@ rule("22.1: Format Time String")
 		Else;
 			Global.timeFormat[4] = Custom String("{0}", Global.timeFormat[3]);
 		End;
-		If(Global.timeFormat[1] < 0);
+		If(Global.timeFormat[1] > 0);
 			Global.timeFormatted = Custom String("{0}:{1}:{2}", Global.timeFormat[1], Global.timeFormat[4], Custom String("{0}.{1}", Global.timeFormat[6], Global.timeFormat[8]));
-		Else If(Global.timeFormat[3] < 0);
+		Else If(Global.timeFormat[3] > 0);
 			Global.timeFormatted = Custom String("{0}:{1}.{2}", Global.timeFormat[3], Global.timeFormat[6], Global.timeFormat[8]);
 		Else;
 			Global.timeFormatted = Custom String("{0}.{1}", Global.timeFormat[5], Global.timeFormat[8]);
