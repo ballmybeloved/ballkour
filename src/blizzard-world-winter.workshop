@@ -697,6 +697,7 @@ rule("9.5.2: Resume Run Circle Entry")
 		Call Subroutine(loadHud);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 		Event Player.isLoading = False;
 	}
 }
@@ -834,6 +835,7 @@ rule("12: Initialize New Run")
 		Wait(0.016, Ignore Condition);
 		Call Subroutine(cpResetPlayer);
 		Call Subroutine(setCpAbilities);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 	}
 }
 
@@ -1355,7 +1357,6 @@ rule("18: Checkpoint Reset Player")
 		Apply Impulse(Event Player, Velocity Of(Event Player) * -0.001, 0.001, To World, Cancel Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 			If(Global.cps[Event Player.runCurrentCp][4] != Null);
 				Event Player.cpData[0] = False;
 				Event Player.cpData[1] = False;
@@ -1654,6 +1655,7 @@ rule("20.3: Go Back Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False, 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
 			Event Player.isLoading = True;
@@ -1669,6 +1671,7 @@ rule("20.3: Go Back Checkpoint Input")
 			Call Subroutine(cpResetPlayer);
 			Destroy In-World Text(Event Player.nameplateObject);
 			Call Subroutine(loadNameplate);
+			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 		End;
 	}
 }
@@ -1707,6 +1710,7 @@ rule("20.4: Skip Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
@@ -1722,6 +1726,7 @@ rule("20.4: Skip Checkpoint Input")
 			Call Subroutine(cpResetPlayer);
 			Destroy In-World Text(Event Player.nameplateObject);
 			Call Subroutine(loadNameplate);
+			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
 		End;
 		If(Event Player.runCurrentCp == Count Of(Global.cps) - 1);
 			Call Subroutine(finalCpReached);
