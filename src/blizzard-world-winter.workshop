@@ -1296,7 +1296,7 @@ rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Global.cps[Event Player.runCurrentCp][4] != Null;
-		(Is Jumping(Event Player) || Altitude Of(Event Player) < 0) == True;
+		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
 		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5] == True;
 	}
@@ -1322,9 +1322,9 @@ rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
 		Event Player.isInFreemode == False;
 		Global.cps[Event Player.runCurrentCp][4] != Null;
 		Event Player.cpData[5] == False;
-		(Is Jumping(Event Player) || Altitude Of(Event Player) < 0) == True;
+		Is Jumping(Event Player) == True;
 		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5] == True;
+		Distance Between(Vector(X Component Of(Position Of(Event Player)), Y Component Of(Global.cps[Event Player.runCurrentCp][4]), Z Component Of(Position Of(Event Player))), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5];
 	}
 
 	actions
