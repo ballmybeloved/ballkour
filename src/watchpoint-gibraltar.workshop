@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.23"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.23-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -285,7 +285,7 @@ rule("3: Checkpoints (CPs)")
 		Global.cps[72] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(16.589, -2, -133.052), 2.2);
 		Global.cps[73] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(21.742, -1.91, -129.950), 2.2, Vector(37.649, 4.01, -124.211), 2.2);
 		Global.cps[74] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(61.452, -7.192, -141.705), 2.2);
-		Global.cps[75] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(64.37, -6.31, -131.28), 2.4, Vector(60.992, 1, -115.213), 2.2);
+		Global.cps[75] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(64.37, -6.31, -131.28), 2.2, Vector(60.992, 1, -115.213), 2.2);
 		Global.cps[76] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(36.918, 0.092, -95.332), 2.2, Vector(27.284, 3.013, -84.642), 2.2);
 		Global.cps[77] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(16.503, -5, -70.262), 2.2);
 		Global.cps[78] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(23.858, -5.068, -82.402), 2.2, Vector(29.458, 6.938, -90.962), 2.2);
