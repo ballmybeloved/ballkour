@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Blizzard World (Winter) \n\nv2026.05.23"
+		Description: "Blizzard World (Winter) \n\nv2026.05.23-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -442,25 +442,28 @@ rule("6.1: Initialize Match")
 	}
 }
 
-rule("6.2: Start Elapsed Time Timer")
+rule("6.2: Start Elapsed Timer Format")
 {
 	event
 	{
 		Ongoing - Global;
 	}
 
+	conditions
+	{
+		Global.settings[1] == True;
+	}
+
 	actions
 	{
-		If(Global.settings[1] == True);
-			Chase Global Variable At Rate(elapsedTime, 99999999, 1, Destination and Rate);
-			If(Global.settings[0] == False);
-				Global.timeToFormat = Global.elapsedTime;
-				Global.timeFormat[0] = False;
-				Call Subroutine(formatTime);
-				Global.elapsedTimeFormatted = Global.timeFormatted;
-				Wait(0.05, Ignore Condition);
-				Loop;
-			End;
+		Chase Global Variable At Rate(elapsedTime, 99999999, 1, Destination and Rate);
+		If(Global.settings[0] == False);
+			Global.timeToFormat = Global.elapsedTime;
+			Global.timeFormat[0] = False;
+			Call Subroutine(formatTime);
+			Global.elapsedTimeFormatted = Global.timeFormatted;
+			Wait(0.03, Ignore Condition);
+			Loop;
 		End;
 	}
 }
@@ -977,7 +980,7 @@ rule("14.1: Start/Resume Run")
 	}
 }
 
-rule("14.2: Update Run Timer")
+rule("14.2: Update Run Timer Format")
 {
 	event
 	{
@@ -990,15 +993,14 @@ rule("14.2: Update Run Timer")
 	{
 		Event Player.runIsPaused == False;
 		Event Player.runIsLoaded == True;
+		Global.settings[0] == False;
 	}
 
 	actions
 	{
-		If(Global.settings[0] == False);
-			While(Event Player.runIsPaused == False);
-				Call Subroutine(formatRunTime);
-				Wait(0.03, Ignore Condition);
-			End;
+		While(Event Player.runIsPaused == False);
+			Call Subroutine(formatRunTime);
+			Wait(0.03, Ignore Condition);
 		End;
 	}
 }
@@ -1047,14 +1049,14 @@ rule("15.2.1: Jump Used")
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInLobby == False;
 		Event Player.isInFreemode == False;
-		Update Every Frame(Is Jumping(Event Player)) == True;
+		Is Jumping(Event Player) == True;
 	}
 
 	actions
 	{
 		Event Player.cpData[2] = True;
 		Event Player.cpData[3] = True;
-		Wait Until(Is On Ground(Event Player), 0.1);
+		Wait Until(Is On Ground(Event Player), 0.016);
 		Event Player.cpData[2] = False;
 	}
 }
@@ -1071,11 +1073,11 @@ rule("15.2.2: Bhop Used")
 	conditions
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
-		Update Every Frame(Is Jumping(Event Player)) == True;
+		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
 		Event Player.isInLobby == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
 	actions
@@ -1133,11 +1135,11 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 	{
 		Event Player.isInFreemode == False;
 		(Global.cps[Event Player.runCurrentCp][4] == Null || Event Player.cpData[0] == False || Event Player.cpData[5] == True) == True;
-		Update Every Frame(Is On Ground(Event Player) || (Event Player.cpData[2] && Event Player.cpData[4])) == True;
+		(Is On Ground(Event Player) || (Event Player.cpData[2] && Event Player.cpData[4])) == True;
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Is Dummy Bot(Event Player) == False;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]) == True; 
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True; 
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
 	actions
@@ -1199,7 +1201,7 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 	}
 }
 
-rule("17.1: Bounce Checkpoints: Reset Useless Grapple")
+rule("17.1: Bounce Checkpoints: Grapple Use")
 {
 	event
 	{
@@ -1210,6 +1212,7 @@ rule("17.1: Bounce Checkpoints: Reset Useless Grapple")
 
 	conditions
 	{
+		Global.cps[Event Player.runCurrentCp][4] != Null;
 		Event Player.cpData[1] == True;
 	}
 
@@ -1223,6 +1226,7 @@ rule("17.1: Bounce Checkpoints: Reset Useless Grapple")
 		Else;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 			Set Secondary Fire Enabled(Event Player, False);
+			Wait(0.016, Ignore Condition);
 		End;
 	}
 }
@@ -1382,8 +1386,8 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runIsLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
-		Update Every Frame(Is On Ground(Event Player) || Event Player.cpData[2]) == True;
-		Update Every Frame(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) <= Global.cps[Event Player.runCurrentCp][7]) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[2]) == True;
+		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) <= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
 	actions
@@ -1486,9 +1490,7 @@ rule("19.4.1: Load Run Completion Text")
 		Event Player.runCompletionText = Array();
 		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 5, Null, Color(Yellow), Null, None, Default Visibility);
 		Event Player.runCompletionText[0] = Last Text ID;
-		If(Global.settings[0] == True);
-			Call Subroutine(formatRunTime);
-		End;
+		Call Subroutine(formatRunTime);
 		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
 		Event Player.runCompletionText[1] = Last Text ID;
 		If(Global.timeToBeatMs == 0);
@@ -1652,18 +1654,22 @@ rule("20.3: Go Back Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False,
-			0.150);
-		While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire))
-			&& Event Player.runCurrentCp > 0);
-			Event Player.runCurrentCp -= 1;
+		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False, 0.25);
+		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
+			Event Player.isLoading = True;
+			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
+				Event Player.runCurrentCp -= 1;
+				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
+				Wait(0.02, Ignore Condition);
+				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False);
+					Break;
+				End;
+			End;
 			Call Subroutine(loadCp);
 			Call Subroutine(cpResetPlayer);
 			Destroy In-World Text(Event Player.nameplateObject);
 			Call Subroutine(loadNameplate);
-			Wait(0.02, Ignore Condition);
 		End;
-		Event Player.isLoading = False;
 	}
 }
 
@@ -1701,22 +1707,25 @@ rule("20.4: Skip Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
-		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire))
-				== False, 0.150);
+		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.25);
+		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 				Event Player.runCurrentCp += 1;
-				Call Subroutine(loadCp);
-				Call Subroutine(cpResetPlayer);
-				Destroy In-World Text(Event Player.nameplateObject);
-				Call Subroutine(loadNameplate);
+				Event Player.isLoading = True;
+				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
 				Wait(0.02, Ignore Condition);
+				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False);
+					Break;
+				End;
 			End;
+			Call Subroutine(loadCp);
+			Call Subroutine(cpResetPlayer);
+			Destroy In-World Text(Event Player.nameplateObject);
+			Call Subroutine(loadNameplate);
 		End;
 		If(Event Player.runCurrentCp == Count Of(Global.cps) - 1);
 			Call Subroutine(finalCpReached);
 		End;
-		Event Player.isLoading = False;
 	}
 }
 
