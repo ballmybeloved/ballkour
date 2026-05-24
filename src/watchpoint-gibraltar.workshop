@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.24-0"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.24-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -243,7 +243,7 @@ rule("3: Checkpoints (CPs)")
 		Global.cps[24] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(41.77, 3, -73.610), Global.cpDefaults[2]);
 		Global.cps[25] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(36.668, -2.134, -57.072), Global.cpDefaults[2]);
 		Global.cps[26] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(53.683, 8.908, -36.387), Global.cpDefaults[2]);
-		Global.cps[27] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(82.606, 3, -33.352), Global.cpDefaults[2]);
+		Global.cps[27] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(81.77, 3, -33.09), Global.cpDefaults[2]);
 		Global.cps[28] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(86.119, 3.01, -29.821), Global.cpDefaults[2]);
 		Global.cps[29] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(77.563, 6, 6.752), Global.cpDefaults[2]);
 		Global.cps[30] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(101.21, -0.94, 40.440), Global.cpDefaults[2]);
@@ -705,7 +705,7 @@ rule("9.6: Load Stats")
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Stats"), Global.lobbyData[14], 1.2, Clip Against Surfaces, Visible To, Color(Yellow), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Elapsed Time: {0}", Global.settings[0] == False ? Global.elapsedTimeFormatted : Global.elapsedTime), Global.lobbyData[15], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Players: {0}", Global.playersAmnt), Global.lobbyData[16], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("New Players: {0}", Global.playersAmnt), Global.lobbyData[16], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Rejoins: {0}", Global.rejoinsAmnt), Global.lobbyData[17], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Legit Runs: {0}", Global.runs), Global.lobbyData[18], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Total Run Time: {0}", Global.totalRunTimeFormatted), Global.lobbyData[19], 0.85, Clip Against Surfaces, Visible To And String, Color(Green), Default Visibility);
