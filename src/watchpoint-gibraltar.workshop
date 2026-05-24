@@ -80,10 +80,11 @@ variables
 		19: lbPos
 		20: lbObj
 		21: lbObjFormatted
-		22: cps
-		23: timeToBeat
-		24: timeToBeatMs
-		90: index
+		22: cpDefaults
+		23: cps
+		24: timeToBeat
+		25: timeToBeatMs
+		100: index
 
 	player:
 		0: isLoading
@@ -112,7 +113,7 @@ variables
 		23: ctrlsHud
 		24: ctrlsHudActive
 		25: cpCtrlsInputLocked
-		90: index
+		100: index
 }
 
 subroutines
@@ -208,109 +209,114 @@ rule("3: Checkpoints (CPs)")
 
 	actions
 	{
+		"Global.cps[i]: [0]cpSize [1]bounceSize [2]nextCpSize"
+		Global.cpDefaults = Array();
+		Global.cpDefaults[0] = 2.5;
+		Global.cpDefaults[1] = 2.5;
+		Global.cpDefaults[2] = 2.5;
 		"Global.cps[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize"
 		Global.cps = Array();
-		Global.cps[0] = Array(Vector(30.354, 5, -151.022), 2.2, False, True, Null, Null, Vector(35.5, 5, -145.90), 2.2);
-		Global.cps[1] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(42.536, 3.218, -140.939), 2.2);
-		Global.cps[2] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(36.938, 4.01, -124.670), 2.2);
-		Global.cps[3] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(19.895, 6, -130.757), 2.2);
-		Global.cps[4] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(46.563, 4.01, -129.999), 2.2);
-		Global.cps[5] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(32.38, 6.56, -108.87), 2.2);
-		Global.cps[6] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(27.37, 4, -88.810), 2.2);
-		Global.cps[7] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(16.181, 3.046, -67.936), 2.2);
-		Global.cps[8] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(27.89, 3.05, -70.120), 2.2);
-		Global.cps[9] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(28.072, 3.998, -105.300), 2.2);
-		Global.cps[10] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(60.854, 1, -113.372), 2.2);
-		Global.cps[11] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(44.855, 4.01, -131.473), 2.2);
-		Global.cps[12] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(39.7, 1, -144.094), 2.2);
-		Global.cps[13] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(44.91, 1, -138.610), 2.2);
-		Global.cps[14] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(44.35, 4.01, -130.820), 2.2);
-		Global.cps[15] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(33.83, 4, -90), 2.2);
-		Global.cps[16] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(30.991, 3, -72.417), 2.2);
-		Global.cps[17] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(39.055, -4.947, -75.702), 2.2);
-		Global.cps[18] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(45.022, -5, -69.766), 2.2);
-		Global.cps[19] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(47.22, 6, -67.500), 2.2);
-		Global.cps[20] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(45.4, 5.31, -51.18), 2.2);
-		Global.cps[21] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(36.368, -2.134, -56.973), 2.2);
-		Global.cps[22] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(45.662, 3, -36.151), 2.2);
-		Global.cps[23] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(65.85, 13.14, -38.910), 2.2);
-		Global.cps[24] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(41.77, 3, -73.610), 2.2);
-		Global.cps[25] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(36.668, -2.134, -57.072), 2.2);
-		Global.cps[26] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(53.683, 8.908, -36.387), 2.2);
-		Global.cps[27] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(82.606, 3, -33.352), 2.2);
-		Global.cps[28] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(86.119, 3.01, -29.821), 2.2);
-		Global.cps[29] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(77.563, 6, 6.752), 2.2);
-		Global.cps[30] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(101.21, -0.94, 40.440), 2.2);
-		Global.cps[31] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(91.745, 6, 9.719), 2.2);
-		Global.cps[32] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(83.1, 1, 56.160), 2.2);
-		Global.cps[33] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(81.151, 2.845, 28.890), 2.2);
-		Global.cps[34] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(71.21, 1, 18.590), 2.2);
-		Global.cps[35] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(77.622, 6.01, 6.080), 2.2);
-		Global.cps[36] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(75.526, 10, 7.506), 2.2);
-		Global.cps[37] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(69.811, 9.01, 12.958), 2.2);
-		Global.cps[38] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(66.62, 8.32, 26.390), 2.2);
-		Global.cps[39] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(98.874, 2.745, -16.184), 2.2);
-		Global.cps[40] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(67.245, -2.905, -13.682), 2.2);
-		Global.cps[41] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(64.54, -3, -17.90), 2.2);
-		Global.cps[42] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(65.85, 13.14, -38.910), 2.2);
-		Global.cps[43] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(53.419, 8.734, -38.662), 2.2);
-		Global.cps[44] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(36.26, -0.26, -47.190), 2.2);
-		Global.cps[45] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(45.993, 3, -36.446), 2.2);
-		Global.cps[46] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(57.496, 3, -54.121), 2.2);
-		Global.cps[47] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(47.49, 6, -67.970), 2.2);
-		Global.cps[48] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(32.38, -5.15, -57.330), 2.2);
-		Global.cps[49] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(34.29, 1.19, -53.240), 2.2);
-		Global.cps[50] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(40.6, -5.01, -51.200), 2.2);
-		Global.cps[51] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(43.11, -0.51, -49.171), 2.2);
-		Global.cps[52] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(65.46, -3.14, -26.55), 2.2);
-		Global.cps[53] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(62.097, 2.028, -22.853), 2.2);
-		Global.cps[54] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(73.6, -3.14, -38.120), 2.2);
-		Global.cps[55] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(74.748, 2.107, -34.640), 2.2);
-		Global.cps[56] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(50.72, 8.72, -47.450), 2.2);
-		Global.cps[57] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(45.49, 3, -36.66), 2.2);
-		Global.cps[58] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(47.22, 6, -67.500), 2.2);
-		Global.cps[59] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(39.46, -5.02, -75.880), 2.2);
-		Global.cps[60] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(14.081, 3.045, -70.069), 2.2);
-		Global.cps[61] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(27.17, 0, -104.230), 2.2);
-		Global.cps[62] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(29.24, 4, -106.270), 2.2);
-		Global.cps[63] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(42.742, -6.137, -119.077), 2.2);
-		Global.cps[64] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(36.423, 0, -112.203), 2.2);
-		Global.cps[65] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(33.015, 6.561, -109.607), 2.2);
-		Global.cps[66] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(38.88, 0, -99.490), 2.2);
-		Global.cps[67] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(31.76, 5.51, -92.420), 2.2);
-		Global.cps[68] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(39.957, 3.998, -102.764), 2.2);
-		Global.cps[69] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(33.417, 4.01, -86.090), 2.2);
-		Global.cps[70] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(43.86, 4.33, -130.510), 2.2);
-		Global.cps[71] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(35.776, 5, -144.535), 2.2);
-		Global.cps[72] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(16.589, -2, -133.052), 2.2);
-		Global.cps[73] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(21.742, -1.91, -129.950), 2.2, Vector(37.649, 4.01, -124.211), 2.2);
-		Global.cps[74] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(61.452, -7.192, -141.705), 2.2);
-		Global.cps[75] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(64.37, -6.31, -131.28), 2.2, Vector(60.992, 1, -115.213), 2.2);
-		Global.cps[76] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(36.918, 0.092, -95.332), 2.2, Vector(27.284, 3.013, -84.642), 2.2);
-		Global.cps[77] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(16.503, -5, -70.262), 2.2);
-		Global.cps[78] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(23.858, -5.068, -82.402), 2.2, Vector(29.458, 6.938, -90.962), 2.2);
-		Global.cps[79] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(38.373, -5.02, -77.208), 2.2);
-		Global.cps[80] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(44.188, -5.058, -60.366), 2.2, Vector(56.069, 3, -52.942), 2.2);
-		Global.cps[81] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(47.966, -5, -68.898), 2.2);
-		Global.cps[82] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(41.762, -5.059, -62.347), 2.2, Vector(36.26, -0.26, -47.190), 2.2);
-		Global.cps[83] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(62.694, -3.003, -16.511), 2.2);
-		Global.cps[84] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(74.99, -2.09, -9.26), 2.2, Vector(83.645, 6, 1.309), 2.2);
-		Global.cps[85] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(97.81, 1, 12.53), 2.2);
-		Global.cps[86] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(82.13, 10.36, 14.070), 2.2);
-		Global.cps[87] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(75.569, 9, 22.556), 2.2);
-		Global.cps[88] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(59.696, 8.354, 20.334), 2.2);
-		Global.cps[89] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(51.531, 9, 9.279), 2.2);
-		Global.cps[90] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(41.032, 3, 7.798), 2.2);
-		Global.cps[91] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(46.18, 9, 10.570), 2.2);
-		Global.cps[92] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(45.06, 3, 3.140), 2.2);
-		Global.cps[93] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(48.646, 9, 7.999), 2.2);
-		Global.cps[94] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(81.852, 1, 23.622), 2.2);
-		Global.cps[95] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(79.799, 9, 21.207), 2.2);
-		Global.cps[96] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Null, Null, Vector(86.008, -3.141, -1.915), 2.2);
-		Global.cps[97] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(83.375, 6, 0.473), 2.2);
-		Global.cps[98] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], False, True, Null, Null, Vector(90.713, -3.045, -5.413), 2.2);
-		Global.cps[99] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7], True, True, Vector(85.5, -3.15, -1.500), 2.2, Vector(83.375, 6, 0.473), 2.2);
-		Global.cps[100] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cps[Count Of(Global.cps) - 2][7]);
+		Global.cps[0] = Array(Vector(30.354, 5, -151.022), Global.cpDefaults[0], False, True, Null, Null, Vector(35.5, 5, -145.90), Global.cpDefaults[2]);
+		Global.cps[1] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(42.536, 3.218, -140.939), Global.cpDefaults[0]);
+		Global.cps[2] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(36.938, 4.01, -124.670), Global.cpDefaults[2]);
+		Global.cps[3] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(19.895, 6, -130.757), Global.cpDefaults[2]);
+		Global.cps[4] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(46.563, 4.01, -129.999), Global.cpDefaults[2]);
+		Global.cps[5] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(32.38, 6.56, -108.87), Global.cpDefaults[2]);
+		Global.cps[6] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(27.37, 4, -88.810), Global.cpDefaults[2]);
+		Global.cps[7] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(16.181, 3.046, -67.936), Global.cpDefaults[2]);
+		Global.cps[8] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(27.89, 3.05, -70.120), Global.cpDefaults[2]);
+		Global.cps[9] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(28.072, 3.998, -105.300), Global.cpDefaults[2]);
+		Global.cps[10] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(60.854, 1, -113.372), Global.cpDefaults[2]);
+		Global.cps[11] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(44.855, 4.01, -131.473), Global.cpDefaults[2]);
+		Global.cps[12] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(39.7, 1, -144.094), Global.cpDefaults[2]);
+		Global.cps[13] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(44.91, 1, -138.610), Global.cpDefaults[2]);
+		Global.cps[14] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(44.35, 4.01, -130.820), Global.cpDefaults[2]);
+		Global.cps[15] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(33.83, 4, -90), Global.cpDefaults[2]);
+		Global.cps[16] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(30.991, 3, -72.417), Global.cpDefaults[2]);
+		Global.cps[17] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(39.055, -4.947, -75.702), Global.cpDefaults[2]);
+		Global.cps[18] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(45.022, -5, -69.766), Global.cpDefaults[2]);
+		Global.cps[19] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(47.22, 6, -67.500), Global.cpDefaults[2]);
+		Global.cps[20] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(45.4, 5.31, -51.18), Global.cpDefaults[2]);
+		Global.cps[21] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(36.368, -2.134, -56.973), Global.cpDefaults[2]);
+		Global.cps[22] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(45.662, 3, -36.151), Global.cpDefaults[2]);
+		Global.cps[23] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(65.85, 13.14, -38.910), Global.cpDefaults[2]);
+		Global.cps[24] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(41.77, 3, -73.610), Global.cpDefaults[2]);
+		Global.cps[25] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(36.668, -2.134, -57.072), Global.cpDefaults[2]);
+		Global.cps[26] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(53.683, 8.908, -36.387), Global.cpDefaults[2]);
+		Global.cps[27] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(82.606, 3, -33.352), Global.cpDefaults[2]);
+		Global.cps[28] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(86.119, 3.01, -29.821), Global.cpDefaults[2]);
+		Global.cps[29] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(77.563, 6, 6.752), Global.cpDefaults[2]);
+		Global.cps[30] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(101.21, -0.94, 40.440), Global.cpDefaults[2]);
+		Global.cps[31] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(91.745, 6, 9.719), Global.cpDefaults[2]);
+		Global.cps[32] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(83.1, 1, 56.160), Global.cpDefaults[2]);
+		Global.cps[33] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(81.151, 2.845, 28.890), Global.cpDefaults[2]);
+		Global.cps[34] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(71.21, 1, 18.590), Global.cpDefaults[2]);
+		Global.cps[35] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(77.622, 6.01, 6.080), Global.cpDefaults[2]);
+		Global.cps[36] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(75.526, 10, 7.506), Global.cpDefaults[2]);
+		Global.cps[37] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(69.811, 9.01, 12.958), Global.cpDefaults[2]);
+		Global.cps[38] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(66.62, 8.32, 26.390), Global.cpDefaults[2]);
+		Global.cps[39] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(98.874, 2.745, -16.184), Global.cpDefaults[2]);
+		Global.cps[40] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(68.47, -3.14, -13.22), Global.cpDefaults[2]);
+		Global.cps[41] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(64.54, -3, -17.90), Global.cpDefaults[2]);
+		Global.cps[42] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(65.85, 13.14, -38.910), Global.cpDefaults[2]);
+		Global.cps[43] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(53.419, 8.734, -38.662), Global.cpDefaults[2]);
+		Global.cps[44] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(36.26, -0.26, -47.190), Global.cpDefaults[2]);
+		Global.cps[45] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(45.993, 3, -36.446), Global.cpDefaults[2]);
+		Global.cps[46] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(57.496, 3, -54.121), Global.cpDefaults[2]);
+		Global.cps[47] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(47.49, 6, -67.970), Global.cpDefaults[2]);
+		Global.cps[48] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(32.38, -5.15, -57.330), Global.cpDefaults[2]);
+		Global.cps[49] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(34.29, 1.19, -53.240), Global.cpDefaults[2]);
+		Global.cps[50] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(40.6, -5.01, -51.200), Global.cpDefaults[2]);
+		Global.cps[51] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(43.11, -0.51, -49.171), Global.cpDefaults[2]);
+		Global.cps[52] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(65.46, -3.14, -26.55), Global.cpDefaults[2]);
+		Global.cps[53] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(62.097, 2.028, -22.853), Global.cpDefaults[2]);
+		Global.cps[54] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(73.6, -3.14, -38.120), Global.cpDefaults[2]);
+		Global.cps[55] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(74.748, 2.107, -34.640), Global.cpDefaults[2]);
+		Global.cps[56] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(50.72, 8.72, -47.450), Global.cpDefaults[2]);
+		Global.cps[57] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(45.49, 3, -36.66), Global.cpDefaults[2]);
+		Global.cps[58] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(47.22, 6, -67.500), Global.cpDefaults[2]);
+		Global.cps[59] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(39.46, -5.02, -75.880), Global.cpDefaults[2]);
+		Global.cps[60] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(14.081, 3.045, -70.069), Global.cpDefaults[2]);
+		Global.cps[61] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(27.17, 0, -104.230), Global.cpDefaults[2]);
+		Global.cps[62] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(29.24, 4, -106.270), Global.cpDefaults[2]);
+		Global.cps[63] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(42.742, -6.137, -119.077), Global.cpDefaults[2]);
+		Global.cps[64] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(36.423, 0, -112.203), Global.cpDefaults[2]);
+		Global.cps[65] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(33.015, 6.561, -109.607), Global.cpDefaults[2]);
+		Global.cps[66] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(38.88, 0, -99.490), Global.cpDefaults[2]);
+		Global.cps[67] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(31.76, 5.51, -92.420), Global.cpDefaults[2]);
+		Global.cps[68] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(39.957, 3.998, -102.764), Global.cpDefaults[2]);
+		Global.cps[69] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(33.417, 4.01, -86.090), Global.cpDefaults[2]);
+		Global.cps[70] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(43.86, 4.33, -130.510), Global.cpDefaults[2]);
+		Global.cps[71] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(35.776, 5, -144.535), Global.cpDefaults[2]);
+		Global.cps[72] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(16.589, -2, -133.052), Global.cpDefaults[2]);
+		Global.cps[73] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(21.742, -1.91, -129.950), Global.cpDefaults[1], Vector(37.649, 4.01, -124.211), Global.cpDefaults[2]);
+		Global.cps[74] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(61.452, -7.192, -141.705), Global.cpDefaults[2]);
+		Global.cps[75] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(64.37, -6.31, -131.28), Global.cpDefaults[1], Vector(60.992, 1, -115.213), Global.cpDefaults[2]);
+		Global.cps[76] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(36.918, 0.092, -95.332), Global.cpDefaults[1], Vector(27.284, 3.013, -84.642), Global.cpDefaults[2]);
+		Global.cps[77] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(16.503, -5, -70.262), Global.cpDefaults[2]);
+		Global.cps[78] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(23.858, -5.068, -82.402), Global.cpDefaults[1], Vector(29.458, 6.938, -90.962), Global.cpDefaults[2]);
+		Global.cps[79] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(38.373, -5.02, -77.208), Global.cpDefaults[2]);
+		Global.cps[80] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(44.188, -5.058, -60.366), Global.cpDefaults[1], Vector(56.069, 3, -52.942), Global.cpDefaults[2]);
+		Global.cps[81] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(47.966, -5, -68.898), Global.cpDefaults[2]);
+		Global.cps[82] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(41.762, -5.059, -62.347), Global.cpDefaults[1], Vector(36.26, -0.26, -47.190), Global.cpDefaults[2]);
+		Global.cps[83] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(62.694, -3.003, -16.511), Global.cpDefaults[2]);
+		Global.cps[84] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(74.99, -2.09, -9.26), Global.cpDefaults[1], Vector(83.645, 6, 1.309), Global.cpDefaults[2]);
+		Global.cps[85] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(97.81, 1, 12.53), Global.cpDefaults[2]);
+		Global.cps[86] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(82.13, 10.36, 14.070), Global.cpDefaults[2]);
+		Global.cps[87] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(75.569, 9, 22.556), Global.cpDefaults[2]);
+		Global.cps[88] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(59.696, 8.354, 20.334), Global.cpDefaults[2]);
+		Global.cps[89] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(51.531, 9, 9.279), Global.cpDefaults[2]);
+		Global.cps[90] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(41.032, 3, 7.798), Global.cpDefaults[2]);
+		Global.cps[91] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(46.18, 9, 10.570), Global.cpDefaults[2]);
+		Global.cps[92] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(45.06, 3, 3.140), Global.cpDefaults[2]);
+		Global.cps[93] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(48.646, 9, 7.999), Global.cpDefaults[2]);
+		Global.cps[94] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(81.852, 1, 23.622), Global.cpDefaults[2]);
+		Global.cps[95] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(79.799, 9, 21.207), Global.cpDefaults[2]);
+		Global.cps[96] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Null, Null, Vector(86.008, -3.141, -1.915), Global.cpDefaults[2]);
+		Global.cps[97] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(83.375, 6, 0.473), Global.cpDefaults[2]);
+		Global.cps[98] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], False, True, Null, Null, Vector(90.713, -3.045, -5.413), Global.cpDefaults[2]);
+		Global.cps[99] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0], True, True, Vector(85.5, -3.15, -1.500), Global.cpDefaults[1], Vector(83.375, 6, 0.473), Global.cpDefaults[2]);
+		Global.cps[100] = Array(Global.cps[Count Of(Global.cps) - 2][6], Global.cpDefaults[0]);
     }
 }
 
