@@ -449,7 +449,7 @@ rule("6.2: Start Elapsed Timer Format")
 			Global.timeFormat[0] = False;
 			Call Subroutine(formatTime);
 			Global.elapsedTimeFormatted = Global.timeFormatted;
-			Wait(0.03, Ignore Condition);
+			Wait(0.1, Ignore Condition);
 			Loop;
 		End;
 	}
@@ -989,7 +989,7 @@ rule("14.2: Update Run Timer Format")
 	{
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			Wait(0.03, Ignore Condition);
+			Wait(0.05, Ignore Condition);
 		End;
 	}
 }
