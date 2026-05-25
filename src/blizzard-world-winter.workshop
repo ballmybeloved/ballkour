@@ -82,6 +82,7 @@ variables
 		23: cps
 		24: timeToBeat
 		25: timeToBeatMs
+		26: playersUnpaused
 		90: bots
 		100: index
 
@@ -474,7 +475,7 @@ rule("6.2: Start Elapsed Timer Format")
 	}
 }
 
-rule("7: Player Joins")
+rule("7.1: Player Joins")
 {
 	event
 	{
@@ -511,6 +512,28 @@ rule("7: Player Joins")
 		Call Subroutine(loadLobby);
 		Wait(0.1, Ignore Condition);
 		Event Player.isLoading = False;
+	}
+}
+
+rule("7.2: Player Joins")
+{
+	event
+	{
+		Player Left Match;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == False;
+	}
+
+	actions
+	{
+		If(Event Player.runIsPaused == False);
+			Global.playersUnpaused -= 1;
+		End;
 	}
 }
 
@@ -1004,22 +1027,24 @@ rule("14.2: Update Run Timer Format")
 
 	actions
 	{
+		Global.playersUnpaused += 1;
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			If(Count Of(All Players(All Teams)) >= 10);
+			If(Global.playersUnpaused >= 10);
 				Wait(0.010, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 8);
+			Else If(Global.playersUnpaused >= 8);
 				Wait(0.080, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 6);
+			Else If(Global.playersUnpaused >= 6);
 				Wait(0.064, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 4);
+			Else If(Global.playersUnpaused >= 4);
 				Wait(0.050, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 2);
+			Else If(Global.playersUnpaused >= 2);
 				Wait(0.032, Abort When False);
 			Else;
 				Wait(0.016, Abort When False);
 			End;
 		End;
+		Global.playersUnpaused -= 1;
 	}
 }
 
