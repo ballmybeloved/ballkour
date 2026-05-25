@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.25-0"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.25-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -989,10 +989,12 @@ rule("14.2: Update Run Timer Format")
 			Call Subroutine(formatRunTime);
 			If(Count Of(All Players(All Teams)) >= 10);
 				Wait(0.096, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 7);
+			Else If(Count Of(All Players(All Teams)) >= 8);
 				Wait(0.080, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 4);
+			Else If(Count Of(All Players(All Teams)) >= 6);
 				Wait(0.064, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 4);
+				Wait(0.048, Abort When False);
 			Else If(Count Of(All Players(All Teams)) >= 2);
 				Wait(0.032, Abort When False);
 			Else;
