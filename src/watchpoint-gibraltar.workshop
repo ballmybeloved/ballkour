@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.24-2"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.25-0"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -342,19 +342,19 @@ rule("4: Lobby")
         Global.lobbyData[8] = Vector(101.36, -1.99, 73.035);
         Global.lobbyData[9] = Global.lobbyData[8] + Vector(0, -1, 0);
         Global.lobbyData[10] = Global.lobbyData[8] + Vector(0, 1.5, 0);
-        Global.lobbyData[11] = Vector(99.18, 4, 68.07);
+        Global.lobbyData[11] = Vector(99.18, 4.2, 68.07);
         Global.lobbyData[12] = 1.2;
         Global.lobbyData[13] = 0.85;
-        Global.lobbyData[14] = Vector(101.52, 4, 62.81);
-		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.65, 0);
-		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, -0.75, 0);
-		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 2;
-		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 3;
-		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 4;
-		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 5;
+        Global.lobbyData[14] = Vector(101.52, 4.2, 62.81);
+		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.775, 0);
+		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, -0.875, 0);
+		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, -0.875, 0) * 2;
+		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, -0.875, 0) * 3;
+		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, -0.875, 0) * 4;
+		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, -0.875, 0) * 5;
         "Top-10 Positions"
         Global.lbPos = Array();
-        Global.lbPos[1] = Global.lobbyData[11] + Vector(0, -1, 0);
+        Global.lbPos[1] = Global.lobbyData[11] + Vector(0, -0.65, 0);
         Global.lbPos[2] = Global.lbPos[1] + Vector(0, -0.5, 0);
         Global.lbPos[3] = Global.lbPos[1] + Vector(0, -0.5, 0) * 2;
         Global.lbPos[4] = Global.lbPos[1] + Vector(0, -0.5, 0) * 3;
@@ -856,11 +856,9 @@ rule("13.2: Load Checkpoint Data")
 
 	actions
 	{
-		"Event Player.cpData: [0]grappleEngaged [1]grappleUsed [2]jumping [3]jumped [4]bhopped [5]bounceUsed"	
+		"Event Player.cpData: [0]grappling [1]grappleUsed [2]jumping [3]jumped [4]bhopped [5]bounceUsed [6]piledriving"		
 		Event Player.cpData = Array();
-		Event Player.cpData[0] = False;
 		Event Player.cpData[1] = False;
-		Event Player.cpData[2] = False;
 		Event Player.cpData[3] = False;
 		Event Player.cpData[4] = False;
 		Event Player.cpData[5] = False;
@@ -989,12 +987,22 @@ rule("14.2: Update Run Timer Format")
 	{
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			Wait(0.05, Ignore Condition);
+			If(Count Of(All Players(All Teams)) >= 10);
+				Wait(0.096, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 7);
+				Wait(0.080, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 4);
+				Wait(0.064, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 2);
+				Wait(0.032, Abort When False);
+			Else;
+				Wait(0.016, Abort When False);
+			End;
 		End;
 	}
 }
 
-rule("15.1: Grapple Use")
+rule("15.1: Grappling")
 {
 	event
 	{
@@ -1024,7 +1032,7 @@ rule("15.1: Grapple Use")
 	}
 }
 
-rule("15.2.1: Jump Used")
+rule("15.2.1: Jumping")
 {
 	event
 	{
@@ -1050,7 +1058,7 @@ rule("15.2.1: Jump Used")
 	}
 }
 
-rule("15.2.2: Bhop Used")
+rule("15.2.2: Bhopping")
 {
 	event
 	{
@@ -1075,6 +1083,29 @@ rule("15.2.2: Bhop Used")
 			Wait Until(Is On Ground(Event Player), 99999999);
 			Event Player.cpData[4] = True;
 		End;
+	}
+}
+
+rule("15.3: Piledriving")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Crouch)) == True;
+		Is Button Held(Event Player, Button(Ultimate)) == False;
+	}
+
+	actions
+	{
+		Event Player.cpData[6] = True;
+		Wait Until(Is On Ground(Event Player), 99999999);
+		Event Player.cpData[6] = False;
 	}
 }
 
@@ -1351,7 +1382,6 @@ rule("18: Checkpoint Reset Player")
 				Set Secondary Fire Enabled(Event Player, True);
 				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 			End;
-			Event Player.cpData[2] = False;
 			Event Player.cpData[3] = False;
 			Event Player.cpData[4] = False;
 		End;
@@ -1374,7 +1404,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runIsLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[2]) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[2] || (Altitude Of(Event Player) < 0.05 && Event Player.cpData[6] == False)) == True;
 		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) <= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
