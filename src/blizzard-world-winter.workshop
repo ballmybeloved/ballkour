@@ -1006,7 +1006,17 @@ rule("14.2: Update Run Timer Format")
 	{
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			Wait(0.1, Ignore Condition);
+			If(Count Of(All Players(All Teams)) >= 10);
+				Wait(0.096, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 7);
+				Wait(0.080, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 4);
+				Wait(0.064, Abort When False);
+			Else If(Count Of(All Players(All Teams)) >= 2);
+				Wait(0.032, Abort When False);
+			Else;
+				Wait(0.016, Abort When False);
+			End;
 		End;
 	}
 }
