@@ -875,11 +875,9 @@ rule("13.2: Load Checkpoint Data")
 
 	actions
 	{
-		"Event Player.cpData: [0]grappleEngaged [1]grappleUsed [2]jumping [3]jumped [4]bhopped [5]bounceUsed"	
+		"Event Player.cpData: [0]grappling [1]grappleUsed [2]jumping [3]jumped [4]bhopped [5]bounceUsed [6]piledriving"		
 		Event Player.cpData = Array();
-		Event Player.cpData[0] = False;
 		Event Player.cpData[1] = False;
-		Event Player.cpData[2] = False;
 		Event Player.cpData[3] = False;
 		Event Player.cpData[4] = False;
 		Event Player.cpData[5] = False;
@@ -1013,7 +1011,7 @@ rule("14.2: Update Run Timer Format")
 	}
 }
 
-rule("15.1: Grapple Use")
+rule("15.1: Grappling")
 {
 	event
 	{
@@ -1043,7 +1041,7 @@ rule("15.1: Grapple Use")
 	}
 }
 
-rule("15.2.1: Jump Used")
+rule("15.2.1: Jumping")
 {
 	event
 	{
@@ -1069,7 +1067,7 @@ rule("15.2.1: Jump Used")
 	}
 }
 
-rule("15.2.2: Bhop Used")
+rule("15.2.2: Bhopping")
 {
 	event
 	{
@@ -1094,6 +1092,29 @@ rule("15.2.2: Bhop Used")
 			Wait Until(Is On Ground(Event Player), 99999999);
 			Event Player.cpData[4] = True;
 		End;
+	}
+}
+
+rule("15.3: Piledriving")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Crouch)) == True;
+		Is Button Held(Event Player, Button(Ultimate)) == False;
+	}
+
+	actions
+	{
+		Event Player.cpData[6] = True;
+		Wait Until(Is On Ground(Event Player), 99999999);
+		Event Player.cpData[6] = False;
 	}
 }
 
@@ -1370,7 +1391,6 @@ rule("18: Checkpoint Reset Player")
 				Set Secondary Fire Enabled(Event Player, True);
 				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 			End;
-			Event Player.cpData[2] = False;
 			Event Player.cpData[3] = False;
 			Event Player.cpData[4] = False;
 		End;
@@ -1393,7 +1413,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runIsLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[2]) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[2] || (Altitude Of(Event Player) < 0.05 && Event Player.cpData[6] == False)) == True;
 		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) <= Global.cps[Event Player.runCurrentCp][7] == True;
 	}
 
