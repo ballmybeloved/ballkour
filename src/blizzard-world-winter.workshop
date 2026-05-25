@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Blizzard World (Winter) \n\nv2026.05.25-1"
+		Description: "Blizzard World (Winter) \n\nv2026.05.25-2"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -59,29 +59,30 @@ variables
 {
 	global:
 		0: settings
-		1: hostPlayer
-		2: elapsedTime
-		3: elapsedTimeFormatted
-		4: timeToFormat
-		5: timeFormat
-		6: timeFormatted
-		7: players
-		8: playersAmnt
-		9: rejoinsAmnt
-		10: runs
-		11: totalRunTime
-		12: totalRunTimeFormatted
-		13: avgRunTime
-		14: avgRunTimeFormatted
-		15: lobbyData
-		16: lb
-		17: lbPos
-		18: lbObj
-		19: lbObjFormatted
-		22: cpDefaults
-		23: cps
-		24: timeToBeat
-		25: timeToBeatMs
+		1: lb
+		2: cps
+		3: cpDefaults
+		4: timeToBeat
+		5: timeToBeatMs
+		6: hostPlayer
+		7: elapsedTime
+		8: elapsedTimeFormatted
+		9: timeToFormat
+		10: timeFormat
+		11: timeFormatted
+		12: players
+		13: playersAmnt
+		14: rejoinsAmnt
+		15: runs
+		16: totalRunTime
+		17: totalRunTimeFormatted
+		18: avgRunTime
+		19: avgRunTimeFormatted
+		20: lobbyData
+		21: lbPos
+		22: lbObj
+		23: lbObjFormatted
+		24: playersUnpaused
 		90: bots
 		100: index
 
@@ -474,7 +475,7 @@ rule("6.2: Start Elapsed Timer Format")
 	}
 }
 
-rule("7: Player Joins")
+rule("7.1: Player Joins")
 {
 	event
 	{
@@ -511,6 +512,28 @@ rule("7: Player Joins")
 		Call Subroutine(loadLobby);
 		Wait(0.1, Ignore Condition);
 		Event Player.isLoading = False;
+	}
+}
+
+rule("7.2: Player Joins")
+{
+	event
+	{
+		Player Left Match;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == False;
+	}
+
+	actions
+	{
+		If(Event Player.runIsPaused == False);
+			Global.playersUnpaused -= 1;
+		End;
 	}
 }
 
@@ -1004,22 +1027,24 @@ rule("14.2: Update Run Timer Format")
 
 	actions
 	{
+		Global.playersUnpaused += 1;
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			If(Count Of(All Players(All Teams)) >= 10);
-				Wait(0.096, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 8);
+			If(Global.playersUnpaused >= 10);
+				Wait(0.100, Abort When False);
+			Else If(Global.playersUnpaused >= 8);
 				Wait(0.080, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 6);
+			Else If(Global.playersUnpaused >= 6);
 				Wait(0.064, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 4);
-				Wait(0.048, Abort When False);
-			Else If(Count Of(All Players(All Teams)) >= 2);
+			Else If(Global.playersUnpaused >= 4);
+				Wait(0.050, Abort When False);
+			Else If(Global.playersUnpaused >= 2);
 				Wait(0.032, Abort When False);
 			Else;
 				Wait(0.016, Abort When False);
 			End;
 		End;
+		Global.playersUnpaused -= 1;
 	}
 }
 
