@@ -1008,7 +1008,7 @@ rule("14.2: Update Run Timer Format")
 	{
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
-			Wait(0.05, Ignore Condition);
+			Wait(0.1, Ignore Condition);
 		End;
 	}
 }
