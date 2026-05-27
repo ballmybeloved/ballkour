@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.27-0"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.27-1"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -494,7 +494,7 @@ rule("7.1: Player Joins")
 	}
 }
 
-rule("7.2: Player Joins")
+rule("7.2: Player Leaves")
 {
     event
     {
@@ -514,11 +514,11 @@ rule("7.2: Player Joins")
             Global.playersUnpaused -= 1;
         End;
         Destroy In-World Text(Event Player.nameplateObject);
-        Call Subroutine(unloadCpObjects);
-        Call Subroutine(unloadHud);
-        Call Subroutine(unloadFreemodeHud);
-        Call Subroutine(unloadRunCompletionText);
-        Call Subroutine(unloadCtrlsHud);
+		Call Subroutine(unloadCpObjects);
+		Call Subroutine(unloadHud);
+		Call Subroutine(unloadFreemodeHud);
+		Call Subroutine(unloadRunCompletionText);
+		Call Subroutine(unloadCtrlsHud);
     }
 }
 
@@ -1013,6 +1013,38 @@ rule("14.2: Update Run Timer Format")
 	actions
 	{
 		Global.playersUnpaused += 1;
+		While(Event Player.runIsPaused == False);
+			Call Subroutine(formatRunTime);
+			If(Global.playersUnpaused >= 2);
+				Wait(0.100, Abort When False);
+			Else;
+				Wait(0.016, Abort When False);
+			End;
+		End;
+		Global.playersUnpaused -= 1;
+	}
+}
+
+disabled rule("14.2: Update Run Timer Format")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.runIsPaused == False;
+		Event Player.runIsLoaded == True;
+		Global.settings[0] == False;
+	}
+
+	actions
+	{
+		Global.playersUnpaused += 1;
+		"Disabled because this timer might be refreshing too quick"
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
 			If(Global.playersUnpaused >= 9);
@@ -1512,15 +1544,11 @@ rule("19.3: Update Lobby Stats With New Run")
 		Global.timeFormat[0] = False;
 		Call Subroutine(formatTime);
 		Global.totalRunTimeFormatted = Global.timeFormatted;
-		If (Global.runs == 0);
-			Global.avgRunTime = Global.totalRunTimeFormatted;
-		Else;
-			Global.avgRunTime = Global.totalRunTime / Global.runs;
-			Global.timeToFormat = Global.avgRunTime;
-			Global.timeFormat[0] = False;
-			Call Subroutine(formatTime);
-			Global.avgRunTimeFormatted = Global.timeFormatted;
-		End;
+		Global.avgRunTime = Global.totalRunTime / Global.runs;
+		Global.timeToFormat = Global.avgRunTime;
+		Global.timeFormat[0] = False;
+		Call Subroutine(formatTime);
+		Global.avgRunTimeFormatted = Global.timeFormatted;
 	}
 }
 
