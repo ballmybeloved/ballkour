@@ -515,26 +515,32 @@ rule("7.1: Player Joins")
 	}
 }
 
-rule("7.2: Player Leaves")
+rule("7.2: Player Joins")
 {
-	event
-	{
-		Player Left Match;
-		All;
-		All;
-	}
+    event
+    {
+        Player Left Match;
+        All;
+        All;
+    }
 
-	conditions
-	{
-		Is Dummy Bot(Event Player) == False;
-	}
+    conditions
+    {
+        Is Dummy Bot(Event Player) == False;
+    }
 
-	actions
-	{
-		If(Event Player.runIsPaused == False);
-			Global.playersUnpaused -= 1;
-		End;
-	}
+    actions
+    {
+        If(Event Player.runIsPaused == False);
+            Global.playersUnpaused -= 1;
+        End;
+        Destroy In-World Text(Event Player.nameplateObject);
+        Call Subroutine(unloadCpObjects);
+        Call Subroutine(unloadHud);
+        Call Subroutine(unloadFreemodeHud);
+        Call Subroutine(unloadRunCompletionText);
+        Call Subroutine(unloadCtrlsHud);
+    }
 }
 
 rule("8: Load Nameplate")
