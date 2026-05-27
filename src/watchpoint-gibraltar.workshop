@@ -1512,15 +1512,11 @@ rule("19.3: Update Lobby Stats With New Run")
 		Global.timeFormat[0] = False;
 		Call Subroutine(formatTime);
 		Global.totalRunTimeFormatted = Global.timeFormatted;
-		If (Global.runs == 0);
-			Global.avgRunTime = Global.totalRunTimeFormatted;
-		Else;
-			Global.avgRunTime = Global.totalRunTime / Global.runs;
-			Global.timeToFormat = Global.avgRunTime;
-			Global.timeFormat[0] = False;
-			Call Subroutine(formatTime);
-			Global.avgRunTimeFormatted = Global.timeFormatted;
-		End;
+		Global.avgRunTime = Global.totalRunTime / Global.runs;
+		Global.timeToFormat = Global.avgRunTime;
+		Global.timeFormat[0] = False;
+		Call Subroutine(formatTime);
+		Global.avgRunTimeFormatted = Global.timeFormatted;
 	}
 }
 
