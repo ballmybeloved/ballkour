@@ -494,7 +494,7 @@ rule("7.1: Player Joins")
 	}
 }
 
-rule("7.2: Player Joins")
+rule("7.2: Player Leaves")
 {
     event
     {
@@ -514,11 +514,11 @@ rule("7.2: Player Joins")
             Global.playersUnpaused -= 1;
         End;
         Destroy In-World Text(Event Player.nameplateObject);
-        Call Subroutine(unloadCpObjects);
-        Call Subroutine(unloadHud);
-        Call Subroutine(unloadFreemodeHud);
-        Call Subroutine(unloadRunCompletionText);
-        Call Subroutine(unloadCtrlsHud);
+		Call Subroutine(unloadCpObjects);
+		Call Subroutine(unloadHud);
+		Call Subroutine(unloadFreemodeHud);
+		Call Subroutine(unloadRunCompletionText);
+		Call Subroutine(unloadCtrlsHud);
     }
 }
 
