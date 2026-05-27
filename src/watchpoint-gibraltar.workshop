@@ -64,25 +64,33 @@ variables
 		3: cpDefaults
 		4: timeToBeat
 		5: timeToBeatMs
-		6: hostPlayer
-		7: elapsedTime
-		8: elapsedTimeFormatted
-		9: timeToFormat
-		10: timeFormat
-		11: timeFormatted
-		12: players
-		13: playersAmnt
-		14: rejoinsAmnt
-		15: runs
-		16: totalRunTime
-		17: totalRunTimeFormatted
-		18: avgRunTime
-		19: avgRunTimeFormatted
-		20: lobbyData
-		21: lbPos
-		22: lbObj
-		23: lbObjFormatted
-		24: playersUnpaused
+		6: timeToBeatFormatted
+		7: hostPlayer
+		8: elapsedTime
+		9: elapsedTimeFormatted
+		10: timeToFormat
+		11: remainingSec
+		12: hr
+		13: min
+		14: minText
+		15: sec
+		16: secText
+		17: hundredths
+		18: hundredthsText
+		19: timeFormatted
+		20: players
+		21: playersAmnt
+		22: rejoinsAmnt
+		23: runs
+		24: totalRunTime
+		25: totalRunTimeFormatted
+		26: avgRunTime
+		27: avgRunTimeFormatted
+		28: lobbyData
+		29: lbPos
+		30: lbObj
+		31: lbObjFormatted
+		32: playersUnpaused
 		100: index
 
 	player:
@@ -95,50 +103,59 @@ variables
 		6: runCurrentCp
 		7: runMistakes
 		8: runTime
-		9: runTimeFormat
-		10: runTimeFormatted
-		11: cpData
-		12: cpEffects
-		13: cpIcons
-		14: runIsLegit
-		15: runIsPaused
-		16: runIsFinished
-		17: isInFreemode
-		18: freemodeHud
-		19: runCompletionText
-		20: runCompletionTextActive
-		21: statToFormat
-		22: statFormatted
-		23: ctrlsHud
-		24: ctrlsHudActive
-		25: cpCtrlsInputLocked
+		9: remainingSec
+		10: hr
+		11: min
+		12: minText
+		13: sec
+		14: secText
+		15: hundredths
+		16: hundredthsText
+		17: runTimeFormatted
+		18: cpData
+		19: cpEffects
+		20: cpIcons
+		21: runIsLegit
+		22: runIsPaused
+		23: runIsFinished
+		24: isInFreemode
+		25: freemodeHud
+		26: runCompletionText
+		27: runCompletionTextActive
+		28: statToFormat
+		29: statFormatted
+		30: ctrlsHud
+		31: ctrlsHudActive
+		32: cpCtrlsInputLocked
 		100: index
 }
 
 subroutines
 {
-	0: formatTime
-	1: loadNameplate
-	2: loadLobby
-	3: formatLbString
-	4: newRun
-	5: loadCp
-	6: loadHud
-	7: unloadHud
-	8: loadCpData
-	9: loadCpObjects
-	10: unloadCpObjects
-	11: setCpAbilities
-	12: cpResetPlayer
-	13: finalCpReached
-	14: formatRunTime
-	15: loadRunCompletionText
-	16: unloadRunCompletionText
-	17: loadFreemodeHud
-	18: unloadFreemodeHud
-	19: loadCtrlsHud
-	20: unloadCtrlsHud
-	21: updateStats
+	0: formatTimeToBeat
+	1: formatElapsedTime
+	2: loadNameplate
+	3: loadLobby
+	4: formatLbString
+	5: newRun
+	6: loadCp
+	7: loadHud
+	8: unloadHud
+	9: loadCpData
+	10: loadCpObjects
+	11: unloadCpObjects
+	12: setCpAbilities
+	13: cpResetPlayer
+	14: finalCpReached
+	15: formatRunTime
+	16: loadRunCompletionText
+	17: unloadRunCompletionText
+	18: loadFreemodeHud
+	19: unloadFreemodeHud
+	20: loadCtrlsHud
+	21: unloadCtrlsHud
+	22: updateStats
+	23: formatLobbyRunTimes
 }
 
 rule("0: Contact & Course Info")
@@ -425,6 +442,7 @@ rule("6.1: Initialize Match")
 			Global.avgRunTime = 0;
 			Global.avgRunTimeFormatted = Custom String("00:00.00");
 		End;
+		Call Subroutine(formatTimeToBeat);
 	}
 }
 
@@ -444,10 +462,7 @@ rule("6.2: Start Elapsed Timer Format")
 	{
 		Chase Global Variable At Rate(elapsedTime, 99999999, 1, Destination and Rate);
 		If(Global.settings[0] == False);
-			Global.timeToFormat = Global.elapsedTime;
-			Global.timeFormat[0] = False;
-			Call Subroutine(formatTime);
-			Global.elapsedTimeFormatted = Global.timeFormatted;
+			Call Subroutine(formatElapsedTime);
 			Wait(0.1, Ignore Condition);
 			Loop;
 		End;
@@ -1541,13 +1556,11 @@ rule("19.3: Update Lobby Stats With New Run")
 		Global.runs += 1;
 		Global.totalRunTime += Event Player.runTime;
 		Global.timeToFormat = Global.totalRunTime;
-		Global.timeFormat[0] = False;
-		Call Subroutine(formatTime);
+		Call Subroutine(formatLobbyRunTimes);
 		Global.totalRunTimeFormatted = Global.timeFormatted;
 		Global.avgRunTime = Global.totalRunTime / Global.runs;
 		Global.timeToFormat = Global.avgRunTime;
-		Global.timeFormat[0] = False;
-		Call Subroutine(formatTime);
+		Call Subroutine(formatLobbyRunTimes);
 		Global.avgRunTimeFormatted = Global.timeFormatted;
 	}
 }
@@ -1573,8 +1586,7 @@ rule("19.4.1: Load Run Completion Text")
 			Event Player.runCompletionText[2] = Last Text ID;
 		Else;
 			Global.timeToFormat = Global.timeToBeatMs;
-			Global.timeFormat[0] = True;
-			Call Subroutine(formatTime);
+			Call Subroutine(formatLobbyRunTimes);
 			Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeFormatted), Null, Top, 8, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[2] = Last Text ID;
 		End;
@@ -1981,57 +1993,87 @@ rule("20.7: Lobby Input")
 	}
 }
 
-rule("21.1: Format Time String")
+rule("21.1: Format Time To Beat String")
 {
 	event
 	{
 		Subroutine;
-		formatTime;
+		formatTimeToBeat;
 	}
 
 	actions
 	{
-		"Global.timeFormat: [0]isTimeInMs [1]hr [2]remainingSec [3]min [4]min Text [5]sec [6]secText [7]hundredths [8]hundredthsText"
-		If(Global.timeFormat[0] == False);
-			Global.timeFormat[1] = Round To Integer(Global.timeToFormat / 3600, Down);
-			Global.timeFormat[2] = Global.timeToFormat % 3600;
-			Global.timeFormat[3] = Round To Integer(Global.timeFormat[2] / 60, Down);
-			Global.timeFormat[5] = Round To Integer(Global.timeFormat[2] % 60, Down);
-			Global.timeFormat[7] = Round To Integer((Global.timeToFormat - Round To Integer(Global.timeToFormat, Down)) * 100, Down);
+		Global.remainingSec = Global.timeToBeatMs % 3600000;
+		Global.hr = Round To Integer(Global.timeToBeatMs / 3600000, Down);
+		Global.min = Round To Integer(Global.remainingSec / 60000, Down);
+		Global.sec = Round To Integer(Global.remainingSec % 60000 / 1000, Down);
+		Global.hundredths = Round To Integer(Global.timeToBeatMs % 1000 / 10, Down);
+		If(Global.sec < 10);
+			Global.secText = Custom String("0{0}", Global.sec);
 		Else;
-			Global.timeFormat[1] = Round To Integer(Global.timeToFormat / 3600000, Down);
-			Global.timeFormat[2] = Global.timeToFormat % 3600000;
-			Global.timeFormat[3] = Round To Integer(Global.timeFormat[2] / 60000, Down);
-			Global.timeFormat[5] = Round To Integer(Global.timeFormat[2] % 60000 / 1000, Down);
-			Global.timeFormat[7] = Round To Integer(Global.timeToFormat % 1000 / 10, Down);
+			Global.secText = Custom String("{0}", Global.sec);
 		End;
-		If(Global.timeFormat[5] < 10);
-			Global.timeFormat[6] = Custom String("0{0}", Global.timeFormat[5]);
+		If(Global.hundredths < 10);
+			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
 		Else;
-			Global.timeFormat[6] = Custom String("{0}", Global.timeFormat[5]);
+			Global.hundredthsText = Custom String("{0}", Global.hundredths);
 		End;
-		If(Global.timeFormat[7] < 10);
-			Global.timeFormat[8] = Custom String("0{0}", Global.timeFormat[7]);
+		If(Global.min < 10);
+			Global.minText = Custom String("0{0}", Global.min);
 		Else;
-			Global.timeFormat[8] = Custom String("{0}", Global.timeFormat[7]);
+			Global.minText = Custom String("{0}", Global.min);
 		End;
-		If(Global.timeFormat[3] < 10);
-			Global.timeFormat[4] = Custom String("0{0}", Global.timeFormat[3]);
+		If(Global.hr > 0);
+			Global.timeToBeatFormatted = Custom String("{0}:{1}:{2}", Global.hr, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
+		Else If(Global.min > 0);
+			Global.timeToBeatFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
 		Else;
-			Global.timeFormat[4] = Custom String("{0}", Global.timeFormat[3]);
+			Global.timeToBeatFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
 		End;
-		If(Global.timeFormat[1] > 0);
-			Global.timeFormatted = Custom String("{0}:{1}:{2}", Global.timeFormat[1], Global.timeFormat[4], Custom String("{0}.{1}", Global.timeFormat[6], Global.timeFormat[8]));
-		Else If(Global.timeFormat[3] > 0);
-			Global.timeFormatted = Custom String("{0}:{1}.{2}", Global.timeFormat[3], Global.timeFormat[6], Global.timeFormat[8]);
-		Else;
-			Global.timeFormatted = Custom String("{0}.{1}", Global.timeFormat[5], Global.timeFormat[8]);
-		End;
-		Global.timeFormat = Array();
 	}
 }
 
-rule("21.2: Format Run Time String")
+rule("21.2: Format Elapsed Time String")
+{
+	event
+	{
+		Subroutine;
+		formatElapsedTime;
+	}
+
+	actions
+	{
+		Global.remainingSec = Global.elapsedTime % 3600;
+		Global.hr = Round To Integer(Global.elapsedTime / 3600, Down);
+		Global.min = Round To Integer(Global.remainingSec / 60, Down);
+		Global.sec = Round To Integer(Global.remainingSec % 60, Down);
+		Global.hundredths = Round To Integer((Global.elapsedTime - Round To Integer(Global.elapsedTime, Down)) * 100, Down);
+		If(Global.sec < 10);
+			Global.secText = Custom String("0{0}", Global.sec);
+		Else;
+			Global.secText = Custom String("{0}", Global.sec);
+		End;
+		If(Global.hundredths < 10);
+			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
+		Else;
+			Global.hundredthsText = Custom String("{0}", Global.hundredths);
+		End;
+		If(Global.min < 10);
+			Global.minText = Custom String("0{0}", Global.min);
+		Else;
+			Global.minText = Custom String("{0}", Global.min);
+		End;
+		If(Global.hr > 0);
+			Global.elapsedTimeFormatted = Custom String("{0}:{1}:{2}", Global.hr, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
+		Else If(Global.min > 0);
+			Global.elapsedTimeFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
+		Else;
+			Global.elapsedTimeFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
+		End;
+	}
+}
+
+rule("21.3: Format Run Time String")
 {
 	event
 	{
@@ -2041,34 +2083,72 @@ rule("21.2: Format Run Time String")
 
 	actions
 	{
-		"Event Player.runTimeFormat: [0]isTimeInMs=False [1]hr [2]remainingSec [3]min [4]min Text [5]sec [6]secText [7]hundredths [8]hundredthsText"
-		Event Player.runTimeFormat = Array();
-		Event Player.runTimeFormat[1] = Round To Integer(Event Player.runTime / 3600, Down);
-		Event Player.runTimeFormat[2] = Event Player.runTime % 3600;
-		Event Player.runTimeFormat[3] = Round To Integer(Event Player.runTimeFormat[2] / 60, Down);
-		Event Player.runTimeFormat[5] = Round To Integer(Event Player.runTimeFormat[2] % 60, Down);
-		Event Player.runTimeFormat[7] = Round To Integer((Event Player.runTime - Round To Integer(Event Player.runTime, Down)) * 100, Down);
-		If(Event Player.runTimeFormat[5] < 10);
-			Event Player.runTimeFormat[6] = Custom String("0{0}", Event Player.runTimeFormat[5]);
+		Event Player.remainingSec = Event Player.runTime % 3600;
+		Event Player.hr = Round To Integer(Event Player.runTime / 3600, Down);
+		Event Player.min = Round To Integer(Event Player.remainingSec / 60, Down);
+		Event Player.sec = Round To Integer(Event Player.remainingSec % 60, Down);
+		Event Player.hundredths = Round To Integer((Event Player.runTime - Round To Integer(Event Player.runTime, Down)) * 100, Down);
+		If(Event Player.sec < 10);
+			Event Player.secText = Custom String("0{0}", Event Player.sec);
 		Else;
-			Event Player.runTimeFormat[6] = Custom String("{0}", Event Player.runTimeFormat[5]);
+			Event Player.secText = Custom String("{0}", Event Player.sec);
 		End;
-		If(Event Player.runTimeFormat[7] < 10);
-			Event Player.runTimeFormat[8] = Custom String("0{0}", Event Player.runTimeFormat[7]);
+		If(Event Player.hundredths < 10);
+			Event Player.hundredthsText = Custom String("0{0}", Event Player.hundredths);
 		Else;
-			Event Player.runTimeFormat[8] = Custom String("{0}", Event Player.runTimeFormat[7]);
+			Event Player.hundredthsText = Custom String("{0}", Event Player.hundredths);
 		End;
-		If(Event Player.runTimeFormat[3] < 10);
-			Event Player.runTimeFormat[4] = Custom String("0{0}", Event Player.runTimeFormat[3]);
+		If(Event Player.min < 10);
+			Event Player.minText = Custom String("0{0}", Event Player.min);
 		Else;
-			Event Player.runTimeFormat[4] = Custom String("{0}", Event Player.runTimeFormat[3]);
+			Event Player.minText = Custom String("{0}", Event Player.min);
 		End;
-		If(Event Player.runTimeFormat[1] > 0);
-			Event Player.runTimeFormatted = Custom String("{0}:{1}:{2}", Event Player.runTimeFormat[1], Event Player.runTimeFormat[4], Custom String("{0}.{1}", Event Player.runTimeFormat[6], Event Player.runTimeFormat[8]));
-		Else If(Event Player.runTimeFormat[3] > 0);
-			Event Player.runTimeFormatted = Custom String("{0}:{1}.{2}", Event Player.runTimeFormat[3], Event Player.runTimeFormat[6], Event Player.runTimeFormat[8]);
+		If(Event Player.hr > 0);
+			Event Player.runTimeFormatted = Custom String("{0}:{1}:{2}", Event Player.hr, Event Player.minText, Custom String("{0}.{1}", Event Player.secText, Event Player.hundredthsText));
+		Else If(Event Player.min > 0);
+			Event Player.runTimeFormatted = Custom String("{0}:{1}.{2}", Event Player.min, Event Player.secText, Event Player.hundredthsText);
 		Else;
-			Event Player.runTimeFormatted = Custom String("{0}.{1}", Event Player.runTimeFormat[5], Event Player.runTimeFormat[8]);
+			Event Player.runTimeFormatted = Custom String("{0}.{1}", Event Player.sec, Event Player.hundredthsText);
+		End;
+	}
+}
+
+rule("21.4: Format Lobby Run Time Strings")
+{
+	event
+	{
+		Subroutine;
+		formatLobbyRunTimes;
+	}
+
+	actions
+	{
+		Global.remainingSec = Global.timeToFormat % 3600;
+		Global.hr = Round To Integer(Global.timeToFormat / 3600, Down);
+		Global.min = Round To Integer(Global.remainingSec / 60, Down);
+		Global.sec = Round To Integer(Global.remainingSec % 60, Down);
+		Global.hundredths = Round To Integer((Global.timeToFormat - Round To Integer(Global.timeToFormat, Down)) * 100, Down);
+		If(Global.sec < 10);
+			Global.secText = Custom String("0{0}", Global.sec);
+		Else;
+			Global.secText = Custom String("{0}", Global.sec);
+		End;
+		If(Global.hundredths < 10);
+			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
+		Else;
+			Global.hundredthsText = Custom String("{0}", Global.hundredths);
+		End;
+		If(Global.min < 10);
+			Global.minText = Custom String("0{0}", Global.min);
+		Else;
+			Global.minText = Custom String("{0}", Global.min);
+		End;
+		If(Global.hr > 0);
+			Global.timeFormatted = Custom String("{0}:{1}:{2}", Global.hr, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
+		Else If(Global.min > 0);
+			Global.timeFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
+		Else;
+			Global.timeFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
 		End;
 	}
 }
