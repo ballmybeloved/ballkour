@@ -102,16 +102,17 @@ variables
 		13: cpIcons
 		14: runIsLegit
 		15: runIsPaused
-		16: runIsFinished
-		17: isInFreemode
-		18: freemodeHud
-		19: runCompletionText
-		20: runCompletionTextActive
-		21: statToFormat
-		22: statFormatted
-		23: ctrlsHud
-		24: ctrlsHudActive
-		25: cpCtrlsInputLocked
+		16: isTimerActive
+		17: runIsFinished
+		18: isInFreemode
+		19: freemodeHud
+		20: runCompletionText
+		21: runCompletionTextActive
+		22: statToFormat
+		23: statFormatted
+		24: ctrlsHud
+		25: ctrlsHudActive
+		26: cpCtrlsInputLocked
 		100: index
 }
 
@@ -1016,6 +1017,7 @@ rule("14.2: Update Run Timer Format")
 
 	conditions
 	{
+		Event Player.isTimerActive == False;
 		Event Player.runIsPaused == False;
 		Event Player.runIsLoaded == True;
 		Global.settings[0] == False;
@@ -1024,6 +1026,7 @@ rule("14.2: Update Run Timer Format")
 	actions
 	{
 		Global.playersUnpaused += 1;
+		Event Player.isTimerActive = True;
 		While(Event Player.runIsPaused == False);
 			Call Subroutine(formatRunTime);
 			If(Global.playersUnpaused >= 2);
@@ -1033,6 +1036,7 @@ rule("14.2: Update Run Timer Format")
 			End;
 		End;
 		Global.playersUnpaused -= 1;
+		Event Player.isTimerActive = False;
 	}
 }
 
