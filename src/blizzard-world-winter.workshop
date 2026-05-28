@@ -408,7 +408,7 @@ rule("5: Lobby Boundary")
 	{
 		(Has Spawned(Event Player) && Event Player.isLoading == False) == True;
 		Event Player.isInLobby == True;
-		Distance Between(Position Of(Event Player), Global.lobbyData[0]) > 30;
+		Distance Between(Position Of(Event Player), Global.lobbyData[0]) > 20;
 	}
 
 	actions
