@@ -1394,7 +1394,7 @@ rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 		Event Player.cpData[4] != Null;
 		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[4]) >= Event Player.cpData[5] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[4]) <= Event Player.cpData[5] == True;
 	}
 
 	actions
