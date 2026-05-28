@@ -865,8 +865,8 @@ rule("13.1: Load Checkpoint")
 	actions
 	{
 		Call Subroutine(unloadCpObjects);
+		Call Subroutine(loadCpData);
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			Call Subroutine(loadCpData);
 			Call Subroutine(loadCpObjects);
 		End;
 		Call Subroutine(setCpAbilities);
@@ -883,9 +883,12 @@ rule("13.2: Load Checkpoint Data")
 
 	actions
 	{
-		"Event Player.cpData: [0]cpLoc [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving"		
+		"Event Player.cpData: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving"		
 		Event Player.cpData = Array();
 		Event Player.cpData[0] = Global.cps[Event Player.runCurrentCp][0];
+		If(Event Player.runCurrentCp == Count Of(Global.cps) - 1);
+			Abort;
+		End;
 		Event Player.cpData[1] = Global.cps[Event Player.runCurrentCp][1];
 		Event Player.cpData[2] = Global.cps[Event Player.runCurrentCp][2];
 		Event Player.cpData[3] = Global.cps[Event Player.runCurrentCp][3];
@@ -1743,11 +1746,8 @@ rule("20.3: Go Back Checkpoint Input")
 			Event Player.isLoading = True;
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
 				Event Player.runCurrentCp -= 1;
-				Teleport(Event Player, Event Player.cpData[0]);
+				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
 				Wait(0.02, Ignore Condition);
-				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False);
-					Break;
-				End;
 			End;
 			Call Subroutine(loadCp);
 			Call Subroutine(cpResetPlayer);
@@ -1795,14 +1795,11 @@ rule("20.4: Skip Checkpoint Input")
 		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
+			Event Player.isLoading = True;
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 				Event Player.runCurrentCp += 1;
-				Event Player.isLoading = True;
-				Teleport(Event Player, Event Player.cpData[0]);
+				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
 				Wait(0.02, Ignore Condition);
-				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False);
-					Break;
-				End;
 			End;
 			Call Subroutine(loadCp);
 			Call Subroutine(cpResetPlayer);
