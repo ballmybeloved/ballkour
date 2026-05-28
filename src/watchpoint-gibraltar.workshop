@@ -898,12 +898,20 @@ rule("13.2: Load Checkpoint Data")
 
 	actions
 	{
-		"Event Player.cpData: [0]grappling [1]grappleUsed [2]jumping [3]jumped [4]bhopped [5]bounceUsed [6]piledriving"		
+		"Event Player.cpData: [0]cpLoc [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving"		
 		Event Player.cpData = Array();
-		Event Player.cpData[1] = False;
-		Event Player.cpData[3] = False;
-		Event Player.cpData[4] = False;
-		Event Player.cpData[5] = False;
+		Event Player.cpData[0] = Global.cps[Event Player.runCurrentCp][0];
+		Event Player.cpData[1] = Global.cps[Event Player.runCurrentCp][1];
+		Event Player.cpData[2] = Global.cps[Event Player.runCurrentCp][2];
+		Event Player.cpData[3] = Global.cps[Event Player.runCurrentCp][3];
+		Event Player.cpData[4] = Global.cps[Event Player.runCurrentCp][4];
+		Event Player.cpData[5] = Global.cps[Event Player.runCurrentCp][5];
+		Event Player.cpData[6] = Global.cps[Event Player.runCurrentCp][6];
+		Event Player.cpData[7] = Global.cps[Event Player.runCurrentCp][7];
+		Event Player.cpData[9] = False;
+		Event Player.cpData[11] = False;
+		Event Player.cpData[12] = False;
+		Event Player.cpData[13] = False;
 	}
 }
 
@@ -919,19 +927,19 @@ rule("13.3.1: Load Checkpoint Objects")
 	{
 		Event Player.cpEffects = Array();
 		Event Player.cpIcons = Array();
-		Create Effect(Event Player, Ring, Color(Green), Global.cps[Event Player.runCurrentCp][0], Global.cps[Event Player.runCurrentCp][1], Position and Radius);
+		Create Effect(Event Player, Ring, Color(Green), Event Player.cpData[0], Event Player.cpData[1], Position and Radius);
 		Event Player.cpEffects[0] = Last Created Entity;
-		If(Global.cps[Event Player.runCurrentCp][4] != Null);
-			Create Effect(Event Player, Ring, Color(Orange), Global.cps[Event Player.runCurrentCp][4], Global.cps[Event Player.runCurrentCp][5], Position and Radius);
+		If(Event Player.cpData[4] != Null);
+			Create Effect(Event Player, Ring, Color(Orange), Event Player.cpData[4], Event Player.cpData[5], Position and Radius);
 			Event Player.cpEffects[1] = Last Created Entity;
-			Create Icon(Event Player, Global.cps[Event Player.runCurrentCp][4], Arrow: Up, Position, Color(Yellow), False);
+			Create Icon(Event Player, Event Player.cpData[4], Arrow: Up, Position, Color(Yellow), False);
 			Event Player.cpIcons[0] = Last Created Entity;
 		End;
-		Create Effect(Event Player, Ring, Color(Sky Blue), Global.cps[Event Player.runCurrentCp][6], Global.cps[Event Player.runCurrentCp][7], Position and Radius);
+		Create Effect(Event Player, Ring, Color(Sky Blue), Event Player.cpData[6], Event Player.cpData[7], Position and Radius);
 		Event Player.cpEffects[2] = Last Created Entity;
-		Create Icon(Event Player, Global.cps[Event Player.runCurrentCp][6] - Vector(0, 0.5, 0), Flag, Position, Color(Green), True);
+		Create Icon(Event Player, Event Player.cpData[6] - Vector(0, 0.5, 0), Flag, Position, Color(Green), True);
 		Event Player.cpIcons[1] = Last Created Entity;
-		Create Effect(Event Player, Light Shaft, Color(Sky Blue), Global.cps[Event Player.runCurrentCp][6], Global.cps[Event Player.runCurrentCp][7], Position and Radius);
+		Create Effect(Event Player, Light Shaft, Color(Sky Blue), Event Player.cpData[6], Event Player.cpData[7], Position and Radius);
 		Event Player.cpEffects[3] = Last Created Entity;
 	}
 }
@@ -966,15 +974,15 @@ rule("13.4: Set Checkpoint Abilities")
 	actions
 	{
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1 && Event Player.isInFreemode == False);
-			Set Secondary Fire Enabled(Event Player, Global.cps[Event Player.runCurrentCp][2]);
-			If(Global.cps[Event Player.runCurrentCp][3] == False);
+			Set Secondary Fire Enabled(Event Player, Event Player.cpData[2]);
+			If(Event Player.cpData[3] == False);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
 			End;
 		Else;
 			Set Secondary Fire Enabled(Event Player, True);
-			If(Global.cps[Event Player.runCurrentCp][3] == False);
+			If(Event Player.cpData[3] == False);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
@@ -999,7 +1007,7 @@ rule("14.1: Start/Resume Run")
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == True;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
 	}
 
 	actions
@@ -1095,15 +1103,15 @@ rule("15.1: Grappling")
 
 	actions
 	{
-		If(Global.cps[Event Player.runCurrentCp][4] == Null || Event Player.isInFreemode == True);
+		If(Event Player.cpData[4] == Null || Event Player.isInFreemode == True);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
-			Event Player.cpData[0] = True;
+			Event Player.cpData[8] = True;
 			Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Speed Of(Event Player) > 05, 99999999);
 			If(Speed Of(Event Player) > 5);
 				Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 8.5);
 			End;
-			Event Player.cpData[1] = True;
+			Event Player.cpData[9] = True;
 		End;
 	}
 }
@@ -1127,10 +1135,10 @@ rule("15.2.1: Jumping")
 
 	actions
 	{
-		Event Player.cpData[2] = True;
-		Event Player.cpData[3] = True;
+		Event Player.cpData[10] = True;
+		Event Player.cpData[11] = True;
 		Wait Until(Is On Ground(Event Player), 0.016);
-		Event Player.cpData[2] = False;
+		Event Player.cpData[10] = False;
 	}
 }
 
@@ -1149,15 +1157,15 @@ rule("15.2.2: Bhopping")
 		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
 		Event Player.isInLobby == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
 	}
 
 	actions
 	{
-		If(Event Player.cpData[4] == False);
+		If(Event Player.cpData[12] == False);
 			Wait Until(Is On Ground(Event Player), 99999999);
-			Event Player.cpData[4] = True;
+			Event Player.cpData[12] = True;
 		End;
 	}
 }
@@ -1179,9 +1187,9 @@ rule("15.3: Piledriving")
 
 	actions
 	{
-		Event Player.cpData[6] = True;
+		Event Player.cpData[14] = True;
 		Wait Until(Is On Ground(Event Player), 99999999);
-		Event Player.cpData[6] = False;
+		Event Player.cpData[14] = False;
 	}
 }
 
@@ -1197,23 +1205,23 @@ rule("15.3: Reset Useless Grapple/Jump/Bhop")
 	conditions
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
-		(Event Player.cpData[1] || Event Player.cpData[3] || Event Player.cpData[4]) == True;
+		(Event Player.cpData[9] || Event Player.cpData[11] || Event Player.cpData[12]) == True;
 		Event Player.isInLobby == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1] == True;
 	}
 
 	actions
 	{
 		Wait Until(Is On Ground(Event Player), 99999999);
-		If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1]);
-			If(Global.cps[Event Player.runCurrentCp][2] == True);
-				Event Player.cpData[1] = False;
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
+			If(Event Player.cpData[2] == True);
+				Event Player.cpData[9] = False;
 				Set Secondary Fire Enabled(Event Player, True);
 				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 			End;
-			Event Player.cpData[3] = False;
-			Event Player.cpData[4] = False;
-			Event Player.cpData[5] = False;
+			Event Player.cpData[11] = False;
+			Event Player.cpData[12] = False;
+			Event Player.cpData[13] = False;
 		End;
 	}
 }
@@ -1230,12 +1238,12 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 	conditions
 	{
 		Event Player.isInFreemode == False;
-		(Global.cps[Event Player.runCurrentCp][4] == Null || Event Player.cpData[0] == False || Event Player.cpData[5] == True) == True;
-		(Is On Ground(Event Player) || (Event Player.cpData[2] && Event Player.cpData[4])) == True;
+		(Event Player.cpData[4] == Null || Event Player.cpData[8] == False || Event Player.cpData[13] == True) == True;
+		(Is On Ground(Event Player) || (Event Player.cpData[10] && Event Player.cpData[12])) == True;
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Is Dummy Bot(Event Player) == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True; 
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True; 
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
 	}
 
 	actions
@@ -1261,10 +1269,10 @@ rule("16.2: Checkpoint Mistake: Already Bhopped")
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInFreemode == False;
 		Is Jumping(Event Player) == True;
-		Event Player.cpData[4] == True;
-		(Global.cps[Event Player.runCurrentCp][4] == Null || Event Player.cpData[0] == False || Event Player.cpData[5] == True) == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) >= Global.cps[Event Player.runCurrentCp][7] == True;
+		Event Player.cpData[12] == True;
+		(Event Player.cpData[4] == Null || Event Player.cpData[8] == False || Event Player.cpData[13] == True) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
 	}
 
 	actions
@@ -1308,16 +1316,16 @@ rule("17.1: Bounce Checkpoints: Grapple Use")
 
 	conditions
 	{
-		Global.cps[Event Player.runCurrentCp][4] != Null;
-		Event Player.cpData[1] == True;
+		Event Player.cpData[4] != Null;
+		Event Player.cpData[9] == True;
 	}
 
 	actions
 	{
 		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 99999999);
-		If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) <= Global.cps[Event Player.runCurrentCp][1]);
-			Event Player.cpData[0] = False;
-			Event Player.cpData[1] = False;
+		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
+			Event Player.cpData[8] = False;
+			Event Player.cpData[9] = False;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
@@ -1340,9 +1348,9 @@ rule("17.2: Bounce Checkpoint Mistake: No Grapple")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInFreemode == False;
-		Global.cps[Event Player.runCurrentCp][4] != Null;
-		Event Player.cpData[0] == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Event Player.cpData[4] != Null;
+		Event Player.cpData[8] == False;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
 	}
 
 	actions
@@ -1366,12 +1374,12 @@ rule("17.3: Bounce Checkpoint Mistake: Too Slow")
 	conditions
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
-		Global.cps[Event Player.runCurrentCp][4] != Null;
-		Event Player.cpData[1] == True;
-		Event Player.cpData[5] == False;
+		Event Player.cpData[4] != Null;
+		Event Player.cpData[9] == True;
+		Event Player.cpData[13] == False;
 		Speed Of(Event Player) <= 10;
 		Event Player.isInFreemode == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
 	}
 
 	actions
@@ -1395,15 +1403,15 @@ rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 	conditions
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
-		Global.cps[Event Player.runCurrentCp][4] != Null;
+		Event Player.cpData[4] != Null;
 		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[4]) >= Event Player.cpData[5] == True;
 	}
 
 	actions
 	{
-		Event Player.cpData[5] = True;
+		Event Player.cpData[13] = True;
 	}
 }
 
@@ -1420,11 +1428,11 @@ rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInFreemode == False;
-		Global.cps[Event Player.runCurrentCp][4] != Null;
-		Event Player.cpData[5] == False;
+		Event Player.cpData[4] != Null;
+		Event Player.cpData[13] == False;
 		Is Jumping(Event Player) == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1] == True;
-		Distance Between(Vector(X Component Of(Position Of(Event Player)), Y Component Of(Global.cps[Event Player.runCurrentCp][4]), Z Component Of(Position Of(Event Player))), Global.cps[Event Player.runCurrentCp][4]) >= Global.cps[Event Player.runCurrentCp][5];
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Vector(X Component Of(Position Of(Event Player)), Y Component Of(Event Player.cpData[4]), Z Component Of(Position Of(Event Player))), Event Player.cpData[4]) >= Event Player.cpData[5];
 	}
 
 	actions
@@ -1447,19 +1455,19 @@ rule("18: Checkpoint Reset Player")
 	actions
 	{
 		Event Player.isLoading = True;
-		Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
+		Teleport(Event Player, Event Player.cpData[0]);
 		Apply Impulse(Event Player, Velocity Of(Event Player) * -0.001, 0.001, To World, Cancel Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			If(Global.cps[Event Player.runCurrentCp][4] != Null);
-				Event Player.cpData[0] = False;
-				Event Player.cpData[1] = False;
-				Event Player.cpData[5] = False;
+			If(Event Player.cpData[4] != Null);
+				Event Player.cpData[8] = False;
+				Event Player.cpData[9] = False;
+				Event Player.cpData[13] = False;
 				Set Secondary Fire Enabled(Event Player, True);
 				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 			End;
-			Event Player.cpData[3] = False;
-			Event Player.cpData[4] = False;
+			Event Player.cpData[11] = False;
+			Event Player.cpData[12] = False;
 		End;
 		Event Player.isLoading = False;
 	}
@@ -1480,8 +1488,8 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runIsLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[2] || (Altitude Of(Event Player) < 0.05 && Event Player.cpData[6] == False)) == True;
-		Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][6]) <= Global.cps[Event Player.runCurrentCp][7] == True;
+		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.05 && Event Player.cpData[14] == False)) == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7] == True;
 	}
 
 	actions
@@ -1490,9 +1498,9 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runCurrentCp += 1;
 		Call Subroutine(loadCp);
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Event Player.isLoading = True;
-				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
+				Teleport(Event Player, Event Player.cpData[0]);
 				Apply Impulse(Event Player, Velocity Of(Event Player) * -0.001, 0.001, To World, Cancel Contrary Motion);
 				Event Player.isLoading = False;
 			End;
@@ -1726,7 +1734,7 @@ rule("20.3: Go Back Checkpoint Input")
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Event Player.runMistakes += 1;
 			End;
 		End;
@@ -1741,13 +1749,13 @@ rule("20.3: Go Back Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
-		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False, 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
 			Event Player.isLoading = True;
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
 				Event Player.runCurrentCp -= 1;
-				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
+				Teleport(Event Player, Event Player.cpData[0]);
 				Wait(0.02, Ignore Condition);
 				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False);
 					Break;
@@ -1757,7 +1765,7 @@ rule("20.3: Go Back Checkpoint Input")
 			Call Subroutine(cpResetPlayer);
 			Destroy In-World Text(Event Player.nameplateObject);
 			Call Subroutine(loadNameplate);
-			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
+			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
 		End;
 	}
 }
@@ -1787,7 +1795,7 @@ rule("20.4: Skip Checkpoint Input")
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Event Player.runMistakes += 1;
 			End;
 		End;
@@ -1796,13 +1804,13 @@ rule("20.4: Skip Checkpoint Input")
 		Call Subroutine(cpResetPlayer);
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
-		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
+		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
 		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 				Event Player.runCurrentCp += 1;
 				Event Player.isLoading = True;
-				Teleport(Event Player, Global.cps[Event Player.runCurrentCp][0]);
+				Teleport(Event Player, Event Player.cpData[0]);
 				Wait(0.02, Ignore Condition);
 				If(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False);
 					Break;
@@ -1812,7 +1820,7 @@ rule("20.4: Skip Checkpoint Input")
 			Call Subroutine(cpResetPlayer);
 			Destroy In-World Text(Event Player.nameplateObject);
 			Call Subroutine(loadNameplate);
-			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Global.cps[Event Player.runCurrentCp][6]), To World);
+			Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
 		End;
 		If(Event Player.runCurrentCp == Count Of(Global.cps) - 1);
 			Call Subroutine(finalCpReached);
@@ -1874,7 +1882,7 @@ rule("20.6.1: Freemode Input")
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			Event Player.runIsLegit = False;
-			If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Event Player.runMistakes += 1;
 			End;
 			Set Secondary Fire Enabled(Event Player, True);
@@ -1885,11 +1893,11 @@ rule("20.6.1: Freemode Input")
 			Event Player.isLoading = True;
 			Event Player.isInFreemode = False;
 			Call Subroutine(unloadFreemodeHud);
-			If(Distance Between(Position Of(Event Player), Global.cps[Event Player.runCurrentCp][0]) >= Global.cps[Event Player.runCurrentCp][1]);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Call Subroutine(cpResetPlayer);
 			End;
-			Set Secondary Fire Enabled(Event Player, Global.cps[Event Player.runCurrentCp][2]);
-			If(Global.cps[Event Player.runCurrentCp][3] == False);
+			Set Secondary Fire Enabled(Event Player, Event Player.cpData[2]);
+			If(Event Player.cpData[3] == False);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
@@ -1977,9 +1985,9 @@ rule("20.7: Lobby Input")
 			If(
 				Distance Between(
 					Position Of(Event Player),
-					Global.cps[Event Player.runCurrentCp][0]
+					Event Player.cpData[0]
 				)
-				>= Global.cps[Event Player.runCurrentCp][1]
+				>= Event Player.cpData[1]
 			);
 				Event Player.runMistakes += 1;
 			End;
