@@ -1971,13 +1971,7 @@ rule("20.7: Lobby Input")
 		If(Event Player.runIsPaused == False);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(
-				Distance Between(
-					Position Of(Event Player),
-					Event Player.cpData[0]
-				)
-				>= Event Player.cpData[1]
-			);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
 				Event Player.runMistakes += 1;
 			End;
 		End;
