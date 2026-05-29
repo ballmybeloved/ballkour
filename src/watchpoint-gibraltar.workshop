@@ -380,9 +380,7 @@ rule("5: Lobby Boundary")
 	{
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 		Event Player.isInLobby == True;
-		((Dot Product(Subtract(Position Of(Event Player), Vector(99.54, 1.12, 53.67)), Normalize(Cross Product(Direction Towards(Vector(99.54, 1.12, 53.67), Vector(101.24, 1.12, 51.96)), Up))) < 0 && Z Component Of(Position Of(Event Player)) < 63)
-		|| (Dot Product(Subtract(Position Of(Event Player), Vector(79.76, 1.12, 64.57)), Normalize(Cross Product(Direction Towards(Vector(79.76, 1.12, 64.57), Vector(81.46, 1.12, 62.84)), Up))) < 0 && X Component Of(Position Of(Event Player)) < 83)
-		|| (Dot Product(Subtract(Position Of(Event Player), Vector(87.65, 1.12, 61.24)), Normalize(Cross Product(Direction Towards(Vector(87.65, 1.12, 61.24), Vector(89.39, 1.12, 59.54)), Up))) < 0 && Z Component Of(Position Of(Event Player)) < 63)) == True;
+		Distance Between(Position Of(Event Player), Global.lobbyData[0]) > 18;
 	}
 
 	actions
@@ -392,13 +390,7 @@ rule("5: Lobby Boundary")
 			Set Secondary Fire Enabled(Event Player, True);	
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0.5);
 		End;
-		If(Dot Product(Subtract(Position Of(Event Player), Vector(99.54, 1.12, 53.67)), Normalize(Cross Product(Direction Towards(Vector(99.54, 1.12, 53.67), Vector(101.24, 1.12, 51.96)), Up))) < 0 && Z Component Of(Position Of(Event Player)) < 63);
-			Apply Impulse(Event Player, Normalize(Cross Product(Direction Towards(Vector(99.54, 1.12, 53.67), Vector(101.24, 1.12, 51.96)), Up)), 20, To World, Cancel Contrary Motion);
-		Else If(Dot Product(Subtract(Position Of(Event Player), Vector(79.76, 1.12, 64.57)), Normalize(Cross Product(Direction Towards(Vector(79.76, 1.12, 64.57), Vector(81.46, 1.12, 62.84)), Up))) < 0 && X Component Of(Position Of(Event Player)) < 83);
-			Apply Impulse(Event Player, Normalize(Cross Product(Direction Towards(Vector(79.76, 1.12, 64.57), Vector(81.46, 1.12, 62.84)), Up)), 20, To World, Cancel Contrary Motion);
-		Else If(Dot Product(Subtract(Position Of(Event Player), Vector(87.65, 1.12, 61.24)), Normalize(Cross Product(Direction Towards(Vector(87.65, 1.12, 61.24), Vector(89.39, 1.12, 59.54)), Up))) < 0 && Z Component Of(Position Of(Event Player)) < 63);
-			Apply Impulse(Event Player, Normalize(Cross Product(Direction Towards(Vector(87.65, 1.12, 61.24), Vector(89.39, 1.12, 59.54)), Up)), 20, To World, Cancel Contrary Motion);
-		End;
+		Apply Impulse(Event Player, Direction Towards(Position Of(Event Player), Global.lobbyData[0]), 10, To World, Cancel Contrary Motion);
 	}
 }
 
