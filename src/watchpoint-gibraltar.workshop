@@ -1028,53 +1028,11 @@ rule("14.2: Update Run Timer Format")
 		Global.playersUnpaused += 1;
 		Event Player.isTimerActive = True;
 		While(!Event Player.runIsPaused);
+			Wait(0.016, Ignore Condition);
 			Call Subroutine(formatRunTime);
-			If(Global.playersUnpaused >= 2);
-				Wait(0.100, Ignore Condition);
-			Else;
-				Wait(0.016, Ignore Condition);
-			End;
 		End;
 		Global.playersUnpaused -= 1;
 		Event Player.isTimerActive = False;
-	}
-}
-
-disabled rule("14.2: Update Run Timer Format")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.runIsPaused == False;
-		Event Player.runIsLoaded == True;
-		Global.settings[0] == False;
-	}
-
-	actions
-	{
-		Global.playersUnpaused += 1;
-		"Disabled because this timer might be refreshing too quick"
-		While(!Event Player.runIsPaused);
-			Call Subroutine(formatRunTime);
-			If(Global.playersUnpaused >= 9);
-				Wait(0.100, Ignore Condition);
-			Else If(Global.playersUnpaused >= 6);
-				Wait(0.080, Ignore Condition);
-			Else If(Global.playersUnpaused >= 3);
-				Wait(0.050, Ignore Condition);
-			Else If(Global.playersUnpaused == 2);
-				Wait(0.032, Ignore Condition);
-			Else;
-				Wait(0.016, Ignore Condition);
-			End;
-		End;
-		Global.playersUnpaused -= 1;
 	}
 }
 
