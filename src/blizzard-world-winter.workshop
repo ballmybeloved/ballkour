@@ -1120,7 +1120,7 @@ rule("15.1: Grappling")
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[8] = True;
-			Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)) || Speed Of(Event Player) > 05, 99999999);
+			Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)) || Speed Of(Event Player) > 5, 99999999);
 			If(Speed Of(Event Player) > 5);
 				Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)), 8.5);
 			End;
