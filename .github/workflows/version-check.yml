@@ -1,26 +1,25 @@
-name: Version check
+name: Version Check
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    tags: ['v*']
 
 jobs:
   check-version:
-    if: startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify version header matches branch name
+      - name: Verify version header matches tag
         run: |
-          BRANCH_VERSION="${GITHUB_HEAD_REF#release/}"
-          echo "Expected version: $BRANCH_VERSION"
+          VERSION="${GITHUB_REF_NAME}"
+          echo "Expected version: $VERSION"
 
           for file in src/*.workshop; do
-            if ! grep -q "$BRANCH_VERSION" "$file"; then
-              echo "::error file=$file::Version header does not contain $BRANCH_VERSION"
+            if ! grep -qF "$VERSION" "$file"; then
+              echo "::error file=$file::Version header does not contain $VERSION"
               exit 1
             fi
           done
 
-          echo "Version header matches branch name ✓"
+          echo "Version header matches tag ✓"
