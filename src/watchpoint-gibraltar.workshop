@@ -193,7 +193,7 @@ rule("2: Leaderboard (LB)")
 		Global.lb[4] = Custom String("DVD, 5:02:50, 15, '                             '");
 		Global.lb[5] = Custom String("GAMINGCHAIR, 5:08.37, 16, '          '");
 		Global.lb[6] = Custom String("CHESSISFUN, 7:54.96, 85, '                '");
-		Global.lb[7] = Custom String("PETUNCA, 9:58.47, 65, '                     '");
+		Global.lb[7] = Custom String("PETUNCO, 9:58.47, 65, '                     '");
 		Global.lb[8] = Custom String("KINGO, 13:11.17, 174, '                    '");
 		Global.lb[9] = Custom String("APPLEJACK, 14:38.48, 152, '             '");
 		Global.timeToBeatMs = 0;
