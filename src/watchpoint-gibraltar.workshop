@@ -189,8 +189,8 @@ rule("2: Leaderboard (LB)")
 		Global.lb = Array();
 		Global.lb[1] = Custom String("BALLMYBLOVED, 4:03.09, 7, '         '");
 		Global.lb[2] = Custom String("COLDSKIN, 4:30.11, 10, '                  '");
-		Global.lb[3] = Custom String("BACKLINEREIN, 4:34:15, 15, '           '");
-		Global.lb[4] = Custom String("DVD, 5:02:50, 15, '                             '");
+		Global.lb[3] = Custom String("BACKLINEREIN, 4:34.15, 15, '           '");
+		Global.lb[4] = Custom String("DVD, 5:02.50, 15, '                             '");
 		Global.lb[5] = Custom String("GAMINGCHAIR, 5:08.37, 16, '          '");
 		Global.lb[6] = Custom String("CHESSISFUN, 7:54.96, 85, '                '");
 		Global.lb[7] = Custom String("PETUNCO, 9:58.47, 65, '                     '");
