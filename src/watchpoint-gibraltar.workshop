@@ -1837,7 +1837,7 @@ rule("20.5: Restart Input")
 	{
 		Event Player.isLoading = True;
 		Stop Chasing Player Variable(Event Player, runTime);
-		Call Subroutine(newRun);
+		Start Rule(newRun, Restart Rule);
 		Call Subroutine(unloadFreemodeHud);
 		Call Subroutine(unloadRunCompletionText);
 		Call Subroutine(unloadCtrlsHud);
