@@ -1820,7 +1820,9 @@ rule("20.5: Restart Input")
 		Call Subroutine(unloadFreemodeHud);
 		Call Subroutine(unloadRunCompletionText);
 		Call Subroutine(unloadCtrlsHud);
-		Call Subroutine(loadCtrlsHud);
+		If(Is Button Held(Event Player, Button(Ultimate)));
+			Call Subroutine(loadCtrlsHud);
+		End;
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Event Player.isLoading = False;
