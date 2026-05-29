@@ -407,7 +407,7 @@ rule("5: Lobby Boundary")
 
 	conditions
 	{
-		(Has Spawned(Event Player) && Event Player.isLoading == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 		Event Player.isInLobby == True;
 		Distance Between(Position Of(Event Player), Global.lobbyData[0]) > 20;
 	}
@@ -435,10 +435,10 @@ rule("6.1: Initialize Match")
 		Disable Built-In Game Mode Announcer;
 		Disable Built-In Game Mode Completion;
 		Set Match Time(0);
-		If(Global.settings[0] == False);
+		If(!Global.settings[0]);
 			Disable Inspector Recording;
 		End;
-		If(Global.settings[1] == True);
+		If(Global.settings[1]);
 			Global.players = Array();
 			Global.playersAmnt = 0;
 			Global.runs = 0;
@@ -465,7 +465,7 @@ rule("6.2: Start Elapsed Timer Format")
 	actions
 	{
 		Chase Global Variable At Rate(elapsedTime, 99999999, 1, Destination and Rate);
-		If(Global.settings[0] == False);
+		If(!Global.settings[0]);
 			Global.timeToFormat = Global.elapsedTime;
 			Global.timeFormat[0] = False;
 			Call Subroutine(formatTime);
@@ -493,7 +493,7 @@ rule("7.1: Player Joins")
 	actions
 	{
 		Event Player.isLoading = True;
-		If(Array Contains(Global.players, Custom String("{0}", Event Player)) == False);
+		If(!Array Contains(Global.players, Custom String("{0}", Event Player)));
 			If(Event Player == Host Player);
 				Global.hostPlayer = Custom String("{0}", Event Player);
 			End;
@@ -532,7 +532,7 @@ rule("7.2: Player Leaves")
 
     actions
     {
-        If(Event Player.runIsPaused == False);
+        If(!Event Player.runIsPaused);
             Global.playersUnpaused -= 1;
         End;
         Destroy In-World Text(Event Player.nameplateObject);
@@ -554,10 +554,10 @@ rule("8: Load Nameplate")
 
 	actions
 	{
-		If(Event Player.isInLobby == True);
+		If(Event Player.isInLobby);
 			Event Player.nameplate = Custom String("{0}", Event Player);
 		Else;
-			If(Event Player.isInFreemode == False);
+			If(!Event Player.isInFreemode);
 				Event Player.nameplate = Custom String("{0} | {1}", Custom String("{0}", Event Player), Event Player.runCurrentCp);
 			Else;
 				Event Player.nameplate = Custom String("{0} | FREEMODE", Custom String("{0}", Event Player));
@@ -598,8 +598,8 @@ rule("9.2: Load Welcome Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Welcome to"), Global.lobbyData[2], Global.lobbyData[4], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Ballkour!"), Global.lobbyData[3], Global.lobbyData[4], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("Welcome to"), Global.lobbyData[2], Global.lobbyData[4], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("Ballkour!"), Global.lobbyData[3], Global.lobbyData[4], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
 	}
 }
 
@@ -612,15 +612,15 @@ rule("9.3: Load Leaderboard Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("Leaderboard"), Global.lobbyData[11],  Global.lobbyData[12], Clip Against Surfaces, Visible To, Custom Color(165, 42, 42, 255), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("Leaderboard"), Global.lobbyData[11],  Global.lobbyData[12], Clip Against Surfaces, Visible To, Custom Color(165, 42, 42, 255), Default Visibility);
 		For Global Variable(index, 1, 11, 1);
 			If(Global.lb[Global.index] != Null);
 				Call Subroutine(formatLbString);
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Global.lbObjFormatted, Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Global.lbObjFormatted, Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
 			Else If(Global.lb[Global.index] < 9);
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("{0}. ---                                               ({1}-:--.--, {2}-)", Global.index, Icon String(Bolt), Icon String(Skull)), Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("{0}. ---                                               ({1}-:--.--, {2}-)", Global.index, Icon String(Bolt), Icon String(Skull)), Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
 			Else;
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("10. ---                 ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("10. ---                 ({0}-:--.--, {1}-)", Icon String(Bolt), Icon String(Skull)), Global.lbPos[Global.index], Global.lobbyData[13], Clip Against Surfaces, Visible To, Color(Orange), Default Visibility);
 			End;
 		End;
 	}
@@ -654,10 +654,10 @@ rule("9.4.1: Load Start Run Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Custom String("New Run"), Global.lobbyData[7], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Ring, Color(Sky Blue), Global.lobbyData[5], 1.6, Visible To);
-		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Global.lobbyData[6], Flag, Visible To, Color(Green), False);
-		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby == True), Sparkles, Color(Orange), Global.lobbyData[5] + Vector(0, -0.85, 0), 1.6, Visible To); 
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Custom String("New Run"), Global.lobbyData[7], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
+		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Ring, Color(Sky Blue), Global.lobbyData[5], 1.6, Visible To);
+		Create Icon(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Global.lobbyData[6], Flag, Visible To, Color(Green), False);
+		Create Effect(Filtered Array(All Players(All Teams), Current Array Element.isInLobby), Sparkles, Color(Orange), Global.lobbyData[5] + Vector(0, -0.85, 0), 1.6, Visible To); 
 	}
 }
 
@@ -672,7 +672,7 @@ rule("9.4.2: Start Run Circle Entry")
 
 	conditions
 	{
-		(Has Spawned(Event Player) && Event Player.isLoading == False && Has Status(Event Player, Rooted) == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInLobby == True;
 		Distance Between(Position Of(Event Player), Global.lobbyData[5]) <= 2;
 	}
@@ -698,10 +698,10 @@ rule("9.5.1: Load Resume Run Area")
 
 	actions
 	{
-		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Custom String("Resume Run"), Global.lobbyData[10], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
-		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && Current Array Element.runIsFinished == False) == True), Ring, Color(Green), Global.lobbyData[8], 1.6, Visible To);
-		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Global.lobbyData[9], Recycle, Visible To, Color(Green), False);
-		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded == True && Current Array Element.runIsFinished == False) == True), Sparkles, Color(Orange), Global.lobbyData[8] + Vector(0, -0.85, 0), 1.6, Visible To);
+		Create In-World Text(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && !Current Array Element.runIsFinished)), Custom String("Resume Run"), Global.lobbyData[10], 1, Clip Against Surfaces, Visible To, Color(Turquoise), Default Visibility);
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && !Current Array Element.runIsFinished)), Ring, Color(Green), Global.lobbyData[8], 1.6, Visible To);
+		Create Icon(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && !Current Array Element.runIsFinished)), Global.lobbyData[9], Recycle, Visible To, Color(Green), False);
+		Create Effect(Filtered Array(All Players(All Teams), (Current Array Element.isInLobby && Current Array Element.runIsLoaded && !Current Array Element.runIsFinished)), Sparkles, Color(Orange), Global.lobbyData[8] + Vector(0, -0.85, 0), 1.6, Visible To);
 	}
 }
 
@@ -716,7 +716,7 @@ rule("9.5.2: Resume Run Circle Entry")
 
 	conditions
 	{
-		(Has Spawned(Event Player) && Event Player.isLoading == False && Has Status(Event Player, Rooted) == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInLobby == True;
 		Event Player.runIsLoaded == True;
 		Event Player.runIsFinished == False;
@@ -753,7 +753,7 @@ rule("9.6: Load Stats")
 	actions
 	{
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Stats"), Global.lobbyData[14], 1.2, Clip Against Surfaces, Visible To, Custom Color(165, 42, 42, 255), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Elapsed Time: {0}", Global.settings[0] == False ? Global.elapsedTimeFormatted : Global.elapsedTime), Global.lobbyData[15], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Elapsed Time: {0}", !Global.settings[0] ? Global.elapsedTimeFormatted : Global.elapsedTime), Global.lobbyData[15], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("New Players: {0}", Global.playersAmnt), Global.lobbyData[16], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Rejoins: {0}", Global.rejoinsAmnt), Global.lobbyData[17], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayer), Custom String("Legit Runs: {0}", Global.runs), Global.lobbyData[18], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
@@ -823,7 +823,7 @@ rule("11.2.1: Load Local Run HUD")
 		Event Player.runHud[0] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String("{0}/{1}", Event Player.runCurrentCp, Count Of(Global.cps) - 1), Top, 1, Null, Null, Color(Orange), String, Default Visibility);
 		Event Player.runHud[1] = Last Text ID;
-		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1}", Icon String(Bolt), Global.settings[0] == False ? Event Player.runTimeFormatted : Event Player.runTime), Right, 4, Null, Null, Color(Orange), String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1}", Icon String(Bolt), !Global.settings[0] ? Event Player.runTimeFormatted : Event Player.runTime), Right, 4, Null, Null, Color(Orange), String, Default Visibility);
 		Event Player.runHud[2] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1}", Icon String(Skull), Event Player.runMistakes), Right, 6, Null, Null, Color(Orange), String, Default Visibility);
 		Event Player.runHud[3] = Last Text ID;
@@ -983,16 +983,16 @@ rule("13.4: Set Checkpoint Abilities")
 
 	actions
 	{
-		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1 && Event Player.isInFreemode == False);
+		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1 && !Event Player.isInFreemode);
 			Set Secondary Fire Enabled(Event Player, Event Player.cpData[2]);
-			If(Event Player.cpData[3] == False);
+			If(!Event Player.cpData[3]);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
 			End;
 		Else;
 			Set Secondary Fire Enabled(Event Player, True);
-			If(Event Player.cpData[3] == False);
+			If(!Event Player.cpData[3]);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
@@ -1012,7 +1012,7 @@ rule("14.1: Start/Resume Run")
 
 	conditions
 	{
-		(Has Spawned(Event Player) && Event Player.isLoading == False && Has Status(Event Player, Rooted) == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		Event Player.isInLobby == False;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == True;
@@ -1048,7 +1048,7 @@ rule("14.2: Update Run Timer Format")
 	{
 		Global.playersUnpaused += 1;
 		Event Player.isTimerActive = True;
-		While(Event Player.runIsPaused == False);
+		While(!Event Player.runIsPaused);
 			Call Subroutine(formatRunTime);
 			If(Global.playersUnpaused >= 2);
 				Wait(0.100, Ignore Condition);
@@ -1081,7 +1081,7 @@ disabled rule("14.2: Update Run Timer Format")
 	{
 		Global.playersUnpaused += 1;
 		"Disabled because this timer might be refreshing too quick"
-		While(Event Player.runIsPaused == False);
+		While(!Event Player.runIsPaused);
 			Call Subroutine(formatRunTime);
 			If(Global.playersUnpaused >= 9);
 				Wait(0.100, Ignore Condition);
@@ -1116,13 +1116,13 @@ rule("15.1: Grappling")
 
 	actions
 	{
-		If(Event Player.isInLobby || Event Player.cpData[4] == Null || Event Player.isInFreemode == True);
+		If(Event Player.isInLobby || Event Player.cpData[4] == Null || Event Player.isInFreemode);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[8] = True;
-			Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False || Speed Of(Event Player) > 05, 99999999);
+			Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)) || Speed Of(Event Player) > 05, 99999999);
 			If(Speed Of(Event Player) > 5);
-				Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 8.5);
+				Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)), 8.5);
 			End;
 			Event Player.cpData[9] = True;
 		End;
@@ -1176,7 +1176,7 @@ rule("15.2.2: Bhopping")
 
 	actions
 	{
-		If(Event Player.cpData[12] == False);
+		If(!Event Player.cpData[12]);
 			Wait Until(Is On Ground(Event Player), 99999999);
 			Event Player.cpData[12] = True;
 		End;
@@ -1227,7 +1227,7 @@ rule("15.3: Reset Useless Grapple/Jump/Bhop")
 	{
 		Wait Until(Is On Ground(Event Player), 99999999);
 		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
-			If(Event Player.cpData[2] == True);
+			If(Event Player.cpData[2]);
 				Event Player.cpData[9] = False;
 				Set Secondary Fire Enabled(Event Player, True);
 				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
@@ -1251,7 +1251,7 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 	conditions
 	{
 		Event Player.isInFreemode == False;
-		(Event Player.cpData[4] == Null || Event Player.cpData[8] == False || Event Player.cpData[13] == True) == True;
+		(Event Player.cpData[4] == Null || !Event Player.cpData[8] || Event Player.cpData[13]) == True;
 		(Is On Ground(Event Player) || (Event Player.cpData[10] && Event Player.cpData[12])) == True;
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Is Dummy Bot(Event Player) == False;
@@ -1283,7 +1283,7 @@ rule("16.2: Checkpoint Mistake: Already Bhopped")
 		Event Player.isInFreemode == False;
 		Is Jumping(Event Player) == True;
 		Event Player.cpData[12] == True;
-		(Event Player.cpData[4] == Null || Event Player.cpData[8] == False || Event Player.cpData[13] == True) == True;
+		(Event Player.cpData[4] == Null || !Event Player.cpData[8] || Event Player.cpData[13]) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
 	}
@@ -1311,7 +1311,7 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 		Event Player.isLoading = True;
 		Respawn(Event Player);
 		Call Subroutine(cpResetPlayer);
-		If(Event Player.isInFreemode == False);
+		If(!Event Player.isInFreemode);
 			Event Player.runMistakes += 1;
 		End;
 		Event Player.isLoading = False;
@@ -1335,7 +1335,7 @@ rule("17.1: Bounce Checkpoints: Grapple Use")
 
 	actions
 	{
-		Wait Until(Is Button Held(Event Player, Button(Secondary Fire)) == False, 99999999);
+		Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)), 99999999);
 		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
 			Event Player.cpData[8] = False;
 			Event Player.cpData[9] = False;
@@ -1501,7 +1501,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.runIsLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.05 && Event Player.cpData[14] == False)) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.05 && !Event Player.cpData[14])) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7] == True;
 	}
 
@@ -1539,7 +1539,7 @@ rule("19.2: Final Checkpoint Reached")
 	{
 		Play Effect(Event Player, Bad Pickup Effect, Color(Lime Green), Event Player, 200);
 		Play Effect(Event Player, Buff Impact Sound, Null, Event Player, 100);
-		If(Event Player.runIsFinished == False);
+		If(!Event Player.runIsFinished);
 			Event Player.runIsFinished = True;
 			Start Rule(loadRunCompletionText, Restart Rule);
 		End;
@@ -1552,11 +1552,11 @@ rule("19.2: Final Checkpoint Reached")
 			Call Subroutine(unloadCtrlsHud);
 			Call Subroutine(loadCtrlsHud);
 		End;
-		If(Event Player.runIsPaused == False);
+		If(!Event Player.runIsPaused);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
-			If(Event Player.runIsLegit == True);
-				If(Global.settings[1] == True);
+			If(Event Player.runIsLegit);
+				If(Global.settings[1]);
 					Call Subroutine(updateStats);
 				End;
 			End;
@@ -1670,7 +1670,7 @@ rule("20.1: Controls HUD Input")
 		Disallow Button(Event Player, Button(Primary Fire));
 		Disallow Button(Event Player, Button(Secondary Fire));
 		Disallow Button(Event Player, Button(Ability 2));
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Event Player.isInLobby == True, 99999999);
+		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || Event Player.isInLobby, 99999999);
 		Call Subroutine(unloadCtrlsHud);
 		Allow Button(Event Player, Button(Primary Fire));
 		Allow Button(Event Player, Button(Secondary Fire));
@@ -1736,7 +1736,7 @@ rule("20.3: Go Back Checkpoint Input")
 
 	conditions
 	{
-		(Has Spawned(Event Player) && Event Player.isLoading == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 		Is Button Held(Event Player, Button(Ultimate)) == True;
 		Is Button Held(Event Player, Button(Primary Fire)) == True;
 		Event Player.runCurrentCp > 0;
@@ -1747,7 +1747,7 @@ rule("20.3: Go Back Checkpoint Input")
 	{
 		Event Player.isLoading = True;
 		Event Player.runIsLegit = False;
-		If(Event Player.runIsPaused == False);
+		If(!Event Player.runIsPaused);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
@@ -1766,7 +1766,7 @@ rule("20.3: Go Back Checkpoint Input")
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Primary Fire)) == False, 0.25);
+		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || !Is Button Held(Event Player, Button(Primary Fire)), 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
 			Event Player.isLoading = True;
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Primary Fire)) && Event Player.runCurrentCp > 0);
@@ -1798,14 +1798,14 @@ rule("20.4: Skip Checkpoint Input")
 		Is Button Held(Event Player, Button(Secondary Fire)) == True;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 		Event Player.isInLobby == False;
-		(Has Spawned(Event Player) && Event Player.isLoading == False) == True;
+		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 	}
 
 	actions
 	{
 		Event Player.isLoading = True;
 		Event Player.runIsLegit = False;
-		If(Event Player.runIsPaused == False);
+		If(!Event Player.runIsPaused);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
@@ -1818,7 +1818,7 @@ rule("20.4: Skip Checkpoint Input")
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Set Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.cpData[6]), To World);
-		Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False || Is Button Held(Event Player, Button(Secondary Fire)) == False, 0.25);
+		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || !Is Button Held(Event Player, Button(Secondary Fire)), 0.25);
 		If(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			Event Player.isLoading = True;
 			While(Is Button Held(Event Player, Button(Ultimate)) && Is Button Held(Event Player, Button(Secondary Fire)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
@@ -1888,7 +1888,7 @@ rule("20.6.1: Freemode Input")
 
 	actions
 	{
-		If(Event Player.isInFreemode == False);
+		If(!Event Player.isInFreemode);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			Event Player.runIsLegit = False;
@@ -1907,7 +1907,7 @@ rule("20.6.1: Freemode Input")
 				Call Subroutine(cpResetPlayer);
 			End;
 			Set Secondary Fire Enabled(Event Player, Event Player.cpData[2]);
-			If(Event Player.cpData[3] == False);
+			If(!Event Player.cpData[3]);
 				Disallow Button(Event Player, Button(Crouch));
 			Else;
 				Allow Button(Event Player, Button(Crouch));
@@ -1989,7 +1989,7 @@ rule("20.7: Lobby Input")
 	actions
 	{
 		Event Player.isLoading = True;
-		If(Event Player.runIsPaused == False);
+		If(!Event Player.runIsPaused);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.runIsPaused = True;
 			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
@@ -2016,7 +2016,7 @@ rule("21.1: Format Time String")
 	actions
 	{
 		"Global.timeFormat: [0]isTimeInMs [1]hr [2]remainingSec [3]min [4]min Text [5]sec [6]secText [7]hundredths [8]hundredthsText"
-		If(Global.timeFormat[0] == False);
+		If(!Global.timeFormat[0]);
 			Global.timeFormat[1] = Round To Integer(Global.timeToFormat / 3600, Down);
 			Global.timeFormat[2] = Global.timeToFormat % 3600;
 			Global.timeFormat[3] = Round To Integer(Global.timeFormat[2] / 60, Down);
