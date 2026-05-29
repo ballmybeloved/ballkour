@@ -1787,11 +1787,13 @@ rule("20.5: Restart Input")
 	{
 		Event Player.isLoading = True;
 		Stop Chasing Player Variable(Event Player, runTime);
-		Start Rule(newRun, Restart Rule);
+		Call Subroutine(newRun);
 		Call Subroutine(unloadFreemodeHud);
 		Call Subroutine(unloadRunCompletionText);
 		Call Subroutine(unloadCtrlsHud);
-		Call Subroutine(loadCtrlsHud);
+		If(Is Button Held(Event Player, Button(Ultimate)));
+			Call Subroutine(loadCtrlsHud);
+		End;
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Event Player.isLoading = False;
