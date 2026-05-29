@@ -1116,7 +1116,7 @@ rule("15.1: Grappling")
 
 	actions
 	{
-		If(Event Player.cpData[4] == Null || Event Player.isInFreemode == True);
+		If(Event Player.isInLobby || Event Player.cpData[4] == Null || Event Player.isInFreemode == True);
 			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		Else;
 			Event Player.cpData[8] = True;
