@@ -949,7 +949,7 @@ rule("13.3.1: Load Checkpoint Objects")
 		Event Player.cpEffects[2] = Last Created Entity;
 		Create Icon(Event Player, Event Player.cpData[6] - Vector(0, 0.5, 0), Flag, Position, Color(Green), True);
 		Event Player.cpIcons[1] = Last Created Entity;
-		Create Effect(Event Player, Light Shaft, Color(Sky Blue), Event Player.cpData[6], Event Player.cpData[7], Position and Radius);
+		Create Effect(Event Player, Light Shaft, Custom Color(72, 127, 163, 0), Event Player.cpData[6], Event Player.cpData[7], Position and Radius);
 		Event Player.cpEffects[3] = Last Created Entity;
 	}
 }
