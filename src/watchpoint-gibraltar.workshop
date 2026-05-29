@@ -988,7 +988,7 @@ rule("14.1: Start/Resume Run")
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == True;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 	}
 
 	actions
@@ -1099,8 +1099,8 @@ rule("15.2.2: Bhopping")
 		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
 		Event Player.isInLobby == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7];
 	}
 
 	actions
@@ -1149,7 +1149,7 @@ rule("15.3: Reset Useless Grapple/Jump/Bhop")
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		(Event Player.cpData[9] || Event Player.cpData[11] || Event Player.cpData[12]) == True;
 		Event Player.isInLobby == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1];
 	}
 
 	actions
@@ -1184,8 +1184,8 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 		(Is On Ground(Event Player) || (Event Player.cpData[10] && Event Player.cpData[12])) == True;
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Is Dummy Bot(Event Player) == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True; 
-		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]; 
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7];
 	}
 
 	actions
@@ -1213,8 +1213,8 @@ rule("16.2: Checkpoint Mistake: Already Bhopped")
 		Is Jumping(Event Player) == True;
 		Event Player.cpData[12] == True;
 		(Event Player.cpData[4] == Null || !Event Player.cpData[8] || Event Player.cpData[13]) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7];
 	}
 
 	actions
@@ -1292,7 +1292,7 @@ rule("17.2: Bounce Checkpoint Mistake: No Grapple")
 		Event Player.isInFreemode == False;
 		Event Player.cpData[4] != Null;
 		Event Player.cpData[8] == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 	}
 
 	actions
@@ -1321,7 +1321,7 @@ rule("17.3: Bounce Checkpoint Mistake: Too Slow")
 		Event Player.cpData[13] == False;
 		Speed Of(Event Player) <= 10;
 		Event Player.isInFreemode == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 	}
 
 	actions
@@ -1348,7 +1348,7 @@ rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 		Event Player.cpData[4] != Null;
 		Is Jumping(Event Player) == True;
 		Event Player.isInFreemode == False;
-		Distance Between(Position Of(Event Player), Event Player.cpData[4]) <= Event Player.cpData[5] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[4]) <= Event Player.cpData[5];
 	}
 
 	actions
@@ -1373,7 +1373,7 @@ rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
 		Event Player.cpData[4] != Null;
 		Event Player.cpData[13] == False;
 		Is Jumping(Event Player) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 		Distance Between(Vector(X Component Of(Position Of(Event Player)), Y Component Of(Event Player.cpData[4]), Z Component Of(Position Of(Event Player))), Event Player.cpData[4]) >= Event Player.cpData[5];
 	}
 
@@ -1431,7 +1431,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.isInFreemode == False;
 		Event Player.runIsPaused == False;
 		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.05 && !Event Player.cpData[14])) == True;
-		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7] == True;
+		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7];
 	}
 
 	actions
