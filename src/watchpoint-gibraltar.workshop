@@ -1020,7 +1020,13 @@ rule("14.2: Update Run Timer Format")
 		Global.playersUnpaused += 1;
 		Event Player.isTimerActive = True;
 		While(!Event Player.runIsPaused);
-			Wait(0.016, Ignore Condition);
+			If(Global.playersUnpaused >= 8);
+				Wait(0.050, Ignore Condition);
+			Else If(Global.playersUnpaused >= 4);
+				Wait(0.032, Ignore Condition);
+			Else;
+				Wait(0.016, Ignore Condition);
+			End;
 			Call Subroutine(formatRunTime);
 		End;
 		Global.playersUnpaused -= 1;
