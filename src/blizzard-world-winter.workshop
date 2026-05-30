@@ -1443,6 +1443,10 @@ rule("18: Checkpoint Reset Player")
 	actions
 	{
 		Event Player.isLoading = True;
+		If(Is Button Held(Event Player, Button(Secondary Fire)));
+			Disallow Button(Event Player, Button(Secondary Fire));
+			Allow Button(Event Player, Button(Secondary Fire));
+		End;
 		Teleport(Event Player, Event Player.cpData[0]);
 		Apply Impulse(Event Player, Velocity Of(Event Player) * -0.001, 0.001, To World, Cancel Contrary Motion);
 		Set Status(Event Player, Null, Rooted, 0.300);
