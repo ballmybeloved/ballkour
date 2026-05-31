@@ -947,7 +947,9 @@ rule("13.3.1: Load Checkpoint Objects")
 
 	actions
 	{
+		"Event Player.cpEffects[i]: [0]cpRing [1]bounceCpRing [2]nextCpRing [3]nextCpRing"
 		Event Player.cpEffects = Array();
+		"Event Player.cpIcons[i]: [0]bounceCpJumpIcon [1]nextCpFlag"
 		Event Player.cpIcons = Array();
 		Create Effect(Event Player, Ring, Color(Green), Event Player.cpData[0], Event Player.cpData[1], Position and Radius);
 		Event Player.cpEffects[0] = Last Created Entity;
