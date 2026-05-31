@@ -917,7 +917,7 @@ rule("13.2: Load Checkpoint Data")
 
 	actions
 	{
-		"Event Player.cpData: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving"		
+		"Event Player.cpData[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving [15]deathLocation"		
 		Event Player.cpData = Array();
 		Event Player.cpData[0] = Global.cps[Event Player.runCurrentCp][0];
 		If(Event Player.runCurrentCp == Count Of(Global.cps) - 1);
@@ -1276,13 +1276,16 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 
 	actions
 	{
-		Event Player.isLoading = True;
+		Event Player.cpData[15] = Position Of(Event Player);
 		Respawn(Event Player);
-		Call Subroutine(cpResetPlayer);
 		If(!Event Player.isInFreemode);
+			Event Player.isLoading = True;
+			Call Subroutine(cpResetPlayer);
 			Event Player.runMistakes += 1;
+			Event Player.isLoading = False;
+		Else;
+			Teleport(Event Player, Nearest Walkable Position(Event Player.cpData[15]));
 		End;
-		Event Player.isLoading = False;
 	}
 }
 
