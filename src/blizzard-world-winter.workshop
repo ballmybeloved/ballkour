@@ -144,7 +144,7 @@ subroutines
 	15: formatRunTime
 	16: loadRunCompletionText
 	17: unloadRunCompletionText
-	18: formatRunLobbyTime
+	18: formatRunTimeForLobby
 	19: loadFreemodeHud
 	20: unloadFreemodeHud
 	21: loadCtrlsHud
@@ -367,7 +367,7 @@ rule("4: Lobby")
 
 	actions
 	{
-		"Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]players [17]rejoins [18]legitRuns [19]totalRunTime [20]avgRunTime"
+		"Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]newPlayers [17]rejoins [18]legitRuns [19]totalRunTime [20]totalMistakes [21]avgRunTime [22]avgMistakes"
 		Global.lobbyData = Array();
         Global.lobbyData[0] = Vector(2.90, -4.95, -42.38);
         Global.lobbyData[5] = Vector(3.00, -3.99, -22.07);
@@ -383,17 +383,9 @@ rule("4: Lobby")
         Global.lobbyData[11] = Vector(12.055, 1.25, -23.265);
         Global.lobbyData[12] = 1.2;
         Global.lobbyData[13] = 0.7;
-        Global.lobbyData[14] = Vector(12.03, 1.25, -32.93);
-		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.65, 0);
-		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, -0.75, 0);
-		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 2;
-		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 3;
-		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 4;
-		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, -0.75, 0) * 5;
-        "Top-10 Positions"
         Global.lbPos = Array();
         Global.lbPos[1] = Global.lobbyData[11] + Vector(0, -0.65, 0);
-        Global.lbPos[2] = Global.lbPos[1] + Vector(0, -0.4, 0);
+        Global.lbPos[2] = Global.lbPos[1] + Vector(0, -0.4, 0) * 1;
         Global.lbPos[3] = Global.lbPos[1] + Vector(0, -0.4, 0) * 2;
         Global.lbPos[4] = Global.lbPos[1] + Vector(0, -0.4, 0) * 3;
         Global.lbPos[5] = Global.lbPos[1] + Vector(0, -0.4, 0) * 4;
@@ -402,6 +394,15 @@ rule("4: Lobby")
         Global.lbPos[8] = Global.lbPos[1] + Vector(0, -0.4, 0) * 7;
         Global.lbPos[9] = Global.lbPos[1] + Vector(0, -0.4, 0) * 8;
         Global.lbPos[10] = Global.lbPos[1] + Vector(0, -0.4, 0) * 9;
+        Global.lobbyData[14] = Vector(12.03, 1.25, -32.93);
+		Global.lobbyData[15] = Global.lobbyData[14] + Vector(0, -0.65, 0);
+		Global.lobbyData[16] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 1;
+		Global.lobbyData[17] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 2;
+		Global.lobbyData[18] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 3;
+		Global.lobbyData[19] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 4;
+		Global.lobbyData[20] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 5;
+		Global.lobbyData[21] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 6;
+		Global.lobbyData[22] = Global.lobbyData[15] + Vector(0, Y Component Of(Global.lbPos[10]) - Y Component Of(Global.lobbyData[15]), 0) / 7 * 7;
 	}
 }
 
@@ -449,7 +450,7 @@ rule("6.1: Initialize Match")
 		End;
 		If(Global.settings[1]);
 			Global.players = Array();
-			"Global.lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]avgRunTime [6]avgRunTimeFormatted"
+			"Global.lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes"
 			Global.lobbyStats = Array();
 			Global.lobbyStats[0] = 0;
 			Global.lobbyStats[1] = 0;
@@ -457,13 +458,15 @@ rule("6.1: Initialize Match")
 			Global.lobbyStats[3] = 0;
 			Global.lobbyStats[4] = Custom String("00:00.00");
 			Global.lobbyStats[5] = 0;
-			Global.lobbyStats[6] = Custom String("00:00.00");
+			Global.lobbyStats[6] = 0;
+			Global.lobbyStats[7] = Custom String("00:00.00");
+			Global.lobbyStats[8] = 0;
 		End;
 		Call Subroutine(formatTimeToBeat);
 	}
 }
 
-rule("6.2: Start Elapsed Timer Format")
+rule("6.2: Start Elapsed Timer")
 {
 	event
 	{
@@ -745,7 +748,7 @@ rule("9.5.2: Resume Run Circle Entry")
 	}
 }
 
-rule("9.6: Load Stats")
+rule("9.6: Load Lobby Stats")
 {
 	event
 	{
@@ -765,7 +768,9 @@ rule("9.6: Load Stats")
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Rejoins: {0}", Global.lobbyStats[1]), Global.lobbyData[17], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Legit Runs: {0}", Global.lobbyStats[2]), Global.lobbyData[18], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Total Run Time: {0}", Global.lobbyStats[4]), Global.lobbyData[19], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
-		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Avg Run Time: {0}", Global.lobbyStats[6]), Global.lobbyData[20], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Total Mistakes: {0}", Global.lobbyStats[5]), Global.lobbyData[20], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Avg Run Time: {0}", Global.lobbyStats[7]), Global.lobbyData[21], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.isInLobby && Custom String("{0}", Current Array Element) == Global.hostPlayerName), Custom String("Total Mistakes: {0}", Global.lobbyStats[8]), Global.lobbyData[22], 0.85, Clip Against Surfaces, Visible To And String, Color(Orange), Default Visibility);
 	}
 }
 
@@ -1602,12 +1607,14 @@ rule("19.4: Update Lobby Stats With New Run")
 		Global.lobbyStats[2] += 1;
 		Global.lobbyStats[3] += Event Player.runTime;
 		Global.timeToFormat = Global.lobbyStats[3];
-		Call Subroutine(formatRunLobbyTime);
+		Call Subroutine(formatRunTimeForLobby);
 		Global.lobbyStats[4] = Global.timeFormatted;
-		Global.lobbyStats[5] = Global.lobbyStats[3] / Global.lobbyStats[2];
-		Global.timeToFormat = Global.lobbyStats[5];
-		Call Subroutine(formatRunLobbyTime);
-		Global.lobbyStats[6] = Global.timeFormatted;
+		Global.lobbyStats[5] += Event Player.runMistakes;
+		Global.lobbyStats[6] = Global.lobbyStats[3] / Global.lobbyStats[2];
+		Global.timeToFormat = Global.lobbyStats[6];
+		Call Subroutine(formatRunTimeForLobby);
+		Global.lobbyStats[7] = Global.timeFormatted;
+		Global.lobbyStats[8] = Global.lobbyStats[5] / Global.lobbyStats[2];
 	}
 }
 
@@ -2089,16 +2096,17 @@ rule("21.3: Format Run Time String")
 	}
 }
 
-rule("21.4: Format Lobby Run Time Strings")
+rule("21.4: Format Total/Avg Run Time For Lobby")
 {
 	event
 	{
 		Subroutine;
-		formatRunLobbyTime;
+		formatRunTimeForLobby;
 	}
 
 	actions
 	{
+
 		Global.remainingSec = Round To Integer(Global.timeToFormat / 3600, Down);
 		Global.hr = Global.timeToFormat % 3600;
 		Global.min = Round To Integer(Global.hr / 60, Down);
