@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Watchpoint: Gibraltar \n\nv2026.05.30-0 \n\nLatest Code: 59W28"
+		Description: "Watchpoint: Gibraltar \n\nv2026.05.31-0 \n\nLatest Code: 59W28"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -1031,13 +1031,7 @@ rule("14.2: Update Run Timer Format")
 		Global.playersUnpaused += 1;
 		Event Player.isTimerActive = True;
 		While(!Event Player.isRunPaused);
-			If(Global.playersUnpaused >= 8);
-				Wait(0.050, Ignore Condition);
-			Else If(Global.playersUnpaused >= 4);
-				Wait(0.032, Ignore Condition);
-			Else;
-				Wait(0.016, Ignore Condition);
-			End;
+			Wait(0.016 + Server Load * 0.0008, Ignore Condition);
 			Call Subroutine(formatRunTime);
 		End;
 		Global.playersUnpaused -= 1;
