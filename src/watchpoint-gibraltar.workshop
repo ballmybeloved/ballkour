@@ -448,7 +448,7 @@ rule("6.2: Start Elapsed Timer Format")
 
 	actions
 	{
-		Chase Global Variable At Rate(elapsedTime, 99999999, 1, Destination and Rate);
+		Chase Global Variable At Rate(elapsedTime, 14340, 1, Destination and Rate);
 		If(!Global.settings[0]);
 			Call Subroutine(formatElapsedTime);
 			Wait(0.1, Ignore Condition);
@@ -2097,5 +2097,33 @@ rule("21.4: Format Lobby Run Time Strings")
 		Else;
 			Global.timeFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
 		End;
+	}
+}
+
+rule("22.1: Auto-Restart Server")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		"3hr59min in (31min before OW servers auto-shut down. Restarting a minute before to be safe)"
+		Global.elapsedTime == 14340;
+	}
+
+	actions
+	{
+		Chase Global Variable At Rate(elapsedTime, 16140, 1, Destination and Rate);
+		Big Message(Event Player, Custom String("Server restart: \n30min"))
+		Wait(900, Ignore Condition);
+		Big Message(Event Player, Custom String("Server restart: \n15min"))
+		Wait(600, Ignore Condition);
+		Big Message(Event Player, Custom String("Server restart: \n5min"))
+		Wait(240, Ignore Condition);
+		Big Message(Event Player, Custom String("Server restart: \n1min"))
+		Wait(60, Ignore Condition);
+		Restart Match;
 	}
 }
