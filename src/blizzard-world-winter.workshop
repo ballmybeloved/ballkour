@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Blizzard World (Winter) \n\nv2026.05.31-0 \n\nLatest Code: GMWRF"
+		Description: "Blizzard World (Winter) \n\nv2026.05.31-1 \n\nLatest Code: GMWRF"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -1474,7 +1474,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.isRunLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.isRunPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.05 && !Event Player.cpData[14])) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.01 && !Event Player.cpData[14])) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7];
 	}
 
