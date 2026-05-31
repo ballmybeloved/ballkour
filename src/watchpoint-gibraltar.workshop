@@ -2116,13 +2116,13 @@ rule("22.1: Auto-Restart Server")
 	actions
 	{
 		Chase Global Variable At Rate(elapsedTime, 16140, 1, Destination and Rate);
-		Big Message(Event Player, Custom String("Server restart: \n30min"))
+		Big Message(All Players(All Teams), Custom String("Server restart: \n30min"));
 		Wait(900, Ignore Condition);
-		Big Message(Event Player, Custom String("Server restart: \n15min"))
+		Big Message(All Players(All Teams), Custom String("Server restart: \n15min"));
 		Wait(600, Ignore Condition);
-		Big Message(Event Player, Custom String("Server restart: \n5min"))
+		Big Message(All Players(All Teams), Custom String("Server restart: \n5min"));
 		Wait(240, Ignore Condition);
-		Big Message(Event Player, Custom String("Server restart: \n1min"))
+		Big Message(All Players(All Teams), Custom String("Server restart: \n1min"));
 		Wait(60, Ignore Condition);
 		Restart Match;
 	}
