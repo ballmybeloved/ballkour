@@ -1118,7 +1118,9 @@ rule("15.2.2: Bhopping")
 	{
 		If(!Event Player.cpData[12]);
 			Wait Until(Is On Ground(Event Player), 99999999);
-			Event Player.cpData[12] = True;
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
+				Event Player.cpData[12] = True;
+			End;
 		End;
 	}
 }
