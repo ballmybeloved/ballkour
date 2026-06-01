@@ -1523,7 +1523,7 @@ rule("19.3.1: Load Run Completion Text")
 	actions
 	{
 		Event Player.runCompletionText = Array();
-		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 5, Null, Color(Yellow), Null, None, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 5, Null, Color(Turquoise), Null, None, Default Visibility);
 		Event Player.runCompletionText[0] = Last Text ID;
 		Call Subroutine(formatRunTime);
 		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
@@ -1634,21 +1634,23 @@ rule("20.2.1: Load Controls HUD")
 	actions
 	{
 		Event Player.ctrlsHud = Array();
-		Create HUD Text(Event Player, Null, Custom String("Go Back:       {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Primary Fire))), Null, Left, 5, Null, Color(Aqua), Null, String, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("Go Back CP:          {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Primary Fire))), Null, Left, 5, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 		Event Player.ctrlsHud[0] = Last Text ID;
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
-			Create HUD Text(Event Player, Null, Custom String("Skip:                {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Secondary Fire))), Null, Left, 6, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Skip CP:                   {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Secondary Fire))), Null, Left, 6, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[1] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Restart:           {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))), Null, Left, 7, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Restart CP:       {0} (Hold)", Input Binding String(Button(Interact))), Null, Left, 7, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[2] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Freemode:     {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Interact))), Null, Left, 8, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Restart Run:           {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))), Null, Left, 8, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[3] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Lobby/Pause: {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))), Null, Left, 9, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Freemode:              {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Interact))), Null, Left, 9, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[4] = Last Text ID;
+			Create HUD Text(Event Player, Null, Custom String("Lobby/Pause:         {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))), Null, Left, 10, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
+			Event Player.ctrlsHud[5] = Last Text ID;
 		Else;
-			Create HUD Text(Event Player, Null, Custom String("Restart:           {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))), Null, Left, 6, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Restart:                    {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))), Null, Left, 6, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[1] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Lobby:              {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))), Null, Left, 7, Null, Color(Aqua), Null, String, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Lobby:                      {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))), Null, Left, 7, Null, Custom Color(165, 42, 42, 255), Null, String, Default Visibility);
 			Event Player.ctrlsHud[2] = Last Text ID;
 		End;
 	}
@@ -1783,7 +1785,42 @@ rule("20.4: Skip Checkpoint Input")
 	}
 }
 
-rule("20.5: Restart Input")
+rule("20.5: Restart Checkpoint Input")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Ultimate)) == False;
+		Is Button Held(Event Player, Button(Interact)) == True;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
+		Event Player.isInLobby == False;
+		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
+	}
+
+	actions
+	{
+		Wait Until(!Is Button Held(Event Player, Button(Interact)), 0.2);
+		If(!Is Button Held(Event Player, Button(Interact)) && !Event Player.runCurrentCp < Count Of(Global.cps) - 1);
+			Abort;
+		End;
+		If(!Event Player.isRunPaused);
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
+				Event Player.runMistakes += 1;
+			End;
+		End;
+		Event Player.isLoading = True;
+		Call Subroutine(cpResetPlayer);
+	}
+}
+
+rule("20.6: Restart Input")
 {
 	event
 	{
@@ -1816,7 +1853,7 @@ rule("20.5: Restart Input")
 	}
 }
 
-rule("20.6.1: Freemode Input")
+rule("20.7.1: Freemode Input")
 {
 	event
 	{
@@ -1835,6 +1872,10 @@ rule("20.6.1: Freemode Input")
 
 	actions
 	{
+		Wait Until(!Is Button Held(Event Player, Button(Ultimate)) || !Is Button Held(Event Player, Button(Interact)), 0.2);
+		If(!Is Button Held(Event Player, Button(Ultimate)) && !Is Button Held(Event Player, Button(Interact)));
+			Abort;
+		End;
 		If(!Event Player.isInFreemode);
 			Stop Chasing Player Variable(Event Player, runTime);
 			Event Player.isRunPaused = True;
@@ -1866,7 +1907,7 @@ rule("20.6.1: Freemode Input")
 	}
 }
 
-rule("20.6.2.1: Load Freemode HUD")
+rule("20.7.2.1: Load Freemode HUD")
 {
 	event
 	{
@@ -1877,31 +1918,29 @@ rule("20.6.2.1: Load Freemode HUD")
 	actions
 	{
 		Event Player.freemodeHud = Array();
-		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 10, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[0] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 11, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[1] = Last Text ID;
+		Event Player.freemodeHud[0] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 12, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[2] = Last Text ID;
+		Event Player.freemodeHud[1] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 13, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[3] = Last Text ID;
+		Event Player.freemodeHud[2] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 14, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[4] = Last Text ID;
+		Event Player.freemodeHud[3] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String(" "), Left, 15, Null, Null, Color(White), None, Default Visibility);
-		Event Player.freemodeHud[5] = Last Text ID;
+		Event Player.freemodeHud[4] = Last Text ID;
 		Create HUD Text(Event Player, Null, Null, Custom String("Freemode On"), Left, 16, Null, Null, Color(Orange), None, Default Visibility);
-		Event Player.freemodeHud[6] = Last Text ID;
+		Event Player.freemodeHud[5] = Last Text ID;
 		If(Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			Create HUD Text(Event Player, Null, Null, Custom String("Disable: {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Interact))), Left, 17, Null, Null, Custom Color(165, 42, 42, 255), String, Default Visibility);
-			Event Player.freemodeHud[7] = Last Text ID;
+			Event Player.freemodeHud[6] = Last Text ID;
 		Else;
 			Create HUD Text(Event Player, Null, Null, Custom String("Restart: {0} + {1}", Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))), Left, 17, Null, Null, Custom Color(165, 42, 42, 255), String, Default Visibility);
-			Event Player.freemodeHud[7] = Last Text ID;
+			Event Player.freemodeHud[6] = Last Text ID;
 		End;
 	}
 }
 
-rule("20.6.3.2: Unload Freemode HUD")
+rule("20.7.3.2: Unload Freemode HUD")
 {
 	event
 	{
@@ -1917,7 +1956,7 @@ rule("20.6.3.2: Unload Freemode HUD")
 	}
 }
 
-rule("20.7: Lobby Input")
+rule("20.8: Lobby Input")
 {
 	event
 	{
