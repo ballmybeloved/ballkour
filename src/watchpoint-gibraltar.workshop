@@ -784,10 +784,9 @@ rule("11.1: Load Global Run HUD")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String(" "), Right, 5, Null, Null, Color(White), Visible To, Default Visibility);
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 2, Null, Color(White), Null, Visible To, Default Visibility);
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 3, Null, Color(White), Null, Visible To, Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 4, Null, Color(White), Null, Visible To, Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 6, Null, Color(White), Null, Visible To, Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 10, Null, Color(White), Null, Visible To, Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 15, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 5, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 9, Null, Color(White), Null, Visible To, Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Null, Top, 14, Null, Color(White), Null, Visible To, Default Visibility);
 	}
 }
 
@@ -1523,30 +1522,30 @@ rule("19.3.1: Load Run Completion Text")
 	actions
 	{
 		Event Player.runCompletionText = Array();
-		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 5, Null, Color(Turquoise), Null, None, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 4, Null, Color(Turquoise), Null, None, Default Visibility);
 		Event Player.runCompletionText[0] = Last Text ID;
 		Call Subroutine(formatRunTime);
-		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 6, Null, Color(Orange), Null, None, Default Visibility);
 		Event Player.runCompletionText[1] = Last Text ID;
 		If(Global.timeToBeatInMs == 0);
-			Create HUD Text(Event Player, Null, Custom String("(Time to beat: 00:00.00)"), Null, Top, 8, Null, Color(Orange), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("(Time to beat: 00:00.00)"), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[2] = Last Text ID;
 		Else;
-			Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeToBeatFormatted), Null, Top, 8, Null, Color(Orange), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeToBeatFormatted), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[2] = Last Text ID;
 		End;
-		Create HUD Text(Event Player, Null, Custom String("Mistakes: {0}", Event Player.runMistakes), Null, Top, 9, Null, Color(Orange), Null, None, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String("Mistakes: {0}", Event Player.runMistakes), Null, Top, 8, Null, Color(Orange), Null, None, Default Visibility);
 		Event Player.runCompletionText[3] = Last Text ID;
 		If(Global.timeToBeatInMs == 0 || Event Player.runTime < Global.timeToBeatInMs / 1000);
-			Create HUD Text(Event Player, Null, Custom String("Top-10 time!"), Null, Top, 11, Null, Color(Orange), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Top-10 time!"), Null, Top, 10, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[4] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Submit a video of your run"), Null, Top, 12, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Submit a video of your run"), Null, Top, 11, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
 			Event Player.runCompletionText[5] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("@"), Null, Top, 13, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("@"), Null, Top, 12, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
 			Event Player.runCompletionText[6] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("ballkour.com"), Null, Top, 14, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("ballkour.com"), Null, Top, 13, Null, Custom Color(165, 42, 42, 255), Null, None, Default Visibility);
 			Event Player.runCompletionText[7] = Last Text ID;
-			Create HUD Text(Event Player, Null, Custom String("Thanks for playing!"), Null, Top, 16, Null, Color(Turquoise), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("Thanks for playing!"), Null, Top, 15, Null, Color(Turquoise), Null, None, Default Visibility);
 			Event Player.runCompletionText[8] = Last Text ID;
 		End;
 		Wait(30, Ignore Condition);
