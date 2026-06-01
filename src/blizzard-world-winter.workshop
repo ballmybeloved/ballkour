@@ -109,19 +109,20 @@ variables
 		18: cpData
 		19: cpEffects
 		20: cpIcons
-		21: isRunLegit
-		22: isRunPaused
-		23: isTimerActive
-		24: isRunFinished
-		25: isInFreemode
-		26: freemodeHud
-		27: runCompletionText
-		28: runCompletionTextActive
-		29: statToFormat
-		30: statFormatted
-		31: ctrlsHud
-		32: ctrlsHudActive
-		33: cpCtrlsInputLocked
+		21: cpTime
+		22: isRunLegit
+		23: isRunPaused
+		24: isTimerActive
+		25: isRunFinished
+		26: isInFreemode
+		27: freemodeHud
+		28: runCompletionText
+		29: runCompletionTextActive
+		30: statToFormat
+		31: statFormatted
+		32: ctrlsHud
+		33: ctrlsHudActive
+		34: cpCtrlsInputLocked
 		100: index
 }
 
@@ -938,6 +939,8 @@ rule("13.2: Load Checkpoint Data")
 		Event Player.cpData[11] = False;
 		Event Player.cpData[12] = False;
 		Event Player.cpData[13] = False;
+		Event Player.cpTime = 0;
+		Stop Chasing player Variable(Event Player, cpTime);
 	}
 }
 
@@ -1045,7 +1048,32 @@ rule("14.1: Start/Resume Run")
 	}
 }
 
-rule("14.2: Update Run Timer Format")
+rule("14.2: Start Checkpoint Time Timer")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
+		Event Player.isInLobby == False;
+		Event Player.isInFreemode == False;
+		Event Player.isRunPaused == True;
+		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
+	}
+
+	actions
+	{
+		Chase Player Variable At Rate(Event Player, cpTime, 99999999, 1, Destination and Rate);
+	}
+}
+
+rule("14.3: Update Run Timer Format")
 {
 	event
 	{
@@ -1519,6 +1547,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Else;
 			Call Subroutine(finalCpReached);
 		End;
+		Small Message(Event Player, Custom String("Time: {0}", Event Player.cpTime));
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Event Player.isLoading = False;
