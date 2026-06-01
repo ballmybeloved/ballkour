@@ -1253,15 +1253,15 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 	actions
 	{
 		Event Player.cpData[15] = Position Of(Event Player);
+		Event Player.isLoading = True;
 		Respawn(Event Player);
 		If(!Event Player.isInFreemode);
-			Event Player.isLoading = True;
 			Call Subroutine(cpResetPlayer);
 			Event Player.runMistakes += 1;
-			Event Player.isLoading = False;
 		Else;
 			Teleport(Event Player, Nearest Walkable Position(Event Player.cpData[15]));
 		End;
+		Event Player.isLoading = False;
 	}
 }
 
