@@ -1204,6 +1204,10 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 		Event Player.isLoading = True;
 		Event Player.runMistakes += 1;
 		Call Subroutine(cpResetPlayer);
+		If(Event Player.isRunPaused);
+			Event Player.isRunPaused = False;
+			Chase Player Variable At Rate(Event Player, runTime, 99999999, 1, Destination and Rate);
+		End;
 		Event Player.isLoading = False;
 	}
 }
