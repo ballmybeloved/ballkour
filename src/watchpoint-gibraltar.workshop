@@ -1077,7 +1077,12 @@ rule("15.1: Grappling")
 			If(Speed Of(Event Player) > 5);
 				Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)), 8.5);
 			End;
-			Event Player.cpData[9] = True;
+			Event Player.cpData[8] = False;
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
+				Event Player.cpData[9] = True;
+			Else;
+				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
+			End;
 		End;
 	}
 }
@@ -1175,22 +1180,20 @@ rule("15.4: Reset Useless Grapple/Jump/Bhop")
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
 		(Event Player.cpData[9] || Event Player.cpData[11] || Event Player.cpData[12]) == True;
 		Event Player.isInLobby == False;
+		Is On Ground(Event Player) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1];
 	}
 
 	actions
 	{
-		Wait Until(Is On Ground(Event Player), 99999999);
-		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
-			If(Event Player.cpData[2]);
-				Event Player.cpData[9] = False;
-				Set Secondary Fire Enabled(Event Player, True);
-				Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
-			End;
-			Event Player.cpData[11] = False;
-			Event Player.cpData[12] = False;
-			Event Player.cpData[13] = False;
+		If(Event Player.cpData[2]);
+			Event Player.cpData[9] = False;
+			Set Secondary Fire Enabled(Event Player, True);
+			Set Ability Cooldown(Event Player, Button(Secondary Fire), 0);
 		End;
+		Event Player.cpData[11] = False;
+		Event Player.cpData[12] = False;
+		Event Player.cpData[13] = False;
 	}
 }
 
@@ -1206,7 +1209,7 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 	conditions
 	{
 		Event Player.isInFreemode == False;
-		(Event Player.cpData[4] == Null || !Event Player.cpData[8] || Event Player.cpData[13]) == True;
+		(Event Player.cpData[4] == Null || (!Event Player.cpData[8] && !Event Player.cpData[9]) || Event Player.cpData[13]) == True;
 		(Is On Ground(Event Player) || (Event Player.cpData[10] && Event Player.cpData[12])) == True;
 		(Has Spawned(Event Player) && !Event Player.isLoading && !Event Player.isInLobby && !Has Status(Event Player, Rooted)) == True;
 		Is Dummy Bot(Event Player) == False;
@@ -1242,7 +1245,7 @@ rule("16.2: Checkpoint Mistake: Already Bhopped")
 		Event Player.isInFreemode == False;
 		Is Jumping(Event Player) == True;
 		Event Player.cpData[12] == True;
-		(Event Player.cpData[4] == Null || !Event Player.cpData[8] || Event Player.cpData[13]) == True;
+		Event Player.cpData[4] == Null;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 		Distance Between(Position Of(Event Player), Event Player.cpData[6]) >= Event Player.cpData[7];
 	}
@@ -1297,7 +1300,6 @@ rule("17.1: Bounce Checkpoints: Grapple Use")
 
 	actions
 	{
-		Wait Until(!Is Button Held(Event Player, Button(Secondary Fire)), 99999999);
 		If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) <= Event Player.cpData[1]);
 			Event Player.cpData[8] = False;
 			Event Player.cpData[9] = False;
@@ -1325,6 +1327,7 @@ rule("17.2: Bounce Checkpoint Mistake: No Grapple")
 		Event Player.isInFreemode == False;
 		Event Player.cpData[4] != Null;
 		Event Player.cpData[8] == False;
+		Event Player.cpData[9] == False;
 		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
 	}
 
