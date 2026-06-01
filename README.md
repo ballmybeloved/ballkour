@@ -16,7 +16,7 @@ _Redeveloped by ballmybeloved, with help from Kalaziel64_
 
 ## Gallery
 
-Logo: ![alt text](gallery/logo.png)
+Logo: ![alt text](gallery/logos/pride-logo-circular.png)
 
 Lobby: ![alt text](gallery/lobby.png)
 
