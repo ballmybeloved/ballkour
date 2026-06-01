@@ -1118,7 +1118,9 @@ rule("15.2.2: Bhopping")
 	{
 		If(!Event Player.cpData[12]);
 			Wait Until(Is On Ground(Event Player), 99999999);
-			Event Player.cpData[12] = True;
+			If(Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1]);
+				Event Player.cpData[12] = True;
+			End;
 		End;
 	}
 }
@@ -1253,15 +1255,15 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 	actions
 	{
 		Event Player.cpData[15] = Position Of(Event Player);
+		Event Player.isLoading = True;
 		Respawn(Event Player);
 		If(!Event Player.isInFreemode);
-			Event Player.isLoading = True;
 			Call Subroutine(cpResetPlayer);
 			Event Player.runMistakes += 1;
-			Event Player.isLoading = False;
 		Else;
 			Teleport(Event Player, Nearest Walkable Position(Event Player.cpData[15]));
 		End;
+		Event Player.isLoading = False;
 	}
 }
 
@@ -1452,7 +1454,7 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Event Player.isRunLoaded == True;
 		Event Player.isInFreemode == False;
 		Event Player.isRunPaused == False;
-		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) < 0.01 && !Event Player.cpData[14])) == True;
+		(Is On Ground(Event Player) || Event Player.cpData[10] || (Altitude Of(Event Player) <= 0.01 && !Event Player.cpData[14])) == True;
 		Distance Between(Position Of(Event Player), Event Player.cpData[6]) <= Event Player.cpData[7];
 	}
 
