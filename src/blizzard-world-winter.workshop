@@ -547,7 +547,7 @@ rule("7.2: Player Leaves")
 
     actions
     {
-		If(!Event Player.runIsPaused);
+		If(!Event Player.isRunPaused);
 			Global.playersUnpaused -= 1;
 		End;
         Destroy In-World Text(Event Player.nameplateObject);
