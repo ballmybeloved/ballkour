@@ -1044,8 +1044,10 @@ rule("14.3: Update Run Timer Format")
 		Event Player.isTimerActive = True;
 		While(!Event Player.isRunPaused);
 			If(Global.playersUnpaused >= 8);
-				Wait(0.048 + Server Load * 0.0006, Ignore Condition);
+				Wait(0.064 + Server Load * 0.0004, Ignore Condition);
 			Else If(Global.playersUnpaused >= 4);
+				Wait(0.048 + Server Load * 0.0006, Ignore Condition);
+			Else If(Global.playersUnpaused >= 2);
 				Wait(0.032 + Server Load * 0.0008, Ignore Condition);
 			Else;
 				Wait(0.016 + Server Load * 0.0010, Ignore Condition);
