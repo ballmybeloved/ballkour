@@ -109,19 +109,20 @@ variables
 		19: cpEffects
 		20: cpIcons
 		21: cpTime
-		22: isRunLegit
-		23: isRunPaused
-		24: isTimerActive
-		25: isRunFinished
-		26: isInFreemode
-		27: freemodeHud
-		28: runCompletionText
-		29: runCompletionTextActive
-		30: statToFormat
-		31: statFormatted
-		32: ctrlsHud
-		33: ctrlsHudActive
-		34: cpCtrlsInputLocked
+		22: cpTimeFormatted
+		23: isRunLegit
+		24: isRunPaused
+		25: isTimerActive
+		26: isRunFinished
+		27: isInFreemode
+		28: freemodeHud
+		29: runCompletionText
+		30: runCompletionTextActive
+		31: statToFormat
+		32: statFormatted
+		33: ctrlsHud
+		34: ctrlsHudActive
+		35: cpCtrlsInputLocked
 		100: index
 }
 
@@ -141,16 +142,17 @@ subroutines
 	11: unloadCpObjects
 	12: setCpAbilities
 	13: cpResetPlayer
-	14: finalCpReached
-	15: formatRunTime
-	16: loadRunCompletionText
-	17: unloadRunCompletionText
-	18: formatRunTimeForLobby
-	19: loadFreemodeHud
-	20: unloadFreemodeHud
-	21: loadCtrlsHud
-	22: unloadCtrlsHud
-	23: updateStats
+	14: formatRunTime
+	15: formatCpTime
+	16: finalCpReached
+	17: loadRunCompletionText
+	18: unloadRunCompletionText
+	19: formatRunTimeForLobby
+	20: loadFreemodeHud
+	21: unloadFreemodeHud
+	22: loadCtrlsHud
+	23: unloadCtrlsHud
+	24: updateStats
 }
 
 rule("0: Contact & Course Info")
@@ -911,7 +913,6 @@ rule("13.2: Load Checkpoint Data")
 		Event Player.cpData[12] = False;
 		Event Player.cpData[13] = False;
 		Event Player.cpTime = 0;
-		Stop Chasing player Variable(Event Player, cpTime);
 	}
 }
 
@@ -1019,31 +1020,6 @@ rule("14.1: Start/Resume Run")
 	}
 }
 
-rule("14.2: Start Checkpoint Time Timer")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
-		Event Player.isInLobby == False;
-		Event Player.isInFreemode == False;
-		Event Player.isRunPaused == True;
-		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
-		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
-	}
-
-	actions
-	{
-		Chase Player Variable At Rate(Event Player, cpTime, 99999999, 1, Destination and Rate);
-	}
-}
-
 rule("14.3: Update Run Timer Format")
 {
 	event
@@ -1080,7 +1056,31 @@ rule("14.3: Update Run Timer Format")
 	}
 }
 
-rule("15.1: Grappling")
+rule("15: Start Checkpoint Time Timer")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Has Spawned(Event Player) && !Event Player.isLoading && !Has Status(Event Player, Rooted)) == True;
+		Event Player.isInLobby == False;
+		Event Player.isInFreemode == False;
+		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
+		Distance Between(Position Of(Event Player), Event Player.cpData[0]) >= Event Player.cpData[1];
+	}
+
+	actions
+	{
+		Chase Player Variable At Rate(Event Player, cpTime, 99999999, 1, Destination and Rate);
+	}
+}
+
+rule("16.1: Grappling")
 {
 	event
 	{
@@ -1115,7 +1115,7 @@ rule("15.1: Grappling")
 	}
 }
 
-rule("15.2.1: Jumping")
+rule("16.2.1: Jumping")
 {
 	event
 	{
@@ -1141,7 +1141,7 @@ rule("15.2.1: Jumping")
 	}
 }
 
-rule("15.2.2: Bhopping")
+rule("16.2.2: Bhopping")
 {
 	event
 	{
@@ -1171,7 +1171,7 @@ rule("15.2.2: Bhopping")
 	}
 }
 
-rule("15.3: Piledriving")
+rule("16.3: Piledriving")
 {
 	event
 	{
@@ -1194,7 +1194,7 @@ rule("15.3: Piledriving")
 	}
 }
 
-rule("15.4: Reset Useless Grapple/Jump/Bhop")
+rule("16.4: Reset Useless Grapple/Jump/Bhop")
 {
 	event
 	{
@@ -1225,7 +1225,7 @@ rule("15.4: Reset Useless Grapple/Jump/Bhop")
 	}
 }
 
-rule("16.1: Checkpoint Mistake: Missed Checkpoint")
+rule("17.1: Checkpoint Mistake: Missed Checkpoint")
 {
 	event
 	{
@@ -1258,7 +1258,7 @@ rule("16.1: Checkpoint Mistake: Missed Checkpoint")
 	}
 }
 
-rule("16.2: Checkpoint Mistake: Already Bhopped")
+rule("17.2: Checkpoint Mistake: Already Bhopped")
 {
 	event
 	{
@@ -1287,7 +1287,7 @@ rule("16.2: Checkpoint Mistake: Already Bhopped")
 	}
 }
 
-rule("16.3: Checkpoint Mistake: Environment Death")
+rule("17.3: Checkpoint Mistake: Environment Death")
 {
 	event
 	{
@@ -1311,7 +1311,7 @@ rule("16.3: Checkpoint Mistake: Environment Death")
 	}
 }
 
-rule("17.1: Bounce Checkpoints: Grapple Use")
+rule("18.1: Bounce Checkpoints: Grapple Use")
 {
 	event
 	{
@@ -1340,7 +1340,7 @@ rule("17.1: Bounce Checkpoints: Grapple Use")
 	}
 }
 
-rule("17.2: Bounce Checkpoint Mistake: No Grapple")
+rule("18.2: Bounce Checkpoint Mistake: No Grapple")
 {
 	event
 	{
@@ -1368,7 +1368,7 @@ rule("17.2: Bounce Checkpoint Mistake: No Grapple")
 	}
 }
 
-rule("17.3: Bounce Checkpoint Mistake: Too Slow")
+rule("18.3: Bounce Checkpoint Mistake: Too Slow")
 {
 	event
 	{
@@ -1397,7 +1397,7 @@ rule("17.3: Bounce Checkpoint Mistake: Too Slow")
 	}
 }
 
-rule("17.4: Bounce Checkpoint: Bounce Used Properly")
+rule("18.4: Bounce Checkpoint: Bounce Used Properly")
 {
 	event
 	{
@@ -1421,7 +1421,7 @@ rule("17.4: Bounce Checkpoint: Bounce Used Properly")
 	}
 }
 
-rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
+rule("18.5: Bounce Checkpoint Mistake: Improperly Airborne")
 {
 	event
 	{
@@ -1450,7 +1450,7 @@ rule("17.5: Bounce Checkpoint Mistake: Improperly Airborne")
 	}
 }
 
-rule("18: Checkpoint Reset Player")
+rule("19: Checkpoint Reset Player")
 {
 	event
 	{
@@ -1461,6 +1461,8 @@ rule("18: Checkpoint Reset Player")
 	actions
 	{
 		Event Player.isLoading = True;
+		Stop Chasing Player Variable(Event Player, cpTime);
+		Event Player.cpTime = 0;
 		If(Is Button Held(Event Player, Button(Secondary Fire)));
 			Disallow Button(Event Player, Button(Secondary Fire));
 			Allow Button(Event Player, Button(Secondary Fire));
@@ -1483,7 +1485,7 @@ rule("18: Checkpoint Reset Player")
 	}
 }
 
-rule("19.1: Checkpoint Completed (No Skipping)")
+rule("20.1: Checkpoint Completed (No Skipping)")
 {
 	event
 	{
@@ -1504,6 +1506,9 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 
 	actions
 	{
+		Stop Chasing Player Variable(Event Player, cpTime);
+		Call Subroutine(formatCpTime);
+		Small Message(Event Player, Custom String("Time: {0}", Event Player.cpTimeFormatted));
 		Event Player.isLoading = True;
 		Event Player.runCurrentCp += 1;
 		Call Subroutine(loadCp);
@@ -1518,14 +1523,13 @@ rule("19.1: Checkpoint Completed (No Skipping)")
 		Else;
 			Call Subroutine(finalCpReached);
 		End;
-		Small Message(Event Player, Custom String("Time: {0}", Event Player.cpTime));
 		Destroy In-World Text(Event Player.nameplateObject);
 		Call Subroutine(loadNameplate);
 		Event Player.isLoading = False;
 	}
 }
 
-rule("19.2: Final Checkpoint Reached")
+rule("20.2: Final Checkpoint Reached")
 {
 	event
 	{
@@ -1562,7 +1566,7 @@ rule("19.2: Final Checkpoint Reached")
 	}
 }
 
-rule("19.3.1: Load Run Completion Text")
+rule("20.3.1: Load Run Completion Text")
 {
 	event
 	{
@@ -1604,7 +1608,7 @@ rule("19.3.1: Load Run Completion Text")
 	}
 }
 
-rule("19.3.2: Unload Run Completion Text")
+rule("20.3.2: Unload Run Completion Text")
 {
 	event
 	{
@@ -1620,7 +1624,7 @@ rule("19.3.2: Unload Run Completion Text")
 	}
 }
 
-rule("19.4: Update Lobby Stats With New Run")
+rule("20.4: Update Lobby Stats With New Run")
 {
 	event
 	{
@@ -1644,7 +1648,7 @@ rule("19.4: Update Lobby Stats With New Run")
 	}
 }
 
-rule("20.1: Controls HUD Input")
+rule("21.1: Controls HUD Input")
 {
 	event
 	{
@@ -1673,7 +1677,7 @@ rule("20.1: Controls HUD Input")
 	}
 }
 
-rule("20.2.1: Load Controls HUD")
+rule("21.2.1: Load Controls HUD")
 {
 	event
 	{
@@ -1706,7 +1710,7 @@ rule("20.2.1: Load Controls HUD")
 	}
 }
 
-rule("20.2.2: Unload Controls HUD")
+rule("21.2.2: Unload Controls HUD")
 {
 	event
 	{
@@ -1722,7 +1726,7 @@ rule("20.2.2: Unload Controls HUD")
 	}
 }
 
-rule("20.3: Go Back Checkpoint Input")
+rule("21.3: Go Back Checkpoint Input")
 {
 	event
 	{
@@ -1780,7 +1784,7 @@ rule("20.3: Go Back Checkpoint Input")
 	}
 }
 
-rule("20.4: Skip Checkpoint Input")
+rule("21.4: Skip Checkpoint Input")
 {
 	event
 	{
@@ -1835,7 +1839,7 @@ rule("20.4: Skip Checkpoint Input")
 	}
 }
 
-rule("20.5: Restart Checkpoint Input")
+rule("21.5: Restart Checkpoint Input")
 {
 	event
 	{
@@ -1870,7 +1874,7 @@ rule("20.5: Restart Checkpoint Input")
 	}
 }
 
-rule("20.6: Restart Input")
+rule("21.6: Restart Input")
 {
 	event
 	{
@@ -1903,7 +1907,7 @@ rule("20.6: Restart Input")
 	}
 }
 
-rule("20.7.1: Freemode Input")
+rule("21.7.1: Freemode Input")
 {
 	event
 	{
@@ -1953,7 +1957,7 @@ rule("20.7.1: Freemode Input")
 	}
 }
 
-rule("20.7.2.1: Load Freemode HUD")
+rule("21.7.2.1: Load Freemode HUD")
 {
 	event
 	{
@@ -1986,7 +1990,7 @@ rule("20.7.2.1: Load Freemode HUD")
 	}
 }
 
-rule("20.7.3.2: Unload Freemode HUD")
+rule("21.7.3.2: Unload Freemode HUD")
 {
 	event
 	{
@@ -2002,7 +2006,7 @@ rule("20.7.3.2: Unload Freemode HUD")
 	}
 }
 
-rule("20.8: Lobby Input")
+rule("21.8: Lobby Input")
 {
 	event
 	{
@@ -2037,7 +2041,7 @@ rule("20.8: Lobby Input")
 	}
 }
 
-rule("21.1: Format Time To Beat String")
+rule("22.1: Format Time To Beat String")
 {
 	event
 	{
@@ -2077,7 +2081,7 @@ rule("21.1: Format Time To Beat String")
 	}
 }
 
-rule("21.2: Format Elapsed Time String")
+rule("22.2: Format Elapsed Time String")
 {
 	event
 	{
@@ -2117,7 +2121,7 @@ rule("21.2: Format Elapsed Time String")
 	}
 }
 
-rule("21.3: Format Run Time String")
+rule("22.3: Format Run Time String")
 {
 	event
 	{
@@ -2157,7 +2161,47 @@ rule("21.3: Format Run Time String")
 	}
 }
 
-rule("21.4: Format Total/Avg Run Time For Lobby")
+rule("22.4: Format Checkpoint Time String")
+{
+	event
+	{
+		Subroutine;
+		formatCpTime;
+	}
+
+	actions
+	{
+		Event Player.remainingSec = Round To Integer(Event Player.cpTime / 3600, Down);
+		Event Player.hr = Event Player.cpTime % 3600;
+		Event Player.min = Round To Integer(Event Player.hr / 60, Down);
+		Event Player.sec = Round To Integer(Event Player.hr % 60, Down);
+		Event Player.hundredths = Round To Integer((Event Player.cpTime - Round To Integer(Event Player.cpTime, Down)) * 100, Down);
+		If(Event Player.sec < 10);
+			Event Player.secText = Custom String("0{0}", Event Player.sec);
+		Else;
+			Event Player.secText = Custom String("{0}", Event Player.sec);
+		End;
+		If(Event Player.hundredths < 10);
+			Event Player.hundredthsText = Custom String("0{0}", Event Player.hundredths);
+		Else;
+			Event Player.hundredthsText = Custom String("{0}", Event Player.hundredths);
+		End;
+		If(Event Player.min < 10);
+			Event Player.minText = Custom String("0{0}", Event Player.min);
+		Else;
+			Event Player.minText = Custom String("{0}", Event Player.min);
+		End;
+		If(Event Player.remainingSec > 0);
+			Event Player.cpTimeFormatted = Custom String("{0}:{1}:{2}", Event Player.remainingSec, Event Player.minText, Custom String("{0}.{1}", Event Player.secText, Event Player.hundredthsText));
+		Else If(Event Player.min > 0);
+			Event Player.cpTimeFormatted = Custom String("{0}:{1}.{2}", Event Player.min, Event Player.secText, Event Player.hundredthsText);
+		Else;
+			Event Player.cpTimeFormatted = Custom String("{0}.{1}", Event Player.sec, Event Player.hundredthsText);
+		End;
+	}
+}
+
+rule("22.5: Format Total/Avg Run Time For Lobby")
 {
 	event
 	{
@@ -2198,7 +2242,7 @@ rule("21.4: Format Total/Avg Run Time For Lobby")
 	}
 }
 
-rule("22.1: Auto-Restart Server")
+rule("23.1: Auto-Restart Server")
 {
 	event
 	{
