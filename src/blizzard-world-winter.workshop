@@ -1754,6 +1754,10 @@ rule("21.3: Go Back Checkpoint Input")
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 		Is Button Held(Event Player, Button(Ultimate)) == True;
 		Is Button Held(Event Player, Button(Primary Fire)) == True;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp > 0;
 		Event Player.isInLobby == False;
 	}
@@ -1810,7 +1814,11 @@ rule("21.4: Skip Checkpoint Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
 		Is Button Held(Event Player, Button(Secondary Fire)) == True;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 		Event Player.isInLobby == False;
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
@@ -1865,8 +1873,11 @@ rule("21.5: Restart Checkpoint Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == False;
-		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
 		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 		Event Player.isInLobby == False;
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
@@ -1900,7 +1911,11 @@ rule("21.6: Restart Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
 		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.isInLobby == False;
 	}
 
@@ -1933,7 +1948,11 @@ rule("21.7.1: Freemode Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
 		Is Button Held(Event Player, Button(Interact)) == True;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.isInLobby == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 	}
@@ -2032,6 +2051,10 @@ rule("21.8: Lobby Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
 		Is Button Held(Event Player, Button(Ability 2)) == True;
 		Event Player.isInLobby == False;
 	}
