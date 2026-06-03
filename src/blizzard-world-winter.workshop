@@ -66,15 +66,13 @@ variables
 		5: hostPlayerName
 		6: elapsedTime
 		7: elapsedTimeFormatted
-		8: timeToFormat
-		9: timeFormatted
-		10: players
-		11: lobbyStats
-		12: lobbyData
-		13: lbPos
-		14: lbObj
-		15: lbObjFormatted
-		16: playersUnpaused
+		8: players
+		9: lobbyStats
+		10: lobbyData
+		11: lbPos
+		12: lbObj
+		13: lbObjFormatted
+		14: playersUnpaused
 		100: index
 		110: bots
 
