@@ -15,11 +15,9 @@ jobs:
           VERSION="${GITHUB_REF_NAME}"
           echo "Expected version: $VERSION"
 
-          for file in src/*.workshop; do
-            if ! grep -qF "$VERSION" "$file"; then
-              echo "::error file=$file::Version header does not contain $VERSION"
-              exit 1
-            fi
-          done
+          if ! grep -qF "$VERSION" "src/VERSION"; then
+            echo "::error file=src/main.opy::Version header does not contain $VERSION"
+            exit 1
+          fi
 
           echo "Version header matches tag ✓"
