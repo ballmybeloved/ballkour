@@ -346,7 +346,7 @@ rule "14.1: Start/Resume Run":
     chaseAtRate(eventPlayer.runTime, 99999999, 1)
 
 
-rule "14.3: Update Run Timer Format":
+rule "14.2: Update Run Timer Format":
     @Event eachPlayer
     @Condition eventPlayer.isTimerActive == false
     @Condition eventPlayer.isRunPaused == false
@@ -698,7 +698,7 @@ def unloadRunCompletionText():
     for eventPlayer.index in range(len(eventPlayer.runCompletionText)):
         destroyHudText(eventPlayer.runCompletionText[eventPlayer.index])
 
-
+        
 def updateStats():
     @Name "20.4: Update Lobby Stats With New Run"
     
@@ -950,7 +950,7 @@ def loadFreemodeHud():
 
 
 def unloadFreemodeHud():
-    @Name "21.7.3.2: Unload Freemode HUD"
+    @Name "21.7.2.2: Unload Freemode HUD"
     
     for eventPlayer.index in range(len(eventPlayer.freemodeHud)):
         destroyHudText(eventPlayer.freemodeHud[eventPlayer.index])
