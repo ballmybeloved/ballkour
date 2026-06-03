@@ -965,11 +965,7 @@ rule("13.4: Set Checkpoint Abilities")
 			End;
 		Else;
 			Set Secondary Fire Enabled(Event Player, True);
-			If(!Event Player.cpData[3]);
-				Disallow Button(Event Player, Button(Crouch));
-			Else;
-				Allow Button(Event Player, Button(Crouch));
-			End;
+			Allow Button(Event Player, Button(Crouch));
 		End;
 	}
 }
