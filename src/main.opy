@@ -995,5 +995,3 @@ rule "23.1: Auto-Restart Server":
     bigMessage(getAllPlayers(), "Server restart: \n1min")
     wait(60)
     restartMatch()
-
-#!writeToOutputFile
