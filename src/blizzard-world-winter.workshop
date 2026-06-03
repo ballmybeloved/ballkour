@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Blizzard World (Winter) \n\nv2026.06.02-1 \n\nLatest Code: GMWRF"
+		Description: "Blizzard World (Winter) \n\nv2026.06.03-0 \n\nLatest Code: GMWRF"
 		Mode Name: "Ball Parkour ● ballkour.com"
 	}
 
@@ -63,27 +63,16 @@ variables
 		2: timeToBeatInMs
 		3: cps
 		4: cpDefaults
-		5: timeToBeatFormatted
-		6: hostPlayerName
-		7: elapsedTime
-		8: elapsedTimeFormatted
-		9: timeToFormat
-		10: remainingSec
-		11: hr
-		12: min
-		13: minText
-		14: sec
-		15: secText
-		16: hundredths
-		17: hundredthsText
-		18: timeFormatted
-		19: players
-		20: lobbyStats
-		21: lobbyData
-		22: lbPos
-		23: lbObj
-		24: lbObjFormatted
-		25: playersUnpaused
+		5: hostPlayerName
+		6: elapsedTime
+		7: elapsedTimeFormatted
+		8: players
+		9: lobbyStats
+		10: lobbyData
+		11: lbPos
+		12: lbObj
+		13: lbObjFormatted
+		14: playersUnpaused
 		100: index
 		110: bots
 
@@ -97,40 +86,30 @@ variables
 		6: runCurrentCp
 		7: runMistakes
 		8: runTime
-		9: remainingSec
-		10: hr
-		11: min
-		12: minText
-		13: sec
-		14: secText
-		15: hundredths
-		16: hundredthsText
-		17: runTimeFormatted
-		18: cpData
-		19: cpEffects
-		20: cpIcons
-		21: cpTime
-		22: cpTimeFormatted
-		23: isRunLegit
-		24: isRunPaused
-		25: isTimerActive
-		26: isRunFinished
-		27: isInFreemode
-		28: freemodeHud
-		29: runCompletionText
-		30: runCompletionTextActive
-		31: statToFormat
-		32: statFormatted
-		33: ctrlsHud
-		34: ctrlsHudActive
-		35: cpCtrlsInputLocked
+		9: runTimeFormatted
+		10: cpData
+		11: cpEffects
+		12: cpIcons
+		13: cpTime
+		14: cpTimeFormatted
+		15: isRunLegit
+		16: isRunPaused
+		17: isTimerActive
+		18: isRunFinished
+		19: isInFreemode
+		20: freemodeHud
+		21: runCompletionText
+		22: runCompletionTextActive
+		23: statToFormat
+		24: statFormatted
+		25: ctrlsHud
+		26: ctrlsHudActive
+		27: cpCtrlsInputLocked
 		100: index
 }
 
 subroutines
 {
-	0: formatTimeToBeat
-	1: formatElapsedTime
 	2: loadNameplate
 	3: loadLobby
 	4: formatLbString
@@ -143,17 +122,14 @@ subroutines
 	11: unloadCpObjects
 	12: setCpAbilities
 	13: cpResetPlayer
-	14: formatRunTime
-	15: formatCpTime
-	16: finalCpReached
-	17: loadRunCompletionText
-	18: unloadRunCompletionText
-	19: formatRunTimeForLobby
-	20: loadFreemodeHud
-	21: unloadFreemodeHud
-	22: loadCtrlsHud
-	23: unloadCtrlsHud
-	24: updateStats
+	14: finalCpReached
+	15: loadRunCompletionText
+	16: unloadRunCompletionText
+	17: loadFreemodeHud
+	18: unloadFreemodeHud
+	19: loadCtrlsHud
+	20: unloadCtrlsHud
+	21: updateStats
 }
 
 rule("0: Contact & Course Info")
@@ -466,7 +442,6 @@ rule("6.1: Initialize Match")
 			Global.lobbyStats[7] = Custom String("00:00.00");
 			Global.lobbyStats[8] = 0;
 		End;
-		Call Subroutine(formatTimeToBeat);
 		Global.playersUnpaused = 0;
 	}
 }
@@ -487,7 +462,7 @@ rule("6.2: Start Elapsed Timer")
 	{
 		Chase Global Variable At Rate(elapsedTime, 14340, 1, Destination and Rate);
 		If(!Global.settings[0]);
-			Call Subroutine(formatElapsedTime);
+			Global.elapsedTimeFormatted = If-Then-Else(Global.elapsedTime >= 3600, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Global.elapsedTime, 3600), Down), String Slice(Add(Divide(Modulo(Global.elapsedTime, 3600), 60), 100), 1, 2), String Slice(Add(Modulo(Global.elapsedTime, 60), 100), 1, 9999)), If-Then-Else(Global.elapsedTime >= 60, Custom String("{0}:{1}", Round To Integer(Divide(Global.elapsedTime, 60), Down), String Slice(Add(Modulo(Global.elapsedTime, 60), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Global.elapsedTime, Down), String Slice(Add(Round To Integer(Multiply(Modulo(Global.elapsedTime, 1), 100), To Nearest), 100), 1, 2))));
 			Wait(0.1, Ignore Condition);
 			Loop;
 		End;
@@ -987,10 +962,12 @@ rule("13.3.2: Unload Checkpoint Objects")
 	actions
 	{
 		Destroy Effect(Event Player.cpEffects[0]);
-		Destroy Effect(Event Player.cpEffects[1]);
+		If(Event Player.cpData[4] != Null);
+			Destroy Effect(Event Player.cpEffects[1]);
+			Destroy Icon(Event Player.cpIcons[0]);
+		End;
 		Destroy Effect(Event Player.cpEffects[2]);
 		Destroy Effect(Event Player.cpEffects[3]);
-		Destroy Icon(Event Player.cpIcons[0]);
 		Destroy Icon(Event Player.cpIcons[1]);
 	}
 }
@@ -1014,11 +991,7 @@ rule("13.4: Set Checkpoint Abilities")
 			End;
 		Else;
 			Set Secondary Fire Enabled(Event Player, True);
-			If(!Event Player.cpData[3]);
-				Disallow Button(Event Player, Button(Crouch));
-			Else;
-				Allow Button(Event Player, Button(Crouch));
-			End;
+			Allow Button(Event Player, Button(Crouch));
 		End;
 	}
 }
@@ -1071,7 +1044,11 @@ rule("14.3: Update Run Timer Format")
 		Global.playersUnpaused += 1;
 		Event Player.isTimerActive = True;
 		While(!Event Player.isRunPaused);
-			If(Global.playersUnpaused >= 8);
+			If(Global.playersUnpaused >= 10);
+				Wait(0.096 + Server Load * 0.0004, Ignore Condition);
+			Else If(Global.playersUnpaused >= 8);
+				Wait(0.080 + Server Load * 0.0004, Ignore Condition);
+			Else If(Global.playersUnpaused >= 6);
 				Wait(0.064 + Server Load * 0.0004, Ignore Condition);
 			Else If(Global.playersUnpaused >= 4);
 				Wait(0.048 + Server Load * 0.0006, Ignore Condition);
@@ -1080,7 +1057,7 @@ rule("14.3: Update Run Timer Format")
 			Else;
 				Wait(0.016 + Server Load * 0.0010, Ignore Condition);
 			End;
-			Call Subroutine(formatRunTime);
+			Event Player.runTimeFormatted = If-Then-Else(Event Player.runTime >= 3600, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Event Player.runTime, 3600), Down), String Slice(Add(Divide(Modulo(Event Player.runTime, 3600), 60), 100), 1, 2), String Slice(Add(Modulo(Event Player.runTime, 60), 100), 1, 9999)), If-Then-Else(Event Player.runTime >= 60, Custom String("{0}:{1}", Round To Integer(Divide(Event Player.runTime, 60), Down), String Slice(Add(Modulo(Event Player.runTime, 60), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Event Player.runTime, Down), String Slice(Add(Round To Integer(Multiply(Modulo(Event Player.runTime, 1), 100), To Nearest), 100), 1, 2))));
 		End;
 		Global.playersUnpaused -= 1;
 		Event Player.isTimerActive = False;
@@ -1329,14 +1306,19 @@ rule("17.3: Checkpoint Mistake: Environment Death")
 
 	actions
 	{
-		Event Player.cpData[15] = Position Of(Event Player);
 		Event Player.isLoading = True;
-		Respawn(Event Player);
-		If(!Event Player.isInFreemode);
-			Call Subroutine(cpResetPlayer);
-			Event Player.runMistakes += 1;
+		If(!Event Player.isInLobby);
+			Event Player.cpData[15] = Position Of(Event Player);
+			Respawn(Event Player);
+			If(!Event Player.isInFreemode);
+				Call Subroutine(cpResetPlayer);
+				Event Player.runMistakes += 1;
+			Else;
+				Teleport(Event Player, Nearest Walkable Position(Event Player.cpData[15]));
+			End;
 		Else;
-			Teleport(Event Player, Nearest Walkable Position(Event Player.cpData[15]));
+			Respawn(Event Player);
+			Call Subroutine(loadLobby);
 		End;
 		Event Player.isLoading = False;
 	}
@@ -1538,7 +1520,7 @@ rule("20.1: Checkpoint Completed (No Skipping)")
 	actions
 	{
 		Stop Chasing Player Variable(Event Player, cpTime);
-		Call Subroutine(formatCpTime);
+		Event Player.cpTimeFormatted = If-Then-Else(Event Player.cpTime >= 3600, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Event Player.cpTime, 3600), Down), String Slice(Add(Divide(Modulo(Event Player.cpTime, 3600), 60), 100), 1, 2), String Slice(Add(Modulo(Event Player.cpTime, 60), 100), 1, 9999)), If-Then-Else(Event Player.cpTime >= 60, Custom String("{0}:{1}", Round To Integer(Divide(Event Player.cpTime, 60), Down), String Slice(Add(Modulo(Event Player.cpTime, 60), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Event Player.cpTime, Down), String Slice(Add(Round To Integer(Multiply(Modulo(Event Player.cpTime, 1), 100), To Nearest), 100), 1, 2))));
 		Small Message(Event Player, Custom String("Time: {0}", Event Player.cpTimeFormatted));
 		Event Player.isLoading = True;
 		Event Player.runCurrentCp += 1;
@@ -1610,14 +1592,13 @@ rule("20.3.1: Load Run Completion Text")
 		Event Player.runCompletionText = Array();
 		Create HUD Text(Event Player, Null, Custom String("Congrats, {0}!", Event Player), Null, Top, 4, Null, Color(Turquoise), Null, None, Default Visibility);
 		Event Player.runCompletionText[0] = Last Text ID;
-		Call Subroutine(formatRunTime);
 		Create HUD Text(Event Player, Null, Custom String("Time: {0}", Event Player.runTimeFormatted), Null, Top, 6, Null, Color(Orange), Null, None, Default Visibility);
 		Event Player.runCompletionText[1] = Last Text ID;
 		If(Global.timeToBeatInMs == 0);
 			Create HUD Text(Event Player, Null, Custom String("(Time to beat: 00:00.00)"), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[2] = Last Text ID;
 		Else;
-			Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", Global.timeToBeatFormatted), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
+			Create HUD Text(Event Player, Null, Custom String("(Time to beat: {0})", If-Then-Else(Global.elapsedTime >= 3600000, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Global.elapsedTime, 3600000), Down), String Slice(Add(Divide(Modulo(Global.elapsedTime, 3600000), 60000), 100), 1, 2), String Slice(Add(Divide(Modulo(Global.elapsedTime, 60000), 1000), 100), 1, 9999)), If-Then-Else(Global.elapsedTime >= 60000, Custom String("{0}:{1}", Round To Integer(Divide(Global.elapsedTime, 60000), Down), String Slice(Add(Divide(Modulo(Global.elapsedTime, 60000), 1000), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Divide(Global.elapsedTime, 1000), Down), String Slice(Add(Divide(Modulo(Global.elapsedTime, 1000), 10), 100), 1, 2))))), Null, Top, 7, Null, Color(Orange), Null, None, Default Visibility);
 			Event Player.runCompletionText[2] = Last Text ID;
 		End;
 		Create HUD Text(Event Player, Null, Custom String("Mistakes: {0}", Event Player.runMistakes), Null, Top, 8, Null, Color(Orange), Null, None, Default Visibility);
@@ -1667,14 +1648,10 @@ rule("20.4: Update Lobby Stats With New Run")
 	{
 		Global.lobbyStats[2] += 1;
 		Global.lobbyStats[3] += Event Player.runTime;
-		Global.timeToFormat = Global.lobbyStats[3];
-		Call Subroutine(formatRunTimeForLobby);
-		Global.lobbyStats[4] = Global.timeFormatted;
+		Global.lobbyStats[4] = If-Then-Else(Global.lobbyStats[3] >= 3600, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Global.lobbyStats[3], 3600), Down), String Slice(Add(Divide(Modulo(Global.lobbyStats[3], 3600), 60), 100), 1, 2), String Slice(Add(Modulo(Global.lobbyStats[3], 60), 100), 1, 9999)), If-Then-Else(Global.lobbyStats[3] >= 60, Custom String("{0}:{1}", Round To Integer(Divide(Global.lobbyStats[3], 60), Down), String Slice(Add(Modulo(Global.lobbyStats[3], 60), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Global.lobbyStats[3], Down), String Slice(Add(Round To Integer(Multiply(Modulo(Global.lobbyStats[3], 1), 100), To Nearest), 100), 1, 2))));
 		Global.lobbyStats[5] += Event Player.runMistakes;
 		Global.lobbyStats[6] = Global.lobbyStats[3] / Global.lobbyStats[2];
-		Global.timeToFormat = Global.lobbyStats[6];
-		Call Subroutine(formatRunTimeForLobby);
-		Global.lobbyStats[7] = Global.timeFormatted;
+		Global.lobbyStats[7] = If-Then-Else(Global.lobbyStats[6] >= 3600, Custom String("{0}:{1}:{2}", Round To Integer(Divide(Global.lobbyStats[6], 3600), Down), String Slice(Add(Divide(Modulo(Global.lobbyStats[6], 3600), 60), 100), 1, 2), String Slice(Add(Modulo(Global.lobbyStats[6], 60), 100), 1, 9999)), If-Then-Else(Global.lobbyStats[6] >= 60, Custom String("{0}:{1}", Round To Integer(Divide(Global.lobbyStats[6], 60), Down), String Slice(Add(Modulo(Global.lobbyStats[6], 60), 100), 1, 9999)), Custom String("{0}.{1}", Round To Integer(Global.lobbyStats[6], Down), String Slice(Add(Round To Integer(Multiply(Modulo(Global.lobbyStats[6], 1), 100), To Nearest), 100), 1, 2))));
 		Global.lobbyStats[8] = Global.lobbyStats[5] / Global.lobbyStats[2];
 	}
 }
@@ -1771,6 +1748,10 @@ rule("21.3: Go Back Checkpoint Input")
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
 		Is Button Held(Event Player, Button(Ultimate)) == True;
 		Is Button Held(Event Player, Button(Primary Fire)) == True;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp > 0;
 		Event Player.isInLobby == False;
 	}
@@ -1827,7 +1808,11 @@ rule("21.4: Skip Checkpoint Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
 		Is Button Held(Event Player, Button(Secondary Fire)) == True;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 		Event Player.isInLobby == False;
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
@@ -1882,8 +1867,11 @@ rule("21.5: Restart Checkpoint Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == False;
-		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
 		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 		Event Player.isInLobby == False;
 		(Has Spawned(Event Player) && !Event Player.isLoading) == True;
@@ -1892,7 +1880,7 @@ rule("21.5: Restart Checkpoint Input")
 	actions
 	{
 		Wait Until(!Is Button Held(Event Player, Button(Reload)), 0.2);
-		If(!Is Button Held(Event Player, Button(Reload)) && !Event Player.runCurrentCp < Count Of(Global.cps) - 1);
+		If(!Is Button Held(Event Player, Button(Reload)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			Abort;
 		End;
 		If(!Event Player.isRunPaused);
@@ -1917,7 +1905,11 @@ rule("21.6: Restart Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
 		Is Button Held(Event Player, Button(Reload)) == True;
+		Is Button Held(Event Player, Button(Interact)) == False;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.isInLobby == False;
 	}
 
@@ -1950,7 +1942,11 @@ rule("21.7.1: Freemode Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
 		Is Button Held(Event Player, Button(Interact)) == True;
+		Is Button Held(Event Player, Button(Ability 2)) == False;
 		Event Player.isInLobby == False;
 		Event Player.runCurrentCp < Count Of(Global.cps) - 1;
 	}
@@ -2049,6 +2045,10 @@ rule("21.8: Lobby Input")
 	conditions
 	{
 		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == False;
+		Is Button Held(Event Player, Button(Secondary Fire)) == False;
+		Is Button Held(Event Player, Button(Reload)) == False;
+		Is Button Held(Event Player, Button(Interact)) == False;
 		Is Button Held(Event Player, Button(Ability 2)) == True;
 		Event Player.isInLobby == False;
 	}
@@ -2069,207 +2069,6 @@ rule("21.8: Lobby Input")
 		Call Subroutine(unloadRunCompletionText);
 		Call Subroutine(loadLobby);
 		Event Player.isLoading = False;
-	}
-}
-
-rule("22.1: Format Time To Beat String")
-{
-	event
-	{
-		Subroutine;
-		formatTimeToBeat;
-	}
-
-	actions
-	{
-		Global.remainingSec = Round To Integer(Global.timeToBeatInMs / 3600000, Down);
-		Global.hr = Global.timeToBeatInMs % 3600000;
-		Global.min = Round To Integer(Global.hr / 60000, Down);
-		Global.sec = Round To Integer(Global.hr % 60000 / 1000, Down);
-		Global.hundredths = Round To Integer(Global.timeToBeatInMs % 1000 / 10, Down);
-		If(Global.sec < 10);
-			Global.secText = Custom String("0{0}", Global.sec);
-		Else;
-			Global.secText = Custom String("{0}", Global.sec);
-		End;
-		If(Global.hundredths < 10);
-			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
-		Else;
-			Global.hundredthsText = Custom String("{0}", Global.hundredths);
-		End;
-		If(Global.min < 10);
-			Global.minText = Custom String("0{0}", Global.min);
-		Else;
-			Global.minText = Custom String("{0}", Global.min);
-		End;
-		If(Global.remainingSec > 0);
-			Global.timeToBeatFormatted = Custom String("{0}:{1}:{2}", Global.remainingSec, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
-		Else If(Global.min > 0);
-			Global.timeToBeatFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
-		Else;
-			Global.timeToBeatFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
-		End;
-	}
-}
-
-rule("22.2: Format Elapsed Time String")
-{
-	event
-	{
-		Subroutine;
-		formatElapsedTime;
-	}
-
-	actions
-	{
-		Global.remainingSec = Round To Integer(Global.elapsedTime / 3600, Down);
-		Global.hr = Global.elapsedTime % 3600;
-		Global.min = Round To Integer(Global.hr / 60, Down);
-		Global.sec = Round To Integer(Global.hr % 60, Down);
-		Global.hundredths = Round To Integer((Global.elapsedTime - Round To Integer(Global.elapsedTime, Down)) * 100, Down);
-		If(Global.sec < 10);
-			Global.secText = Custom String("0{0}", Global.sec);
-		Else;
-			Global.secText = Custom String("{0}", Global.sec);
-		End;
-		If(Global.hundredths < 10);
-			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
-		Else;
-			Global.hundredthsText = Custom String("{0}", Global.hundredths);
-		End;
-		If(Global.min < 10);
-			Global.minText = Custom String("0{0}", Global.min);
-		Else;
-			Global.minText = Custom String("{0}", Global.min);
-		End;
-		If(Global.remainingSec > 0);
-			Global.elapsedTimeFormatted = Custom String("{0}:{1}:{2}", Global.remainingSec, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
-		Else If(Global.min > 0);
-			Global.elapsedTimeFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
-		Else;
-			Global.elapsedTimeFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
-		End;
-	}
-}
-
-rule("22.3: Format Run Time String")
-{
-	event
-	{
-		Subroutine;
-		formatRunTime;
-	}
-
-	actions
-	{
-		Event Player.remainingSec = Round To Integer(Event Player.runTime / 3600, Down);
-		Event Player.hr = Event Player.runTime % 3600;
-		Event Player.min = Round To Integer(Event Player.hr / 60, Down);
-		Event Player.sec = Round To Integer(Event Player.hr % 60, Down);
-		Event Player.hundredths = Round To Integer((Event Player.runTime - Round To Integer(Event Player.runTime, Down)) * 100, Down);
-		If(Event Player.sec < 10);
-			Event Player.secText = Custom String("0{0}", Event Player.sec);
-		Else;
-			Event Player.secText = Custom String("{0}", Event Player.sec);
-		End;
-		If(Event Player.hundredths < 10);
-			Event Player.hundredthsText = Custom String("0{0}", Event Player.hundredths);
-		Else;
-			Event Player.hundredthsText = Custom String("{0}", Event Player.hundredths);
-		End;
-		If(Event Player.min < 10);
-			Event Player.minText = Custom String("0{0}", Event Player.min);
-		Else;
-			Event Player.minText = Custom String("{0}", Event Player.min);
-		End;
-		If(Event Player.remainingSec > 0);
-			Event Player.runTimeFormatted = Custom String("{0}:{1}:{2}", Event Player.remainingSec, Event Player.minText, Custom String("{0}.{1}", Event Player.secText, Event Player.hundredthsText));
-		Else If(Event Player.min > 0);
-			Event Player.runTimeFormatted = Custom String("{0}:{1}.{2}", Event Player.min, Event Player.secText, Event Player.hundredthsText);
-		Else;
-			Event Player.runTimeFormatted = Custom String("{0}.{1}", Event Player.sec, Event Player.hundredthsText);
-		End;
-	}
-}
-
-rule("22.4: Format Checkpoint Time String")
-{
-	event
-	{
-		Subroutine;
-		formatCpTime;
-	}
-
-	actions
-	{
-		Event Player.remainingSec = Round To Integer(Event Player.cpTime / 3600, Down);
-		Event Player.hr = Event Player.cpTime % 3600;
-		Event Player.min = Round To Integer(Event Player.hr / 60, Down);
-		Event Player.sec = Round To Integer(Event Player.hr % 60, Down);
-		Event Player.hundredths = Round To Integer((Event Player.cpTime - Round To Integer(Event Player.cpTime, Down)) * 100, Down);
-		If(Event Player.sec < 10);
-			Event Player.secText = Custom String("0{0}", Event Player.sec);
-		Else;
-			Event Player.secText = Custom String("{0}", Event Player.sec);
-		End;
-		If(Event Player.hundredths < 10);
-			Event Player.hundredthsText = Custom String("0{0}", Event Player.hundredths);
-		Else;
-			Event Player.hundredthsText = Custom String("{0}", Event Player.hundredths);
-		End;
-		If(Event Player.min < 10);
-			Event Player.minText = Custom String("0{0}", Event Player.min);
-		Else;
-			Event Player.minText = Custom String("{0}", Event Player.min);
-		End;
-		If(Event Player.remainingSec > 0);
-			Event Player.cpTimeFormatted = Custom String("{0}:{1}:{2}", Event Player.remainingSec, Event Player.minText, Custom String("{0}.{1}", Event Player.secText, Event Player.hundredthsText));
-		Else If(Event Player.min > 0);
-			Event Player.cpTimeFormatted = Custom String("{0}:{1}.{2}", Event Player.min, Event Player.secText, Event Player.hundredthsText);
-		Else;
-			Event Player.cpTimeFormatted = Custom String("{0}.{1}", Event Player.sec, Event Player.hundredthsText);
-		End;
-	}
-}
-
-rule("22.5: Format Total/Avg Run Time For Lobby")
-{
-	event
-	{
-		Subroutine;
-		formatRunTimeForLobby;
-	}
-
-	actions
-	{
-
-		Global.remainingSec = Round To Integer(Global.timeToFormat / 3600, Down);
-		Global.hr = Global.timeToFormat % 3600;
-		Global.min = Round To Integer(Global.hr / 60, Down);
-		Global.sec = Round To Integer(Global.hr % 60, Down);
-		Global.hundredths = Round To Integer((Global.timeToFormat - Round To Integer(Global.timeToFormat, Down)) * 100, Down);
-		If(Global.sec < 10);
-			Global.secText = Custom String("0{0}", Global.sec);
-		Else;
-			Global.secText = Custom String("{0}", Global.sec);
-		End;
-		If(Global.hundredths < 10);
-			Global.hundredthsText = Custom String("0{0}", Global.hundredths);
-		Else;
-			Global.hundredthsText = Custom String("{0}", Global.hundredths);
-		End;
-		If(Global.min < 10);
-			Global.minText = Custom String("0{0}", Global.min);
-		Else;
-			Global.minText = Custom String("{0}", Global.min);
-		End;
-		If(Global.remainingSec > 0);
-			Global.timeFormatted = Custom String("{0}:{1}:{2}", Global.remainingSec, Global.minText, Custom String("{0}.{1}", Global.secText, Global.hundredthsText));
-		Else If(Global.min > 0);
-			Global.timeFormatted = Custom String("{0}:{1}.{2}", Global.min, Global.secText, Global.hundredthsText);
-		Else;
-			Global.timeFormatted = Custom String("{0}.{1}", Global.sec, Global.hundredthsText);
-		End;
 	}
 }
 
