@@ -1858,7 +1858,7 @@ rule("21.5: Restart Checkpoint Input")
 	actions
 	{
 		Wait Until(!Is Button Held(Event Player, Button(Reload)), 0.2);
-		If(!Is Button Held(Event Player, Button(Reload)) && !Event Player.runCurrentCp < Count Of(Global.cps) - 1);
+		If(!Is Button Held(Event Player, Button(Reload)) && Event Player.runCurrentCp < Count Of(Global.cps) - 1);
 			Abort;
 		End;
 		If(!Event Player.isRunPaused);
