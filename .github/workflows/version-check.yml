@@ -12,7 +12,7 @@ jobs:
 
       - name: Verify version header matches tag
         run: |
-          VERSION="${GITHUB_REF_NAME}"
+          VERSION="${GITHUB_REF_NAME#v}"
           echo "Expected version: $VERSION"
 
           if ! grep -qF "$VERSION" "src/VERSION"; then
