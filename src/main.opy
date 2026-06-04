@@ -982,10 +982,10 @@ rule "21.8: Lobby Input":
 
 rule "23.1: Auto-Restart Server":
     @SuppressWarnings w_ow2_rule_condition_chase
-    #3hr59min in (31min before OW servers auto-shut down. Restarting a minute before to be safe)
-    @Condition elapsedTime == 14340
+    #3hr29min in
+    @Condition elapsedTime == 12540
     
-    chaseAtRate(elapsedTime, 16140, 1)
+    chaseAtRate(elapsedTime, 99999999, 1)
     bigMessage(getAllPlayers(), "Server restart: \n30min")
     wait(900)
     bigMessage(getAllPlayers(), "Server restart: \n15min")
@@ -994,4 +994,5 @@ rule "23.1: Auto-Restart Server":
     wait(240)
     bigMessage(getAllPlayers(), "Server restart: \n1min")
     wait(60)
+    #3hr59min in
     restartMatch()
