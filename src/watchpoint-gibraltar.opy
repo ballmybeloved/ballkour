@@ -1,12 +1,8 @@
-macro MAP = "Watchpoint: Gibraltar"
 #!include "VERSION"
-macro MAP_CODE = "59W28"
-
-macro MAP_ID = "watchpointGibraltar"
 
 settings {
     "main": {
-        "description": f"{MAP} \n\nv{VERSION} \n\nLatest Code: {MAP_CODE}",
+        "description": f"Watchpoint: Gibraltar \n\nv{VERSION} \n\nLatest Code: 59W28",
         "modeName": "Ball Parkour ● ballkour.com"
     },
     "lobby": {
@@ -22,7 +18,7 @@ settings {
     "gamemodes": {
         "skirmish": {
             "enabledMaps": [
-                f"{MAP_ID}"
+                "watchpointGibraltar"
             ]
         },
         "general": {
