@@ -1,12 +1,8 @@
-macro MAP = "Blizzard World (Winter)"
 #!include "VERSION"
-macro MAP_CODE = "GMWRF"
-
-macro MAP_ID = "blizzWorldWinter"
 
 settings {
     "main": {
-        "description": f"{MAP} \n\nv{VERSION} \n\nLatest Code: {MAP_CODE}",
+        "description": f"Blizzard World (Winter) \n\nv{VERSION} \n\nLatest Code: GMWRF",
         "modeName": "Ball Parkour ● ballkour.com"
     },
     "lobby": {
@@ -22,7 +18,7 @@ settings {
     "gamemodes": {
         "skirmish": {
             "enabledMaps": [
-                f"{MAP_ID}"
+                "blizzWorldWinter"
             ]
         },
         "general": {
