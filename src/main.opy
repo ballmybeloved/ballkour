@@ -802,7 +802,7 @@ def loadCtrlsHud():
                 "Restart CP:        {} (Hold)\n"
                 "Restart Run:           {} + {}\n"
                 "Freemode:              {} + {}\n"
-                "Lobby/Pause:         {} + {}\n"
+                "Lobby/Pause:         {} + {}"
             )
             .format(
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
@@ -816,8 +816,8 @@ def loadCtrlsHud():
         )
     else:
         hudSubheader(eventPlayer, 
-            "Go Back CP:          {} + {}"
-            "Restart Run:           {} + {}"
+            "Go Back CP:          {} + {}\n"
+            "Restart Run:           {} + {}\n"
             "Lobby/Pause:         {} + {}"
             .format(
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
