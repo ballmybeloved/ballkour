@@ -1,3 +1,5 @@
+#!setupTags
+
 rule "6.1: Initialize Match":
     disableAnnouncer()
     disableGamemodeCompletion()
@@ -62,7 +64,7 @@ rule "7.2: Player Leaves":
     unloadHud()
     unloadFreemodeHud()
     unloadRunCompletionText()
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
 
 
 def loadNameplate():
@@ -191,36 +193,23 @@ rule "10: Clear Unused Variables":
 
 
 rule "11.1: Load Global Run HUD":
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 0, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 1, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 4, Color.WHITE, HudReeval.VISIBILITY)
     hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(165, 42, 42), HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 1, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 4, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 5, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 5, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 9, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 14, Color.WHITE, HudReeval.VISIBILITY)
 
 
 def loadHud():
     @Name "11.2.1: Load Local Run HUD"
     
     eventPlayer.runHud = []
-    hudSubtext(eventPlayer, "Controls: {0}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 4, Color.ORANGE, HudReeval.STRING)
+    hudSubtext(eventPlayer, "\n\n\n\nControls: {0}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[0] = getLastCreatedText()
     hudSubtext(eventPlayer, "{0}/{1}".format(eventPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[1] = getLastCreatedText()
-    hudSubtext(eventPlayer, "{0} {1}".format(iconString(Icon.BOLT), eventPlayer.runTimeFormatted if not settings_[0] else eventPlayer.runTime), HudPosition.RIGHT, 4, Color.ORANGE, HudReeval.STRING)
+    if not settings_[0]:
+        hudSubtext(eventPlayer, "\n\n\n\n{0} {1}\n".format(iconString(Icon.BOLT), eventPlayer.runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.STRING)
+    else:
+        hudSubtext(eventPlayer, "\n\n\n\n{0} {1}\n".format(iconString(Icon.BOLT), eventPlayer.runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[2] = getLastCreatedText()
-    hudSubtext(eventPlayer, "{0} {1}".format(iconString(Icon.SKULL), eventPlayer.runMistakes), HudPosition.RIGHT, 6, Color.ORANGE, HudReeval.STRING)
+    hudSubtext(eventPlayer, "{0} {1}".format(iconString(Icon.SKULL), eventPlayer.runMistakes), HudPosition.RIGHT, 3, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[3] = getLastCreatedText()
 
 
@@ -649,7 +638,7 @@ def finalCpReached():
     unloadFreemodeHud()
     loadFreemodeHud()
     if eventPlayer.isHoldingButton(Button.ULTIMATE):
-        unloadCtrlsHud()
+        destroyHudText(eventPlayer.ctrlsHud)
         loadCtrlsHud()
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
@@ -661,31 +650,39 @@ def finalCpReached():
 
 def loadRunCompletionText():
     @Name "20.3.1: Load Run Completion Text"
-    
+
     eventPlayer.runCompletionText = []
-    hudSubheader(eventPlayer, "Congrats, {0}!".format(eventPlayer), HudPosition.TOP, 4, Color.TURQUOISE, HudReeval.NONE)
-    eventPlayer.runCompletionText[0] = getLastCreatedText()
-    hudSubheader(eventPlayer, "Time: {0}".format(eventPlayer.runTimeFormatted), HudPosition.TOP, 6, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.runCompletionText[1] = getLastCreatedText()
-    if timeToBeatInMs == 0:
-        hudSubheader(eventPlayer, "(Time to beat: 00:00.00)", HudPosition.TOP, 7, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[2] = getLastCreatedText()
-    else:
-        hudSubheader(eventPlayer, "(Time to beat: {0})".format("{0}:{1}:{2}".format(floor(elapsedTime / 3600000), (elapsedTime % 3600000 / 60000 + 100).substring(1, 2), (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)) if elapsedTime >= 3600000 else "{0}:{1}".format(floor(elapsedTime / 60000), (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)) if elapsedTime >= 60000 else "{0}.{1}".format(floor(elapsedTime / 1000), (elapsedTime % 1000 / 10 + 100).substring(1, 2))), HudPosition.TOP, 7, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[2] = getLastCreatedText()
-    hudSubheader(eventPlayer, "Mistakes: {0}".format(eventPlayer.runMistakes), HudPosition.TOP, 8, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.runCompletionText[3] = getLastCreatedText()
-    if timeToBeatInMs == 0 or eventPlayer.runTime < timeToBeatInMs / 1000:
-        hudSubheader(eventPlayer, "Top-10 time!", HudPosition.TOP, 10, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[4] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Submit a video of your run", HudPosition.TOP, 11, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[5] = getLastCreatedText()
-        hudSubheader(eventPlayer, "@", HudPosition.TOP, 12, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[6] = getLastCreatedText()
-        hudSubheader(eventPlayer, "ballkour.com", HudPosition.TOP, 13, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[7] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Thanks for playing!", HudPosition.TOP, 15, Color.TURQUOISE, HudReeval.NONE)
-        eventPlayer.runCompletionText[8] = getLastCreatedText()
+    hudSubheader(eventPlayer, "\n\nCongrats, {}!\n".format(eventPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.NONE)    
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Time: {}".format(eventPlayer.runTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
+            "{}:{}:{}".format(
+                floor(elapsedTime / 3600000),
+                (elapsedTime % 3600000 / 60000 + 100).substring(1, 2),
+                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
+            ) if elapsedTime >= 3600000 else
+            "{0}:{1}".format(
+                floor(elapsedTime / 60000),
+                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
+            ) if elapsedTime >= 60000 else
+            "{0}.{1}".format(
+                floor(elapsedTime / 1000),
+                (elapsedTime % 1000 / 10 + 100).substring(1, 2)
+            )
+        ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.NONE
+    )
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Mistakes: {}\n".format(eventPlayer.runMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, 
+        "                <fgEC9900FF>Top-10 Time!</fg>\n"
+        "<fgA52A2AFF>Submit a Video of Your Run\n"
+        "                        @\n"
+        "              ballkour.com</fg>\n\n"
+        "       <fg00E697FF>Thanks for Playing!</fg>"
+    , HudPosition.TOP, 6, Color.WHITE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
     wait(30)
     unloadRunCompletionText()
 
@@ -719,41 +716,49 @@ rule "21.1: Controls HUD Input":
     eventPlayer.disallowButton(Button.SECONDARY_FIRE)
     eventPlayer.disallowButton(Button.ABILITY_2)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or eventPlayer.isInLobby, 99999999)
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     eventPlayer.allowButton(Button.SECONDARY_FIRE)
     eventPlayer.allowButton(Button.ABILITY_2)
 
 
 def loadCtrlsHud():
-    @Name "21.2.1: Load Controls HUD"
+    @Name "21.2: Load Controls HUD"
     
-    eventPlayer.ctrlsHud = []
-    hudSubheader(eventPlayer, "Go Back CP:          {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE)), HudPosition.LEFT, 5, rgb(165, 42, 42), HudReeval.STRING)
-    eventPlayer.ctrlsHud[0] = getLastCreatedText()
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        hudSubheader(eventPlayer, "Skip CP:                   {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE)), HudPosition.LEFT, 6, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[1] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Restart CP:        {0} (Hold)".format(inputBindingString(Button.RELOAD)), HudPosition.LEFT, 7, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[2] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Restart Run:           {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 8, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[3] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Freemode:              {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 9, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[4] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Lobby/Pause:         {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)), HudPosition.LEFT, 10, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[5] = getLastCreatedText()
+        hudSubheader(eventPlayer, 
+            (
+                "Go Back CP:          {} + {}\n"
+                "Skip CP:                   {} + {}\n"
+                "Restart CP:        {} (Hold)\n"
+                "Restart Run:           {} + {}\n"
+                "Freemode:              {} + {}\n"
+                "Lobby/Pause:         {} + {}\n"
+            )
+            .format(
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE), 
+                inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+            ), 
+            HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.STRING
+        )
     else:
-        hudSubheader(eventPlayer, "Restart:                    {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 6, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[1] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Lobby:                      {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)), HudPosition.LEFT, 7, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[2] = getLastCreatedText()
-
-
-def unloadCtrlsHud():
-    @Name "21.2.2: Unload Controls HUD"
-    
-    for eventPlayer.index in range(len(eventPlayer.ctrlsHud)):
-        destroyHudText(eventPlayer.ctrlsHud[eventPlayer.index])
+        hudSubheader(eventPlayer, 
+            "Go Back CP:          {0} + {1}"
+            "Restart Run:           {0} + {1}"
+            "Lobby/Pause:         {0} + {1}"
+            .format(
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+            ), 
+            HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.STRING
+        )
+    eventPlayer.ctrlsHud = getLastCreatedText()
 
 
 rule "21.3: Go Back Checkpoint Input":
@@ -779,7 +784,7 @@ rule "21.3: Go Back Checkpoint Input":
     if eventPlayer.runCurrentCp == len(cps) - 2:
         unloadFreemodeHud()
         loadFreemodeHud()
-        unloadCtrlsHud()
+        destroyHudText(eventPlayer.ctrlsHud)
         loadCtrlsHud()
     loadCp()
     cpResetPlayer()
@@ -878,7 +883,7 @@ rule "21.6: Restart Input":
     newRun()
     unloadFreemodeHud()
     unloadRunCompletionText()
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
     if eventPlayer.isHoldingButton(Button.ULTIMATE):
         loadCtrlsHud()
     destroyInWorldText(eventPlayer.nameplateObject)
@@ -927,24 +932,14 @@ def loadFreemodeHud():
     @Name "21.7.2.1: Load Freemode HUD"
     
     eventPlayer.freemodeHud = []
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 11, Color.WHITE, HudReeval.NONE)
+    hudSubtext(eventPlayer, "\n\n\n\n\nFreemode On", HudPosition.LEFT, 11, Color.ORANGE, HudReeval.NONE)
     eventPlayer.freemodeHud[0] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 12, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[1] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 13, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[2] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 14, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[3] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 15, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[4] = getLastCreatedText()
-    hudSubtext(eventPlayer, "Freemode On", HudPosition.LEFT, 16, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.freemodeHud[5] = getLastCreatedText()
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        hudSubtext(eventPlayer, "Disable: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 17, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.freemodeHud[6] = getLastCreatedText()
+        hudSubtext(eventPlayer, "Disable: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.STRING)
+        eventPlayer.freemodeHud[1] = getLastCreatedText()
     else:
-        hudSubtext(eventPlayer, "Restart: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 17, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.freemodeHud[6] = getLastCreatedText()
+        hudSubtext(eventPlayer, "Restart: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.STRING)
+        eventPlayer.freemodeHud[1] = getLastCreatedText()
 
 
 def unloadFreemodeHud():
