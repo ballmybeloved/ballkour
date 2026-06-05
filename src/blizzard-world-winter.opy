@@ -89,25 +89,25 @@ playervar ctrlsHudActive 26
 playervar cpCtrlsInputLocked 27
 playervar index 100
 
-subroutine loadNameplate 2
-subroutine loadLobby 3
-subroutine formatLbString 4
-subroutine newRun 5
-subroutine loadCp 6
-subroutine loadHud 7
-subroutine unloadHud 8
-subroutine loadCpData 9
-subroutine loadCpObjects 10
-subroutine unloadCpObjects 11
-subroutine setCpAbilities 12
-subroutine cpResetPlayer 13
-subroutine finalCpReached 14
-subroutine loadRunCompletionText 15
-subroutine unloadRunCompletionText 16
-subroutine loadFreemodeHud 17
-subroutine unloadFreemodeHud 18
-subroutine loadCtrlsHud 19
-subroutine updateStats 20
+subroutine loadNameplate 0
+subroutine loadLobby 1
+subroutine formatLbString 2
+subroutine newRun 3
+subroutine loadCp 4
+subroutine loadHud 5
+subroutine unloadHud 6
+subroutine loadCpData 7
+subroutine loadCpObjects 8
+subroutine unloadCpObjects 9
+subroutine setCpAbilities 10
+subroutine cpResetPlayer 11
+subroutine finalCpReached 12
+subroutine loadRunCompletionText 13
+subroutine unloadRunCompletionText 14
+subroutine loadFreemodeHud 15
+subroutine unloadFreemodeHud 16
+subroutine loadCtrlsHud 17
+subroutine updateStats 18
 
 #!optimizeStrict
 
