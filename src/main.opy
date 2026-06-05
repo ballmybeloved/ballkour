@@ -822,7 +822,6 @@ def loadCtrlsHud():
             .format(
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
-                inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
             ), 
             HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.STRING
