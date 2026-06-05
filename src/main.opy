@@ -24,7 +24,21 @@ rule "6.1: Initialize Match":
 rule "6.2: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
     if settings_[1] and not settings_[0]:
-        elapsedTimeFormatted = "{0}:{1}:{2}".format(floor(elapsedTime / 3600), (elapsedTime % 3600 / 60 + 100).substring(1, 2), (elapsedTime % 60 + 100).substring(1, 9999)) if elapsedTime >= 3600 else "{0}:{1}".format(floor(elapsedTime / 60), (elapsedTime % 60 + 100).substring(1, 9999)) if elapsedTime >= 60 else "{0}.{1}".format(floor(elapsedTime), (round(elapsedTime % 1 * 100) + 100).substring(1, 2))
+        elapsedTimeFormatted = (
+            "{0}:{1}:{2}".format(
+                floor(elapsedTime / 3600),
+                (elapsedTime % 3600 / 60 + 100).substring(1, 2),
+                (elapsedTime % 60 + 100).substring(1, 9999)
+            ) if elapsedTime >= 3600 else
+            "{0}:{1}".format(
+                floor(elapsedTime / 60),
+                (elapsedTime % 60 + 100).substring(1, 9999)
+            ) if elapsedTime >= 60 else
+            "{0}.{1}".format(
+                floor(elapsedTime),
+                (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
+            )
+        )
         wait(0.1)
         loop()
 
@@ -354,7 +368,21 @@ rule "14.2: Update Run Timer Format":
             wait(0.032 + getServerLoad() * 0.0008)
         else:
             wait(0.016 + getServerLoad() * 0.001)
-        eventPlayer.runTimeFormatted = "{0}:{1}:{2}".format(floor(eventPlayer.runTime / 3600), (eventPlayer.runTime % 3600 / 60 + 100).substring(1, 2), (eventPlayer.runTime % 60 + 100).substring(1, 9999)) if eventPlayer.runTime >= 3600 else "{0}:{1}".format(floor(eventPlayer.runTime / 60), (eventPlayer.runTime % 60 + 100).substring(1, 9999)) if eventPlayer.runTime >= 60 else "{0}.{1}".format(floor(eventPlayer.runTime), (round(eventPlayer.runTime % 1 * 100) + 100).substring(1, 2))
+        eventPlayer.runTimeFormatted = (
+            "{0}:{1}:{2}".format(
+                floor(eventPlayer.runTime / 3600),
+                (eventPlayer.runTime % 3600 / 60 + 100).substring(1, 2),
+                (eventPlayer.runTime % 60 + 100).substring(1, 9999)
+            ) if eventPlayer.runTime >= 3600 else
+            "{0}:{1}".format(
+                floor(eventPlayer.runTime / 60),
+                (eventPlayer.runTime % 60 + 100).substring(1, 9999)
+            ) if eventPlayer.runTime >= 60 else
+            "{0}.{1}".format(
+                floor(eventPlayer.runTime),
+                (round(eventPlayer.runTime % 1 * 100) + 100).substring(1, 2)
+            )
+        )
     playersUnpaused--
     eventPlayer.isTimerActive = false
 
@@ -604,7 +632,21 @@ rule "20.1: Checkpoint Completed (No Skipping)":
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) <= eventPlayer.cpData[7]
     
     stopChasingVariable(eventPlayer.cpTime)
-    eventPlayer.cpTimeFormatted = "{0}:{1}:{2}".format(floor(eventPlayer.cpTime / 3600), (eventPlayer.cpTime % 3600 / 60 + 100).substring(1, 2), (eventPlayer.cpTime % 60 + 100).substring(1, 9999)) if eventPlayer.cpTime >= 3600 else "{0}:{1}".format(floor(eventPlayer.cpTime / 60), (eventPlayer.cpTime % 60 + 100).substring(1, 9999)) if eventPlayer.cpTime >= 60 else "{0}.{1}".format(floor(eventPlayer.cpTime), (round(eventPlayer.cpTime % 1 * 100) + 100).substring(1, 2))
+    eventPlayer.cpTimeFormatted = (
+        "{0}:{1}:{2}".format(
+            floor(eventPlayer.cpTime / 3600),
+            (eventPlayer.cpTime % 3600 / 60 + 100).substring(1, 2),
+            (eventPlayer.cpTime % 60 + 100).substring(1, 9999)
+        ) if eventPlayer.cpTime >= 3600 else
+        "{0}:{1}".format(
+            floor(eventPlayer.cpTime / 60),
+            (eventPlayer.cpTime % 60 + 100).substring(1, 9999)
+        ) if eventPlayer.cpTime >= 60 else
+        "{0}.{1}".format(
+            floor(eventPlayer.cpTime),
+            (round(eventPlayer.cpTime % 1 * 100) + 100).substring(1, 2)
+        )
+    )
     smallMessage(eventPlayer, "Time: {0}".format(eventPlayer.cpTimeFormatted))
     eventPlayer.isLoading = true
     eventPlayer.runCurrentCp++
@@ -698,10 +740,38 @@ def updateStats():
     
     lobbyStats[2]++
     lobbyStats[3] += eventPlayer.runTime
-    lobbyStats[4] = "{0}:{1}:{2}".format(floor(lobbyStats[3] / 3600), (lobbyStats[3] % 3600 / 60 + 100).substring(1, 2), (lobbyStats[3] % 60 + 100).substring(1, 9999)) if lobbyStats[3] >= 3600 else "{0}:{1}".format(floor(lobbyStats[3] / 60), (lobbyStats[3] % 60 + 100).substring(1, 9999)) if lobbyStats[3] >= 60 else "{0}.{1}".format(floor(lobbyStats[3]), (round(lobbyStats[3] % 1 * 100) + 100).substring(1, 2))
+    lobbyStats[4] = (
+        "{0}:{1}:{2}".format(
+            floor(lobbyStats[3] / 3600),
+            (lobbyStats[3] % 3600 / 60 + 100).substring(1, 2),
+            (lobbyStats[3] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[3] >= 3600 else
+        "{0}:{1}".format(
+            floor(lobbyStats[3] / 60),
+            (lobbyStats[3] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[3] >= 60 else
+        "{0}.{1}".format(
+            floor(lobbyStats[3]),
+            (round(lobbyStats[3] % 1 * 100) + 100).substring(1, 2)
+        )
+    )
     lobbyStats[5] += eventPlayer.runMistakes
     lobbyStats[6] = lobbyStats[3] / lobbyStats[2]
-    lobbyStats[7] = "{0}:{1}:{2}".format(floor(lobbyStats[6] / 3600), (lobbyStats[6] % 3600 / 60 + 100).substring(1, 2), (lobbyStats[6] % 60 + 100).substring(1, 9999)) if lobbyStats[6] >= 3600 else "{0}:{1}".format(floor(lobbyStats[6] / 60), (lobbyStats[6] % 60 + 100).substring(1, 9999)) if lobbyStats[6] >= 60 else "{0}.{1}".format(floor(lobbyStats[6]), (round(lobbyStats[6] % 1 * 100) + 100).substring(1, 2))
+    lobbyStats[7] = (
+        "{0}:{1}:{2}".format(
+            floor(lobbyStats[6] / 3600),
+            (lobbyStats[6] % 3600 / 60 + 100).substring(1, 2),
+            (lobbyStats[6] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[6] >= 3600 else
+        "{0}:{1}".format(
+            floor(lobbyStats[6] / 60),
+            (lobbyStats[6] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[6] >= 60 else
+        "{0}.{1}".format(
+            floor(lobbyStats[6]),
+            (round(lobbyStats[6] % 1 * 100) + 100).substring(1, 2)
+        )
+    )
     lobbyStats[8] = lobbyStats[5] / lobbyStats[2]
 
 
