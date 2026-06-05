@@ -16,7 +16,7 @@ _Original course by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel6
 
 ## Gallery
 
-Logo: ![alt text](gallery/logos/pride-logo-circular.png)
+Logo: ![alt text](gallery/logos/logo.png)
 
 Lobby: ![alt text](gallery/lobby.png)
 
