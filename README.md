@@ -10,7 +10,7 @@ Course playthrough: https://ballkour.com/run
 Found a bug or have a suggestion? Please let us know in our Discord or open an issue here!  
 Set a top-10 time? Submit a video with your run in our Discord!
 
-_Redeveloped by ballmybeloved, with help from Kalaziel64_
+_Original course by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo from Madje._
 
 
 
