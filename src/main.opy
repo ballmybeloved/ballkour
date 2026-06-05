@@ -104,11 +104,12 @@ rule "9.3: Load Leaderboard Area":
     for index in range(1, 11):
         if lb[index] != null:
             formatLbString()
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
-        elif lb[index] < 9:
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "{0}. ---                                               ({1}-:--.--, {2}-)".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
         else:
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "10. ---                 ({0}-:--.--, {1}-)".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+            if lb[index] <= 9:
+                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>{}</fg>. <fgEC9900FF>---</fg>                                               <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+            else:
+                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>10</fg>. <fgEC9900FF>---</fg>                                              <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
 
 
 def formatLbString():
@@ -117,9 +118,7 @@ def formatLbString():
     #Global.lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lbObj = lb[index].split(",")
     lbObj[3] = lbObj[3].replace("'", "")
-    lbObjFormatted = "{0}. {1}{2}".format(index, lbObj[0], lbObj[3])
-    lbObjFormatted = "{0}({1}{2}, ".format(lbObjFormatted, iconString(Icon.BOLT), lbObj[1])
-    lbObjFormatted = "{0}{1}{2})".format(lbObjFormatted, iconString(Icon.SKULL), lbObj[2])
+    lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
 
 
 rule "9.4.1: Load Start Run Area":
