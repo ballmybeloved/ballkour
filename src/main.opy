@@ -475,7 +475,7 @@ rule "16.4: Reset Useless Grapple/Jump/Bhop":
 rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     @Event eachPlayer
     @Condition eventPlayer.isInFreemode == false
-    @Condition (eventPlayer.cpData[4] == null or not eventPlayer.cpData[8] and not eventPlayer.cpData[9] or eventPlayer.cpData[13]) == true
+    @Condition (eventPlayer.cpData[4] == null or (not eventPlayer.cpData[8] and not eventPlayer.cpData[9]) or (eventPlayer.cpData[13] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) > eventPlayer.cpData[5])) == true
     @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[10] and eventPlayer.cpData[12]) == true
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isDummy() == false
@@ -560,7 +560,7 @@ rule "18.3: Bounce Checkpoint Mistake: Too Slow":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.cpData[9] == true
-    @Condition eventPlayer.cpData[13] == false
+    @Condition (not eventPlayer.cpData[13] or (eventPlayer.cpData[13] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5])) == true
     @Condition eventPlayer.getSpeed() <= 10
     @Condition eventPlayer.isInFreemode == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
@@ -577,7 +577,7 @@ rule "18.4: Bounce Checkpoint: Bounce Used Properly":
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.isInFreemode == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[4]) <= eventPlayer.cpData[5]
+    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5]
     
     eventPlayer.cpData[13] = true
 
