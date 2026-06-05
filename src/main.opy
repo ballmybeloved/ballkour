@@ -1,3 +1,5 @@
+#!setupTags
+
 rule "6.1: Initialize Match":
     disableAnnouncer()
     disableGamemodeCompletion()
@@ -20,11 +22,23 @@ rule "6.1: Initialize Match":
     playersUnpaused = 0
 
 rule "6.2: Start Elapsed Timer":
-    @Condition settings_[1] == true
-    
     chaseAtRate(elapsedTime, 14340, 1)
-    if not settings_[0]:
-        elapsedTimeFormatted = "{0}:{1}:{2}".format(floor(elapsedTime / 3600), (elapsedTime % 3600 / 60 + 100).substring(1, 2), (elapsedTime % 60 + 100).substring(1, 9999)) if elapsedTime >= 3600 else "{0}:{1}".format(floor(elapsedTime / 60), (elapsedTime % 60 + 100).substring(1, 9999)) if elapsedTime >= 60 else "{0}.{1}".format(floor(elapsedTime), (round(elapsedTime % 1 * 100) + 100).substring(1, 2))
+    if settings_[1] and not settings_[0]:
+        elapsedTimeFormatted = (
+            "{}:{}:{}".format(
+                floor(elapsedTime / 3600),
+                (elapsedTime % 3600 / 60 + 100).substring(1, 2),
+                (elapsedTime % 60 + 100).substring(1, 9999)
+            ) if elapsedTime >= 3600 else
+            "{}:{}".format(
+                floor(elapsedTime / 60),
+                (elapsedTime % 60 + 100).substring(1, 9999)
+            ) if elapsedTime >= 60 else
+            "{}.{}".format(
+                floor(elapsedTime),
+                (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
+            )
+        )
         wait(0.1)
         loop()
 
@@ -33,11 +47,11 @@ rule "7.1: Player Joins":
     @Condition eventPlayer.isDummy() == false
     
     eventPlayer.isLoading = true
-    if not "{0}".format(eventPlayer) in players:
+    if not "{}".format(eventPlayer) in players:
         if eventPlayer == hostPlayer:
-            hostPlayerName = "{0}".format(eventPlayer)
+            hostPlayerName = "{}".format(eventPlayer)
         lobbyStats[0]++
-        players[len(players)] = "{0}".format(eventPlayer)
+        players[len(players)] = "{}".format(eventPlayer)
     else:
         lobbyStats[1]++
     waitUntil(eventPlayer.hasSpawned(), 99999999)
@@ -64,19 +78,19 @@ rule "7.2: Player Leaves":
     unloadHud()
     unloadFreemodeHud()
     unloadRunCompletionText()
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
 
 
 def loadNameplate():
     @Name "8: Load Nameplate"
     
     if eventPlayer.isInLobby:
-        eventPlayer.nameplate = "{0}".format(eventPlayer)
+        eventPlayer.nameplate = "{}".format(eventPlayer)
     else:
         if not eventPlayer.isInFreemode:
-            eventPlayer.nameplate = "{0} | {1}".format("{0}".format(eventPlayer), eventPlayer.runCurrentCp)
+            eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
         else:
-            eventPlayer.nameplate = "{0} | FREEMODE".format("{0}".format(eventPlayer))
+            eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
     createInWorldText(getAllPlayers().filter(lambda player: player != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
     eventPlayer.nameplateObject = getLastCreatedText()
 
@@ -104,11 +118,12 @@ rule "9.3: Load Leaderboard Area":
     for index in range(1, 11):
         if lb[index] != null:
             formatLbString()
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
-        elif lb[index] < 9:
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "{0}. ---                                               ({1}-:--.--, {2}-)".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
         else:
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "10. ---                 ({0}-:--.--, {1}-)".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+            if lb[index] <= 9:
+                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>{}</fg>. <fgEC9900FF>---</fg>                                               <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+            else:
+                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>10</fg>. <fgEC9900FF>---</fg>                                              <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
 
 
 def formatLbString():
@@ -117,9 +132,7 @@ def formatLbString():
     #Global.lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lbObj = lb[index].split(",")
     lbObj[3] = lbObj[3].replace("'", "")
-    lbObjFormatted = "{0}. {1}{2}".format(index, lbObj[0], lbObj[3])
-    lbObjFormatted = "{0}({1}{2}, ".format(lbObjFormatted, iconString(Icon.BOLT), lbObj[1])
-    lbObjFormatted = "{0}{1}{2})".format(lbObjFormatted, iconString(Icon.SKULL), lbObj[2])
+    lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
 
 
 rule "9.4.1: Load Start Run Area":
@@ -174,15 +187,15 @@ rule "9.5.2: Resume Run Circle Entry":
 rule "9.6: Load Lobby Stats":
     @Condition settings_[1] == true
     
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Elapsed Time: {0}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[15], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "New Players: {0}".format(lobbyStats[0]), lobbyData[16], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Rejoins: {0}".format(lobbyStats[1]), lobbyData[17], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Legit Runs: {0}".format(lobbyStats[2]), lobbyData[18], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Total Run Time: {0}".format(lobbyStats[4]), lobbyData[19], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Total Mistakes: {0}".format(lobbyStats[5]), lobbyData[20], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Avg Run Time: {0}".format(lobbyStats[7]), lobbyData[21], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{0}".format(player) == hostPlayerName), "Total Mistakes: {0}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[15], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[16], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[17], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[18], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[19], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[20], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[21], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
 
 
 rule "10: Clear Unused Variables":
@@ -193,36 +206,23 @@ rule "10: Clear Unused Variables":
 
 
 rule "11.1: Load Global Run HUD":
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 0, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 1, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.LEFT, 4, Color.WHITE, HudReeval.VISIBILITY)
     hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(165, 42, 42), HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 0, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 1, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 4, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers(), " ", HudPosition.RIGHT, 5, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 2, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 3, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 5, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 9, Color.WHITE, HudReeval.VISIBILITY)
-    hudSubheader(getAllPlayers(), " ", HudPosition.TOP, 14, Color.WHITE, HudReeval.VISIBILITY)
 
 
 def loadHud():
     @Name "11.2.1: Load Local Run HUD"
     
     eventPlayer.runHud = []
-    hudSubtext(eventPlayer, "Controls: {0}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 4, Color.ORANGE, HudReeval.STRING)
+    hudSubtext(eventPlayer, "\n\n\n\nControls: {}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[0] = getLastCreatedText()
-    hudSubtext(eventPlayer, "{0}/{1}".format(eventPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.STRING)
+    hudSubtext(eventPlayer, "{}/{}".format(eventPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[1] = getLastCreatedText()
-    hudSubtext(eventPlayer, "{0} {1}".format(iconString(Icon.BOLT), eventPlayer.runTimeFormatted if not settings_[0] else eventPlayer.runTime), HudPosition.RIGHT, 4, Color.ORANGE, HudReeval.STRING)
+    if not settings_[0]:
+        hudSubtext(eventPlayer, "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), eventPlayer.runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.STRING)
+    else:
+        hudSubtext(eventPlayer, "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), eventPlayer.runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[2] = getLastCreatedText()
-    hudSubtext(eventPlayer, "{0} {1}".format(iconString(Icon.SKULL), eventPlayer.runMistakes), HudPosition.RIGHT, 6, Color.ORANGE, HudReeval.STRING)
+    hudSubtext(eventPlayer, "{} {}".format(iconString(Icon.SKULL), eventPlayer.runMistakes), HudPosition.RIGHT, 3, Color.ORANGE, HudReeval.STRING)
     eventPlayer.runHud[3] = getLastCreatedText()
 
 
@@ -368,7 +368,21 @@ rule "14.2: Update Run Timer Format":
             wait(0.032 + getServerLoad() * 0.0008)
         else:
             wait(0.016 + getServerLoad() * 0.001)
-        eventPlayer.runTimeFormatted = "{0}:{1}:{2}".format(floor(eventPlayer.runTime / 3600), (eventPlayer.runTime % 3600 / 60 + 100).substring(1, 2), (eventPlayer.runTime % 60 + 100).substring(1, 9999)) if eventPlayer.runTime >= 3600 else "{0}:{1}".format(floor(eventPlayer.runTime / 60), (eventPlayer.runTime % 60 + 100).substring(1, 9999)) if eventPlayer.runTime >= 60 else "{0}.{1}".format(floor(eventPlayer.runTime), (round(eventPlayer.runTime % 1 * 100) + 100).substring(1, 2))
+        eventPlayer.runTimeFormatted = (
+            "{}:{}:{}".format(
+                floor(eventPlayer.runTime / 3600),
+                (eventPlayer.runTime % 3600 / 60 + 100).substring(1, 2),
+                (eventPlayer.runTime % 60 + 100).substring(1, 9999)
+            ) if eventPlayer.runTime >= 3600 else
+            "{}:{}".format(
+                floor(eventPlayer.runTime / 60),
+                (eventPlayer.runTime % 60 + 100).substring(1, 9999)
+            ) if eventPlayer.runTime >= 60 else
+            "{}.{}".format(
+                floor(eventPlayer.runTime),
+                (round(eventPlayer.runTime % 1 * 100) + 100).substring(1, 2)
+            )
+        )
     playersUnpaused--
     eventPlayer.isTimerActive = false
 
@@ -461,7 +475,7 @@ rule "16.4: Reset Useless Grapple/Jump/Bhop":
 rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     @Event eachPlayer
     @Condition eventPlayer.isInFreemode == false
-    @Condition (eventPlayer.cpData[4] == null or not eventPlayer.cpData[8] and not eventPlayer.cpData[9] or eventPlayer.cpData[13]) == true
+    @Condition (eventPlayer.cpData[4] == null or (not eventPlayer.cpData[8] and not eventPlayer.cpData[9]) or (eventPlayer.cpData[13] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) > eventPlayer.cpData[5])) == true
     @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[10] and eventPlayer.cpData[12]) == true
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isDummy() == false
@@ -546,7 +560,7 @@ rule "18.3: Bounce Checkpoint Mistake: Too Slow":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.cpData[9] == true
-    @Condition eventPlayer.cpData[13] == false
+    @Condition (not eventPlayer.cpData[13] or (eventPlayer.cpData[13] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5])) == true
     @Condition eventPlayer.getSpeed() <= 10
     @Condition eventPlayer.isInFreemode == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
@@ -563,7 +577,7 @@ rule "18.4: Bounce Checkpoint: Bounce Used Properly":
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.isInFreemode == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[4]) <= eventPlayer.cpData[5]
+    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5]
     
     eventPlayer.cpData[13] = true
 
@@ -618,8 +632,22 @@ rule "20.1: Checkpoint Completed (No Skipping)":
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) <= eventPlayer.cpData[7]
     
     stopChasingVariable(eventPlayer.cpTime)
-    eventPlayer.cpTimeFormatted = "{0}:{1}:{2}".format(floor(eventPlayer.cpTime / 3600), (eventPlayer.cpTime % 3600 / 60 + 100).substring(1, 2), (eventPlayer.cpTime % 60 + 100).substring(1, 9999)) if eventPlayer.cpTime >= 3600 else "{0}:{1}".format(floor(eventPlayer.cpTime / 60), (eventPlayer.cpTime % 60 + 100).substring(1, 9999)) if eventPlayer.cpTime >= 60 else "{0}.{1}".format(floor(eventPlayer.cpTime), (round(eventPlayer.cpTime % 1 * 100) + 100).substring(1, 2))
-    smallMessage(eventPlayer, "Time: {0}".format(eventPlayer.cpTimeFormatted))
+    eventPlayer.cpTimeFormatted = (
+        "{}:{}:{}".format(
+            floor(eventPlayer.cpTime / 3600),
+            (eventPlayer.cpTime % 3600 / 60 + 100).substring(1, 2),
+            (eventPlayer.cpTime % 60 + 100).substring(1, 9999)
+        ) if eventPlayer.cpTime >= 3600 else
+        "{}:{}".format(
+            floor(eventPlayer.cpTime / 60),
+            (eventPlayer.cpTime % 60 + 100).substring(1, 9999)
+        ) if eventPlayer.cpTime >= 60 else
+        "{}.{}".format(
+            floor(eventPlayer.cpTime),
+            (round(eventPlayer.cpTime % 1 * 100) + 100).substring(1, 2)
+        )
+    )
+    smallMessage(eventPlayer, "Time: {}".format(eventPlayer.cpTimeFormatted))
     eventPlayer.isLoading = true
     eventPlayer.runCurrentCp++
     loadCp()
@@ -642,6 +670,12 @@ def finalCpReached():
     
     playEffect(eventPlayer, DynamicEffect.BAD_PICKUP_EFFECT, Color.LIME_GREEN, eventPlayer, 200)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
+    if not eventPlayer.isRunPaused:
+        stopChasingVariable(eventPlayer.runTime)
+        eventPlayer.isRunPaused = true
+        if eventPlayer.isRunLegit:
+            if settings_[1]:
+                updateStats()
     if not eventPlayer.isRunFinished:
         eventPlayer.isRunFinished = true
         async(loadRunCompletionText, AsyncBehavior.RESTART)
@@ -651,43 +685,45 @@ def finalCpReached():
     unloadFreemodeHud()
     loadFreemodeHud()
     if eventPlayer.isHoldingButton(Button.ULTIMATE):
-        unloadCtrlsHud()
+        destroyHudText(eventPlayer.ctrlsHud)
         loadCtrlsHud()
-    if not eventPlayer.isRunPaused:
-        stopChasingVariable(eventPlayer.runTime)
-        eventPlayer.isRunPaused = true
-        if eventPlayer.isRunLegit:
-            if settings_[1]:
-                updateStats()
 
 
 def loadRunCompletionText():
     @Name "20.3.1: Load Run Completion Text"
-    
+
     eventPlayer.runCompletionText = []
-    hudSubheader(eventPlayer, "Congrats, {0}!".format(eventPlayer), HudPosition.TOP, 4, Color.TURQUOISE, HudReeval.NONE)
-    eventPlayer.runCompletionText[0] = getLastCreatedText()
-    hudSubheader(eventPlayer, "Time: {0}".format(eventPlayer.runTimeFormatted), HudPosition.TOP, 6, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.runCompletionText[1] = getLastCreatedText()
-    if timeToBeatInMs == 0:
-        hudSubheader(eventPlayer, "(Time to beat: 00:00.00)", HudPosition.TOP, 7, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[2] = getLastCreatedText()
-    else:
-        hudSubheader(eventPlayer, "(Time to beat: {0})".format("{0}:{1}:{2}".format(floor(elapsedTime / 3600000), (elapsedTime % 3600000 / 60000 + 100).substring(1, 2), (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)) if elapsedTime >= 3600000 else "{0}:{1}".format(floor(elapsedTime / 60000), (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)) if elapsedTime >= 60000 else "{0}.{1}".format(floor(elapsedTime / 1000), (elapsedTime % 1000 / 10 + 100).substring(1, 2))), HudPosition.TOP, 7, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[2] = getLastCreatedText()
-    hudSubheader(eventPlayer, "Mistakes: {0}".format(eventPlayer.runMistakes), HudPosition.TOP, 8, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.runCompletionText[3] = getLastCreatedText()
-    if timeToBeatInMs == 0 or eventPlayer.runTime < timeToBeatInMs / 1000:
-        hudSubheader(eventPlayer, "Top-10 time!", HudPosition.TOP, 10, Color.ORANGE, HudReeval.NONE)
-        eventPlayer.runCompletionText[4] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Submit a video of your run", HudPosition.TOP, 11, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[5] = getLastCreatedText()
-        hudSubheader(eventPlayer, "@", HudPosition.TOP, 12, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[6] = getLastCreatedText()
-        hudSubheader(eventPlayer, "ballkour.com", HudPosition.TOP, 13, rgb(165, 42, 42), HudReeval.NONE)
-        eventPlayer.runCompletionText[7] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Thanks for playing!", HudPosition.TOP, 15, Color.TURQUOISE, HudReeval.NONE)
-        eventPlayer.runCompletionText[8] = getLastCreatedText()
+    hudSubheader(eventPlayer, "\n\nCongrats, {}!\n".format(eventPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.NONE)    
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Time: {}".format(eventPlayer.runTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
+            "{}:{}:{}".format(
+                floor(elapsedTime / 3600000),
+                (elapsedTime % 3600000 / 60000 + 100).substring(1, 2),
+                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
+            ) if elapsedTime >= 3600000 else
+            "{}:{}".format(
+                floor(elapsedTime / 60000),
+                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
+            ) if elapsedTime >= 60000 else
+            "{}.{}".format(
+                floor(elapsedTime / 1000),
+                (elapsedTime % 1000 / 10 + 100).substring(1, 2)
+            )
+        ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.NONE
+    )
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, "Mistakes: {}\n".format(eventPlayer.runMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
+    hudSubheader(eventPlayer, 
+        "                <fgEC9900FF>Top-10 Time!</fg>\n"
+        "<fgA52A2AFF>Submit a Video of Your Run\n"
+        "                        @\n"
+        "              ballkour.com</fg>\n\n"
+        "       <fg00E697FF>Thanks for Playing!</fg>"
+    , HudPosition.TOP, 6, Color.WHITE, HudReeval.NONE)
+    eventPlayer.runCompletionText[len(eventPlayer.runCompletionText)] = getLastCreatedText()
     wait(30)
     unloadRunCompletionText()
 
@@ -704,10 +740,38 @@ def updateStats():
     
     lobbyStats[2]++
     lobbyStats[3] += eventPlayer.runTime
-    lobbyStats[4] = "{0}:{1}:{2}".format(floor(lobbyStats[3] / 3600), (lobbyStats[3] % 3600 / 60 + 100).substring(1, 2), (lobbyStats[3] % 60 + 100).substring(1, 9999)) if lobbyStats[3] >= 3600 else "{0}:{1}".format(floor(lobbyStats[3] / 60), (lobbyStats[3] % 60 + 100).substring(1, 9999)) if lobbyStats[3] >= 60 else "{0}.{1}".format(floor(lobbyStats[3]), (round(lobbyStats[3] % 1 * 100) + 100).substring(1, 2))
+    lobbyStats[4] = (
+        "{}:{}:{}".format(
+            floor(lobbyStats[3] / 3600),
+            (lobbyStats[3] % 3600 / 60 + 100).substring(1, 2),
+            (lobbyStats[3] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[3] >= 3600 else
+        "{}:{}".format(
+            floor(lobbyStats[3] / 60),
+            (lobbyStats[3] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[3] >= 60 else
+        "{}.{}".format(
+            floor(lobbyStats[3]),
+            (round(lobbyStats[3] % 1 * 100) + 100).substring(1, 2)
+        )
+    )
     lobbyStats[5] += eventPlayer.runMistakes
     lobbyStats[6] = lobbyStats[3] / lobbyStats[2]
-    lobbyStats[7] = "{0}:{1}:{2}".format(floor(lobbyStats[6] / 3600), (lobbyStats[6] % 3600 / 60 + 100).substring(1, 2), (lobbyStats[6] % 60 + 100).substring(1, 9999)) if lobbyStats[6] >= 3600 else "{0}:{1}".format(floor(lobbyStats[6] / 60), (lobbyStats[6] % 60 + 100).substring(1, 9999)) if lobbyStats[6] >= 60 else "{0}.{1}".format(floor(lobbyStats[6]), (round(lobbyStats[6] % 1 * 100) + 100).substring(1, 2))
+    lobbyStats[7] = (
+        "{}:{}:{}".format(
+            floor(lobbyStats[6] / 3600),
+            (lobbyStats[6] % 3600 / 60 + 100).substring(1, 2),
+            (lobbyStats[6] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[6] >= 3600 else
+        "{}:{}".format(
+            floor(lobbyStats[6] / 60),
+            (lobbyStats[6] % 60 + 100).substring(1, 9999)
+        ) if lobbyStats[6] >= 60 else
+        "{}.{}".format(
+            floor(lobbyStats[6]),
+            (round(lobbyStats[6] % 1 * 100) + 100).substring(1, 2)
+        )
+    )
     lobbyStats[8] = lobbyStats[5] / lobbyStats[2]
 
 
@@ -721,41 +785,48 @@ rule "21.1: Controls HUD Input":
     eventPlayer.disallowButton(Button.SECONDARY_FIRE)
     eventPlayer.disallowButton(Button.ABILITY_2)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or eventPlayer.isInLobby, 99999999)
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     eventPlayer.allowButton(Button.SECONDARY_FIRE)
     eventPlayer.allowButton(Button.ABILITY_2)
 
 
 def loadCtrlsHud():
-    @Name "21.2.1: Load Controls HUD"
+    @Name "21.2: Load Controls HUD"
     
-    eventPlayer.ctrlsHud = []
-    hudSubheader(eventPlayer, "Go Back CP:          {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE)), HudPosition.LEFT, 5, rgb(165, 42, 42), HudReeval.STRING)
-    eventPlayer.ctrlsHud[0] = getLastCreatedText()
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        hudSubheader(eventPlayer, "Skip CP:                   {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE)), HudPosition.LEFT, 6, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[1] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Restart CP:        {0} (Hold)".format(inputBindingString(Button.RELOAD)), HudPosition.LEFT, 7, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[2] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Restart Run:           {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 8, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[3] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Freemode:              {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 9, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[4] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Lobby/Pause:         {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)), HudPosition.LEFT, 10, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[5] = getLastCreatedText()
+        hudSubheader(eventPlayer, 
+            (
+                "Go Back CP:          {} + {}\n"
+                "Skip CP:                   {} + {}\n"
+                "Restart CP:        {} (Hold)\n"
+                "Restart Run:           {} + {}\n"
+                "Freemode:              {} + {}\n"
+                "Lobby/Pause:         {} + {}"
+            )
+            .format(
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE), 
+                inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+            ), 
+            HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.STRING
+        )
     else:
-        hudSubheader(eventPlayer, "Restart:                    {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 6, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[1] = getLastCreatedText()
-        hudSubheader(eventPlayer, "Lobby:                      {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)), HudPosition.LEFT, 7, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.ctrlsHud[2] = getLastCreatedText()
-
-
-def unloadCtrlsHud():
-    @Name "21.2.2: Unload Controls HUD"
-    
-    for eventPlayer.index in range(len(eventPlayer.ctrlsHud)):
-        destroyHudText(eventPlayer.ctrlsHud[eventPlayer.index])
+        hudSubheader(eventPlayer, 
+            "Go Back CP:          {} + {}\n"
+            "Restart Run:           {} + {}\n"
+            "Lobby/Pause:         {} + {}"
+            .format(
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+                inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+            ), 
+            HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.STRING
+        )
+    eventPlayer.ctrlsHud = getLastCreatedText()
 
 
 rule "21.3: Go Back Checkpoint Input":
@@ -781,7 +852,7 @@ rule "21.3: Go Back Checkpoint Input":
     if eventPlayer.runCurrentCp == len(cps) - 2:
         unloadFreemodeHud()
         loadFreemodeHud()
-        unloadCtrlsHud()
+        destroyHudText(eventPlayer.ctrlsHud)
         loadCtrlsHud()
     loadCp()
     cpResetPlayer()
@@ -880,7 +951,7 @@ rule "21.6: Restart Input":
     newRun()
     unloadFreemodeHud()
     unloadRunCompletionText()
-    unloadCtrlsHud()
+    destroyHudText(eventPlayer.ctrlsHud)
     if eventPlayer.isHoldingButton(Button.ULTIMATE):
         loadCtrlsHud()
     destroyInWorldText(eventPlayer.nameplateObject)
@@ -929,24 +1000,14 @@ def loadFreemodeHud():
     @Name "21.7.2.1: Load Freemode HUD"
     
     eventPlayer.freemodeHud = []
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 11, Color.WHITE, HudReeval.NONE)
+    hudSubtext(eventPlayer, "\n\n\n\n\nFreemode On", HudPosition.LEFT, 11, Color.ORANGE, HudReeval.NONE)
     eventPlayer.freemodeHud[0] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 12, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[1] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 13, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[2] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 14, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[3] = getLastCreatedText()
-    hudSubtext(eventPlayer, " ", HudPosition.LEFT, 15, Color.WHITE, HudReeval.NONE)
-    eventPlayer.freemodeHud[4] = getLastCreatedText()
-    hudSubtext(eventPlayer, "Freemode On", HudPosition.LEFT, 16, Color.ORANGE, HudReeval.NONE)
-    eventPlayer.freemodeHud[5] = getLastCreatedText()
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        hudSubtext(eventPlayer, "Disable: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 17, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.freemodeHud[6] = getLastCreatedText()
+        hudSubtext(eventPlayer, "Disable: {} + {}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.STRING)
+        eventPlayer.freemodeHud[1] = getLastCreatedText()
     else:
-        hudSubtext(eventPlayer, "Restart: {0} + {1}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 17, rgb(165, 42, 42), HudReeval.STRING)
-        eventPlayer.freemodeHud[6] = getLastCreatedText()
+        hudSubtext(eventPlayer, "Restart: {} + {}".format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.STRING)
+        eventPlayer.freemodeHud[1] = getLastCreatedText()
 
 
 def unloadFreemodeHud():
@@ -982,10 +1043,10 @@ rule "21.8: Lobby Input":
 
 rule "23.1: Auto-Restart Server":
     @SuppressWarnings w_ow2_rule_condition_chase
-    #3hr59min in (31min before OW servers auto-shut down. Restarting a minute before to be safe)
-    @Condition elapsedTime == 14340
+    #3hr29min in
+    @Condition elapsedTime >= 12540
     
-    chaseAtRate(elapsedTime, 16140, 1)
+    chaseAtRate(elapsedTime, 99999999, 1)
     bigMessage(getAllPlayers(), "Server restart: \n30min")
     wait(900)
     bigMessage(getAllPlayers(), "Server restart: \n15min")
@@ -994,4 +1055,5 @@ rule "23.1: Auto-Restart Server":
     wait(240)
     bigMessage(getAllPlayers(), "Server restart: \n1min")
     wait(60)
+    #3hr59min in
     restartMatch()
