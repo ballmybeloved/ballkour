@@ -107,8 +107,7 @@ subroutine unloadRunCompletionText 16
 subroutine loadFreemodeHud 17
 subroutine unloadFreemodeHud 18
 subroutine loadCtrlsHud 19
-subroutine unloadCtrlsHud 20
-subroutine updateStats 21
+subroutine updateStats 20
 
 #!optimizeStrict
 
