@@ -670,6 +670,12 @@ def finalCpReached():
     
     playEffect(eventPlayer, DynamicEffect.BAD_PICKUP_EFFECT, Color.LIME_GREEN, eventPlayer, 200)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
+    if not eventPlayer.isRunPaused:
+        stopChasingVariable(eventPlayer.runTime)
+        eventPlayer.isRunPaused = true
+        if eventPlayer.isRunLegit:
+            if settings_[1]:
+                updateStats()
     if not eventPlayer.isRunFinished:
         eventPlayer.isRunFinished = true
         async(loadRunCompletionText, AsyncBehavior.RESTART)
@@ -681,12 +687,6 @@ def finalCpReached():
     if eventPlayer.isHoldingButton(Button.ULTIMATE):
         destroyHudText(eventPlayer.ctrlsHud)
         loadCtrlsHud()
-    if not eventPlayer.isRunPaused:
-        stopChasingVariable(eventPlayer.runTime)
-        eventPlayer.isRunPaused = true
-        if eventPlayer.isRunLegit:
-            if settings_[1]:
-                updateStats()
 
 
 def loadRunCompletionText():
