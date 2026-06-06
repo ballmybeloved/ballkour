@@ -122,7 +122,6 @@ rule "0: Contact & Course Info":
     logToInspector("Course playthrough: ballkour.com/blizzard-world/run")
 
 
-
 rule "1: Settings":
     settings_ = []
     settings_[0] = createWorkshopSettingBool("Settings", "Debug", false, 1)
