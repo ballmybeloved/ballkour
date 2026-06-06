@@ -669,6 +669,8 @@ def finalCpReached():
                 updateStats()
     if not eventPlayer.isRunFinished:
         eventPlayer.isRunFinished = true
+        eventPlayer.runFinalTimeFormatted = eventPlayer.runTimeFormatted
+        eventPlayer.runFinalMistakes = eventPlayer.runMistakes
         eventPlayer.isViewingRunCompletionText = true
     eventPlayer.isInFreemode = true
     destroyInWorldText(eventPlayer.nameplateObject)
@@ -685,7 +687,7 @@ rule "21.1: Load Run Completion Text":
 
 rule "21.1.1: Run Completion Text":
     hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "\n\nCongrats, {}!\n".format(localPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)    
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Time: {}".format(localPlayer.runTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
             "{}:{}:{}".format(
                 floor(elapsedTime / 3600000),
@@ -702,7 +704,7 @@ rule "21.1.1: Run Completion Text":
             )
         ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
     )
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), 
         "                <fgEC9900FF>Top-10 Time!</fg>\n"
         "<fgA52A2AFF>Submit a Video of Your Run\n"

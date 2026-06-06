@@ -78,13 +78,15 @@ playervar isRunLegit 15
 playervar isRunPaused 16
 playervar isTimerActive 17
 playervar isRunFinished 18
-playervar isInFreemode 19
-playervar isViewingRunCompletionText 20
-playervar runCompletionText 21
-playervar statToFormat 22
-playervar statFormatted 23
-playervar isViewingCtrlsHud 24
-playervar cpCtrlsInputLocked 25
+playervar runFinalTimeFormatted 19
+playervar runFinalMistakes 20
+playervar isViewingRunCompletionText 21
+playervar runCompletionText 22
+playervar statToFormat 23
+playervar statFormatted 24
+playervar isInFreemode 25
+playervar isViewingCtrlsHud 26
+playervar cpCtrlsInputLocked 27
 playervar index 100
 
 subroutine loadNameplate 0
