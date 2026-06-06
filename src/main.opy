@@ -24,23 +24,25 @@ rule "6.1: Initialize Match":
 rule "6.2: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
     if settings_[1] and not settings_[0]:
-        elapsedTimeFormatted = (
-            "{}:{}:{}".format(
-                floor(elapsedTime / 3600),
-                (elapsedTime % 3600 / 60 + 100).substring(1, 2),
-                (elapsedTime % 60 + 100).substring(1, 9999)
-            ) if elapsedTime >= 3600 else
-            "{}:{}".format(
-                floor(elapsedTime / 60),
-                (elapsedTime % 60 + 100).substring(1, 9999)
-            ) if elapsedTime >= 60 else
-            "{}.{}".format(
-                floor(elapsedTime),
-                (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
+        while true:
+            elapsedTimeFormatted = (
+                "{}:{}:{}".format(
+                    floor(elapsedTime / 3600),
+                    (elapsedTime % 3600 / 60 + 100).substring(1, 2),
+                    (elapsedTime % 60 + 100).substring(1, 9999)
+                ) if elapsedTime >= 3600 else
+                "{}:{}".format(
+                    floor(elapsedTime / 60),
+                    (elapsedTime % 60 + 100).substring(1, 9999)
+                ) if elapsedTime >= 60 else
+                "{}.{}".format(
+                    floor(elapsedTime),
+                    (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
+                )
             )
-        )
-        wait(0.1)
-        loop()
+            wait(0.1)
+            loop()
+
 
 rule "7.1: Player Joins":
     @Event playerJoined
