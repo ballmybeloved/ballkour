@@ -77,8 +77,6 @@ rule "7.2: Player Leaves":
     
     if not eventPlayer.isRunPaused:
         playersUnpaused--
-    unloadCpObjects()
-    destroyInWorldText(eventPlayer.nameplateObject)
 
 
 def loadLobby():
@@ -246,18 +244,6 @@ rule "13.3.1: Load Checkpoint Objects":
     createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
     createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-
-
-def unloadCpObjects():
-    @Name "13.3.2: Unload Checkpoint Objects"
-    
-    destroyEffect(eventPlayer.cpEffects[0])
-    if eventPlayer.cpData[4] != null:
-        destroyEffect(eventPlayer.cpEffects[1])
-        destroyIcon(eventPlayer.cpIcons[0])
-    destroyEffect(eventPlayer.cpEffects[2])
-    destroyEffect(eventPlayer.cpEffects[3])
-    destroyIcon(eventPlayer.cpIcons[1])
 
 
 def setCpAbilities():
