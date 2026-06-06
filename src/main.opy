@@ -80,7 +80,7 @@ rule "7.2: Player Leaves":
 
 
 def loadLobby():
-    @Name "9.1: Load Lobby"
+    @Name "8.1: Load Lobby"
     
     eventPlayer.teleport(lobbyData[0])
     eventPlayer.isInLobby = true
@@ -91,12 +91,12 @@ def loadLobby():
     eventPlayer.nameplate = "{}".format(eventPlayer)
 
 
-rule "9.2: Load Welcome Area":
+rule "8.2: Load Welcome Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Welcome to", lobbyData[2], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Ballkour!", lobbyData[3], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
 
 
-rule "9.3: Load Leaderboard Area":
+rule "8.3: Load Leaderboard Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Leaderboard", lobbyData[11], lobbyData[12], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
     for index in range(1, 11):
         if lb[index] != null:
@@ -110,7 +110,7 @@ rule "9.3: Load Leaderboard Area":
 
 
 def formatLbString():
-    @Name "9.3.1: Format Leaderboard String"
+    @Name "8.3.1: Format Leaderboard String"
     
     #Global.lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lbObj = lb[index].split(",")
@@ -118,14 +118,14 @@ def formatLbString():
     lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
 
 
-rule "9.4.1: Load Start Run Area":
+rule "8.4.1: Load Start Run Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "New Run", lobbyData[7], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
     createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.RING, Color.SKY_BLUE, lobbyData[5], 1.6, EffectReeval.VISIBILITY)
     createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lobbyData[6], Icon.FLAG, IconReeval.VISIBILITY, Color.GREEN, false)
     createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.SPARKLES, Color.ORANGE, lobbyData[5] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
-rule "9.4.2: Start Run Circle Entry":
+rule "8.4.2: Start Run Circle Entry":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInLobby == true
@@ -138,14 +138,14 @@ rule "9.4.2: Start Run Circle Entry":
     eventPlayer.isLoading = false
 
 
-rule "9.5.1: Load Resume Run Area":
+rule "8.5.1: Load Resume Run Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), "Resume Run", lobbyData[10], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
     createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.RING, Color.GREEN, lobbyData[8], 1.6, EffectReeval.VISIBILITY)
     createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), lobbyData[9], Icon.RECYCLE, IconReeval.VISIBILITY, Color.GREEN, false)
     createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.SPARKLES, Color.ORANGE, lobbyData[8] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
-rule "9.5.2: Resume Run Circle Entry":
+rule "8.5.2: Resume Run Circle Entry":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInLobby == true
@@ -163,7 +163,7 @@ rule "9.5.2: Resume Run Circle Entry":
     eventPlayer.isLoading = false
 
 
-rule "9.6: Load Lobby Stats":
+rule "8.6: Load Lobby Stats":
     @Condition settings_[1] == true
     
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
@@ -177,14 +177,14 @@ rule "9.6: Load Lobby Stats":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
 
 
-rule "10: Clear Unused Variables":
+rule "9: Clear Unused Variables":
     lb = null
     lbPos = null
     lbObj = null
     lbObjFormatted = null
 
 
-rule "11: Load Run HUD":
+rule "10: Load Run HUD":
     hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(165, 42, 42), HudReeval.VISIBILITY)
     hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "\n\n\n\nControls: {}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "{}/{}".format(localPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
@@ -196,7 +196,7 @@ rule "11: Load Run HUD":
 
 
 def newRun():
-    @Name "12: Initialize New Run"
+    @Name "11: Initialize New Run"
     
     eventPlayer.isRunLoaded = false
     eventPlayer.isRunLoaded = true
@@ -216,7 +216,7 @@ def newRun():
 
 
 def loadCpData():
-    @Name "13.2: Load Checkpoint Data"
+    @Name "12.1: Load Checkpoint Data"
     
     #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving [15]deathLocation
     eventPlayer.cpData = []
@@ -237,17 +237,8 @@ def loadCpData():
     eventPlayer.cpTime = 0
 
 
-rule "13.3.1: Load Checkpoint Objects":
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.GREEN, localPlayer.cpData[0], localPlayer.cpData[1], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.ORANGE, localPlayer.cpData[4], localPlayer.cpData[5], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[4], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-
-
 def setCpAbilities():
-    @Name "13.4: Set Checkpoint Abilities"
+    @Name "12.2: Set Checkpoint Abilities"
     
     if eventPlayer.runCurrentCp < len(cps) - 1 and not eventPlayer.isInFreemode:
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
@@ -258,6 +249,15 @@ def setCpAbilities():
     else:
         eventPlayer.setSecondaryFireEnabled(true)
         eventPlayer.allowButton(Button.CROUCH)
+
+
+rule "13: Load Checkpoint Objects":
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.GREEN, localPlayer.cpData[0], localPlayer.cpData[1], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.ORANGE, localPlayer.cpData[4], localPlayer.cpData[5], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[4], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 
 rule "14.1: Start/Resume Run":
@@ -606,7 +606,7 @@ rule "20: Checkpoint Completed (No Skipping)":
 
 
 def finalCpReached():
-    @Name "21: Final Checkpoint Reached"
+    @Name "21.1: Final Checkpoint Reached"
     
     playEffect(eventPlayer, DynamicEffect.BAD_PICKUP_EFFECT, Color.LIME_GREEN, eventPlayer, 200)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
@@ -625,7 +625,7 @@ def finalCpReached():
     eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
 
 
-rule "21.1: Load Run Completion Text":
+rule "21.2.1: Load Run Completion Text":
     @Event eachPlayer
     @Condition eventPlayer.isViewingRunCompletionText == true
 
@@ -633,7 +633,7 @@ rule "21.1: Load Run Completion Text":
     eventPlayer.isViewingRunCompletionText = false
 
 
-rule "21.1.1: Run Completion Text":
+rule "21.2.2: Run Completion Text":
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "\n\nCongrats, {}!\n".format(localPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)    
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
@@ -898,7 +898,7 @@ rule "22.6.1: Freemode Input":
 
 
 
-rule "22.6.2.1: Load Freemode HUD":
+rule "22.6.2: Load Freemode HUD":
     hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
     (
         "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
