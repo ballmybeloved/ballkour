@@ -118,8 +118,9 @@ rule "0: Contact & Course Info":
     logToInspector("Changes: this route's checkpoints are slightly bigger")
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
-    logToInspector("Set a top-10 time? Submit a video with your run in our Discord!")
-    logToInspector("Course playthrough: ballkour.com/run")
+    logToInspector("Set a top-10 time? Submit a video with your run in our Discord or open an issue at ballkour.com/github!")
+    logToInspector("Course playthrough: ballkour.com/blizzard-world/run")
+
 
 
 rule "1: Settings":
