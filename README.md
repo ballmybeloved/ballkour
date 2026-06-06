@@ -6,11 +6,11 @@ _Wrecking Ball Parkour Courses for Overwatch_
 
 ## Blizzard World (Winter)
 Course Code: GMWRF  
-
+Course Gameplay: https://ballkour.com/blizzard-world/run
 
 ## Watchpoint: Gibraltar
 Course Code: 59W28  
-Course Playthrough: https://ballkour.com/gibraltar/run
+Course Gameplay: https://ballkour.com/gibraltar/run
 
 ---
 
