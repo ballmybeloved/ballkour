@@ -113,12 +113,12 @@ subroutine updateStats 18
 
 rule "0: Contact & Course Info":
     logToInspector("Hello! Welcome to Ballkour's Watchpoint: Gibraltar course!")
-    logToInspector("Original course (W1RWY) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo from Madje.")
-    logToInspector("This route was slightly adjusted for quality purposes, and also because this map was updated in Feb, 2026.")
+    logToInspector("Original course (W1RWY) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo by Madje.")
+    logToInspector("This route was slightly adjusted for quality purposes and also because this map was updated in Feb, 2026. Checkpoints are slightly bigger too.")
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
-    logToInspector("Set a top-10 time? Submit a video with your run in our Discord!")
-    logToInspector("Course playthrough: ballkour.com/run")
+    logToInspector("Set a top-10 time? Submit a video with your run in our Discord or open an issue at ballkour.com/github!")
+    logToInspector("Course playthrough: ballkour.com/gibraltar/run")
 
 
 rule "1: Settings":
@@ -137,9 +137,9 @@ rule "2: Leaderboard (LB)":
     lb[5] = "GAMINGCHAIR, 5:08.37, 16, '          '"
     lb[6] = "CHESSISFUN, 7:54.96, 85, '                '"
     lb[7] = "JAKOBONEDGE, 7:57.30, 53, '          '"
-    lb[8] = "PETUNCO, 9:58.47, 65, '                     '"
-    lb[9] = "KINGO, 13:11.17, 174, '                    '"
-    lb[10] = "APPLEJACK, 14:38.48, 152, '             '"
+    lb[8] = "KILROY, 8:50.38, 69, '                        '"
+    lb[9] = "PETUNCO, 9:58.47, 65, '                     '"
+    lb[10] = "KINGO, 13:11.17, 174, '                    '"
     timeToBeatInMs = 0
 
 
