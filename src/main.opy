@@ -364,7 +364,7 @@ rule "14.2: Update Run Timer Format":
     eventPlayer.isTimerActive = false
 
 
-rule "15: Start Checkpoint Time Timer":
+rule "15.1: Start Checkpoint Time Timer":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInLobby == false
@@ -372,8 +372,22 @@ rule "15: Start Checkpoint Time Timer":
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
     
+    eventPlayer.isCpTimerActive = true
     chaseAtRate(eventPlayer.cpTime, 99999999, 1)
 
+
+rule "15.2: Restart Checkpoint Time Timer":
+    @Event eachPlayer
+    @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
+    @Condition eventPlayer.isCpTimerActive == true
+    @Condition eventPlayer.isInLobby == false
+    @Condition eventPlayer.isInFreemode == false
+    @Condition eventPlayer.runCurrentCp < len(cps) - 1
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]
+    
+    eventPlayer.isCpTimerActive = false
+    stopChasingVariable(eventPlayer.cpTime)
+    eventPlayer.cpTime = 0
 
 rule "16.1: Grappling":
     @Event eachPlayer
