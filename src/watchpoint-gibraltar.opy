@@ -119,7 +119,7 @@ rule "1: Settings":
 
 
 rule "2: Leaderboard (LB)":
-    #Global.lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
+    #lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lb = []
     lb[1] = "BALLMYBLOVED, 3:54.23, 5, '           '"
     lb[2] = "COLDSKIN, 4:30.11, 10, '                  '"
@@ -135,12 +135,12 @@ rule "2: Leaderboard (LB)":
 
 
 rule "3: Checkpoints (CPs)":
-    #Global.cpDefaults[i]: [0]cpSize [1]bounceSize [2]nextCpSize
+    #cpDefaults[i]: [0]cpSize [1]bounceSize [2]nextCpSize
     cpDefaults = []
     cpDefaults[0] = 2.5
     cpDefaults[1] = 2.5
     cpDefaults[2] = 2.5
-    #Global.cps[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize
+    #cps[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize
     cps = []
     cps[0] = [vect(30.354, 5, -151.022), cpDefaults[0], false, true, null, null, vect(35.5, 5, -145.9), cpDefaults[2]]
     cps[1] = [(cps[len(cps) - 2])[6], (cps[len(cps) - 2])[7], false, true, null, null, vect(42.536, 3.218, -140.939), (cps[len(cps) - 2])[7]]
@@ -246,7 +246,7 @@ rule "3: Checkpoints (CPs)":
 
 
 rule "4: Lobby":
-    #Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]newPlayers [17]rejoins [18]legitRuns [19]totalRunTime [20]totalMistakes [21]avgRunTime [22]avgMistakes
+    #lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]newRunRing [6]newRunIcon [7]newRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]newPlayers [17]rejoins [18]legitRuns [19]totalRunTime [20]totalMistakes [21]avgRunTime [22]avgMistakes
     lobbyData = []
     lobbyData[0] = vect(112.24, -2, 65.57)
     lobbyData[5] = vect(103.805, -1.99, 75.48)
