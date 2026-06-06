@@ -63,7 +63,7 @@ rule "7.1: Player Joins":
     eventPlayer.disablePlayerCollision()
     eventPlayer.disableNameplatesFor(getAllPlayers())
     getAllPlayers().disableNameplatesFor(eventPlayer)
-    createInWorldText(getAllPlayers().filter(lambda player: player != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
     eventPlayer.nameplateObject = getLastCreatedText()
     wait()
     loadLobby()
@@ -92,21 +92,21 @@ def loadLobby():
 
 
 rule "9.2: Load Welcome Area":
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "Welcome to", lobbyData[2], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "Ballkour!", lobbyData[3], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Welcome to", lobbyData[2], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Ballkour!", lobbyData[3], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
 
 
 rule "9.3: Load Leaderboard Area":
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "Leaderboard", lobbyData[11], lobbyData[12], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Leaderboard", lobbyData[11], lobbyData[12], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
     for index in range(1, 11):
         if lb[index] != null:
             formatLbString()
-            createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+            createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
         else:
             if lb[index] <= 9:
-                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>{}</fg>. <fgEC9900FF>---</fg>                                               <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+                createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "<fgA52A2AFF>{}</fg>. <fgEC9900FF>---</fg>                                               <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
             else:
-                createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "<fgA52A2AFF>10</fg>. <fgEC9900FF>---</fg>                                              <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+                createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "<fgA52A2AFF>10</fg>. <fgEC9900FF>---</fg>                                              <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
 
 
 def formatLbString():
@@ -119,10 +119,10 @@ def formatLbString():
 
 
 rule "9.4.1: Load Start Run Area":
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby), "New Run", lobbyData[7], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
-    createEffect(getAllPlayers().filter(lambda player: player.isInLobby), Effect.RING, Color.SKY_BLUE, lobbyData[5], 1.6, EffectReeval.VISIBILITY)
-    createIcon(getAllPlayers().filter(lambda player: player.isInLobby), lobbyData[6], Icon.FLAG, IconReeval.VISIBILITY, Color.GREEN, false)
-    createEffect(getAllPlayers().filter(lambda player: player.isInLobby), Effect.SPARKLES, Color.ORANGE, lobbyData[5] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "New Run", lobbyData[7], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.RING, Color.SKY_BLUE, lobbyData[5], 1.6, EffectReeval.VISIBILITY)
+    createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lobbyData[6], Icon.FLAG, IconReeval.VISIBILITY, Color.GREEN, false)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.SPARKLES, Color.ORANGE, lobbyData[5] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
 rule "9.4.2: Start Run Circle Entry":
@@ -139,10 +139,10 @@ rule "9.4.2: Start Run Circle Entry":
 
 
 rule "9.5.1: Load Resume Run Area":
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and player.isRunLoaded and not player.isRunFinished), "Resume Run", lobbyData[10], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
-    createEffect(getAllPlayers().filter(lambda player: player.isInLobby and player.isRunLoaded and not player.isRunFinished), Effect.RING, Color.GREEN, lobbyData[8], 1.6, EffectReeval.VISIBILITY)
-    createIcon(getAllPlayers().filter(lambda player: player.isInLobby and player.isRunLoaded and not player.isRunFinished), lobbyData[9], Icon.RECYCLE, IconReeval.VISIBILITY, Color.GREEN, false)
-    createEffect(getAllPlayers().filter(lambda player: player.isInLobby and player.isRunLoaded and not player.isRunFinished), Effect.SPARKLES, Color.ORANGE, lobbyData[8] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), "Resume Run", lobbyData[10], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.RING, Color.GREEN, lobbyData[8], 1.6, EffectReeval.VISIBILITY)
+    createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), lobbyData[9], Icon.RECYCLE, IconReeval.VISIBILITY, Color.GREEN, false)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.SPARKLES, Color.ORANGE, lobbyData[8] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
 rule "9.5.2: Resume Run Circle Entry":
@@ -166,15 +166,15 @@ rule "9.5.2: Resume Run Circle Entry":
 rule "9.6: Load Lobby Stats":
     @Condition settings_[1] == true
     
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[15], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[16], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[17], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[18], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[19], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[20], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[21], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda player: player.isInLobby and "{}".format(player) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[15], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[16], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[17], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[18], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[19], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[20], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[21], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
 
 
 rule "10: Clear Unused Variables":
@@ -186,13 +186,13 @@ rule "10: Clear Unused Variables":
 
 rule "11: Load Run HUD":
     hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(165, 42, 42), HudReeval.VISIBILITY)
-    hudSubtext(getAllPlayers().filter(lambda player: not player.isInLobby), "\n\n\n\nControls: {}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubtext(getAllPlayers().filter(lambda player: not player.isInLobby), "{}/{}".format(localPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "\n\n\n\nControls: {}".format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "{}/{}".format(localPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     if not settings_[0]:
-        hudSubtext(getAllPlayers().filter(lambda player: not player.isInLobby), "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), localPlayer.runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), localPlayer.runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     else:
-        hudSubtext(getAllPlayers().filter(lambda player: not player.isInLobby), "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), localPlayer.runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubtext(getAllPlayers().filter(lambda player: not player.isInLobby), "{} {}".format(iconString(Icon.SKULL), localPlayer.runMistakes), HudPosition.RIGHT, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "\n\n\n\n{} {}\n".format(iconString(Icon.BOLT), localPlayer.runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby), "{} {}".format(iconString(Icon.SKULL), localPlayer.runMistakes), HudPosition.RIGHT, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
 
 
 def newRun():
@@ -634,9 +634,9 @@ rule "21.1: Load Run Completion Text":
 
 
 rule "21.1.1: Run Completion Text":
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "\n\nCongrats, {}!\n".format(localPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)    
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "\n\nCongrats, {}!\n".format(localPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)    
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
             "{}:{}:{}".format(
                 floor(elapsedTime / 3600000),
                 (elapsedTime % 3600000 / 60000 + 100).substring(1, 2),
@@ -652,8 +652,8 @@ rule "21.1.1: Run Completion Text":
             )
         ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
     )
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingRunCompletionText), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), 
         "                <fgEC9900FF>Top-10 Time!</fg>\n"
         "<fgA52A2AFF>Submit a Video of Your Run\n"
         "                        @\n"
@@ -719,7 +719,7 @@ rule "22.1.1: Controls HUD Input":
 
 
 rule "22.1.2: Controls HUD":
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingCtrlsHud and player.runCurrentCp < len(cps) - 1), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1), 
         (
             "Go Back CP:          {} + {}\n"
             "Skip CP:                   {} + {}\n"
@@ -738,7 +738,7 @@ rule "22.1.2: Controls HUD":
         ), 
         HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING
     )
-    hudSubheader(getAllPlayers().filter(lambda player: player.isViewingCtrlsHud and player.runCurrentCp == len(cps) - 1), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp == len(cps) - 1), 
         "Go Back CP:          {} + {}\n"
         "Restart Run:           {} + {}\n"
         "Lobby/Pause:         {} + {}"
@@ -899,13 +899,13 @@ rule "22.6.1: Freemode Input":
 
 
 rule "22.6.2.1: Load Freemode HUD":
-    hudSubtext(getAllPlayers().filter(lambda player: player.isInFreemode and player.runCurrentCp < len(cps) - 1), 
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
     (
         "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
         "\n<fgA52A2AFF>Disable: {} + {}</fg>"
     )
     .format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 11, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubtext(getAllPlayers().filter(lambda player: player.isInFreemode and player.runCurrentCp == len(cps) - 1), 
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp == len(cps) - 1), 
     (
         "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
         "\n<fgA52A2AFF>Restart: {} + {}</fg>"
