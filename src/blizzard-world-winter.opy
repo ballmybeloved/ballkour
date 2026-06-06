@@ -114,7 +114,7 @@ subroutine updateStats 18
 
 rule "0: Contact & Course Info":
     logToInspector("Hello! Welcome to Ballkour's Blizzard World (Winter) course!")
-    logToInspector("Original course (6B9Z09) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo from Madje.")
+    logToInspector("Original course (6B9Z09) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo by Madje.")
     logToInspector("Changes: this route's checkpoints are slightly bigger")
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
