@@ -19,7 +19,7 @@ _Wrecking Ball Parkour Courses for Overwatch_
 **Found a bug or have a suggestion?** Please let us know in our Discord or open an issue here!  
 **Set a top-10 time?** Submit a video with your run in our Discord or open an issue here!  
 
-_Original courses by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo from Madje._  
+_Original courses by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo by Madje._  
 
 
 ![alt text](gallery/logos/logo.png)  
