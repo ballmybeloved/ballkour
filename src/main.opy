@@ -944,6 +944,7 @@ rule "22.6.1: Freemode Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
         eventPlayer.setSecondaryFireEnabled(true)
+        eventPlayer.allowButton(Button.CROUCH)
         eventPlayer.isInFreemode = true
     else:
         eventPlayer.isLoading = true
