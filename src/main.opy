@@ -60,9 +60,11 @@ rule "7.1: Player Joins":
     eventPlayer.disableGamemodeHud()
     eventPlayer.disableKillFeed()
     eventPlayer.disableGamemodeInWorldUi()
+    eventPlayer.disablePlayerCollision()
     eventPlayer.disableNameplatesFor(getAllPlayers())
     getAllPlayers().disableNameplatesFor(eventPlayer)
-    eventPlayer.disablePlayerCollision()
+    createInWorldText(getAllPlayers().filter(lambda player: player != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
+    eventPlayer.nameplateObject = getLastCreatedText()
     wait()
     loadLobby()
     wait(0.1)
@@ -75,22 +77,8 @@ rule "7.2: Player Leaves":
     
     if not eventPlayer.isRunPaused:
         playersUnpaused--
-    destroyInWorldText(eventPlayer.nameplateObject)
     unloadCpObjects()
-
-
-def loadNameplate():
-    @Name "8: Load Nameplate"
-    
-    if eventPlayer.isInLobby:
-        eventPlayer.nameplate = "{}".format(eventPlayer)
-    else:
-        if not eventPlayer.isInFreemode:
-            eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
-        else:
-            eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
-    createInWorldText(getAllPlayers().filter(lambda player: player != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
-    eventPlayer.nameplateObject = getLastCreatedText()
+    destroyInWorldText(eventPlayer.nameplateObject)
 
 
 def loadLobby():
@@ -102,8 +90,7 @@ def loadLobby():
     eventPlayer.isInFreemode = false
     eventPlayer.setSecondaryFireEnabled(true)
     eventPlayer.allowButton(Button.CROUCH)
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
+    eventPlayer.nameplate = "{}".format(eventPlayer)
 
 
 rule "9.2: Load Welcome Area":
@@ -149,8 +136,7 @@ rule "9.4.2: Start Run Circle Entry":
     eventPlayer.isInLobby = false
     eventPlayer.isLoading = true
     newRun()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
+    eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
     eventPlayer.isLoading = false
 
 
@@ -174,8 +160,7 @@ rule "9.5.2: Resume Run Circle Entry":
     cpResetPlayer()
     setCpAbilities()
     loadCpObjects()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
+    eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][6]), Relativity.TO_WORLD)
     eventPlayer.isLoading = false
 
@@ -225,21 +210,11 @@ def newRun():
     eventPlayer.runTime = 0
     eventPlayer.runTimeFormatted = "0.00"
     eventPlayer.runMistakes = 0
-    loadCp()
+    loadCpData()
     wait()
     cpResetPlayer()
     setCpAbilities()
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][6]), Relativity.TO_WORLD)
-
-
-def loadCp():
-    @Name "13.1: Load Checkpoint"
-    
-    unloadCpObjects()
-    loadCpData()
-    if eventPlayer.runCurrentCp < len(cps) - 1:
-        loadCpObjects()
-    setCpAbilities()
 
 
 def loadCpData():
@@ -264,26 +239,13 @@ def loadCpData():
     eventPlayer.cpTime = 0
 
 
-def loadCpObjects():
-    @Name "13.3.1: Load Checkpoint Objects"
-    
-    #Event Player.cpEffects[i]: [0]cpRing [1]bounceCpRing [2]nextCpRing [3]nextCpRing
-    eventPlayer.cpEffects = []
-    #Event Player.cpIcons[i]: [0]bounceCpJumpIcon [1]nextCpFlag
-    eventPlayer.cpIcons = []
-    createEffect(eventPlayer, Effect.RING, Color.GREEN, eventPlayer.cpData[0], eventPlayer.cpData[1], EffectReeval.POSITION_AND_RADIUS)
-    eventPlayer.cpEffects[0] = getLastCreatedEntity()
-    if eventPlayer.cpData[4] != null:
-        createEffect(eventPlayer, Effect.RING, Color.ORANGE, eventPlayer.cpData[4], eventPlayer.cpData[5], EffectReeval.POSITION_AND_RADIUS)
-        eventPlayer.cpEffects[1] = getLastCreatedEntity()
-        createIcon(eventPlayer, eventPlayer.cpData[4], Icon.ARROW_UP, IconReeval.POSITION, Color.YELLOW, false)
-        eventPlayer.cpIcons[0] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.RING, Color.SKY_BLUE, eventPlayer.cpData[6], eventPlayer.cpData[7], EffectReeval.POSITION_AND_RADIUS)
-    eventPlayer.cpEffects[2] = getLastCreatedEntity()
-    createIcon(eventPlayer, eventPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.POSITION, Color.GREEN)
-    eventPlayer.cpIcons[1] = getLastCreatedEntity()
-    createEffect(eventPlayer, Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), eventPlayer.cpData[6], eventPlayer.cpData[7], EffectReeval.POSITION_AND_RADIUS)
-    eventPlayer.cpEffects[3] = getLastCreatedEntity()
+rule "13.3.1: Load Checkpoint Objects":
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.GREEN, localPlayer.cpData[0], localPlayer.cpData[1], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.ORANGE, localPlayer.cpData[4], localPlayer.cpData[5], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[4], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 
 def unloadCpObjects():
@@ -643,7 +605,8 @@ rule "20: Checkpoint Completed (No Skipping)":
     smallMessage(eventPlayer, "Time: {}".format(eventPlayer.cpTimeFormatted))
     eventPlayer.isLoading = true
     eventPlayer.runCurrentCp++
-    loadCp()
+    loadCpData()
+    setCpAbilities()
     if eventPlayer.runCurrentCp < len(cps) - 1:
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.isLoading = true
@@ -653,8 +616,6 @@ rule "20: Checkpoint Completed (No Skipping)":
         playEffect(eventPlayer, DynamicEffect.RING_EXPLOSION_SOUND, null, eventPlayer, 100)
     else:
         finalCpReached()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
     eventPlayer.isLoading = false
 
 
@@ -675,8 +636,7 @@ def finalCpReached():
         eventPlayer.runFinalMistakes = eventPlayer.runMistakes
         eventPlayer.isViewingRunCompletionText = true
     eventPlayer.isInFreemode = true
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
+    eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
 
 
 rule "21.1: Load Run Completion Text":
@@ -825,10 +785,8 @@ rule "22.2: Go Back Checkpoint Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp--
-    loadCp()
+    loadCpData()
     cpResetPlayer()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.25)
     if eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.runCurrentCp > 0:
@@ -837,10 +795,8 @@ rule "22.2: Go Back Checkpoint Input":
             eventPlayer.runCurrentCp--
             eventPlayer.teleport(cps[eventPlayer.runCurrentCp][0])
             wait(0.02)
-        loadCp()
+        loadCpData()
         cpResetPlayer()
-        destroyInWorldText(eventPlayer.nameplateObject)
-        loadNameplate()
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
 
 
@@ -864,10 +820,8 @@ rule "22.3: Skip Checkpoint Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp++
-    loadCp()
+    loadCpData()
     cpResetPlayer()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.25)
     if eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.runCurrentCp < len(cps) - 1:
@@ -876,10 +830,8 @@ rule "22.3: Skip Checkpoint Input":
             eventPlayer.runCurrentCp++
             eventPlayer.teleport(cps[eventPlayer.runCurrentCp][0])
             wait(0.02)
-        loadCp()
+        loadCpData()
         cpResetPlayer()
-        destroyInWorldText(eventPlayer.nameplateObject)
-        loadNameplate()
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
@@ -921,8 +873,6 @@ rule "22.5: Restart Input":
     stopChasingVariable(eventPlayer.runTime)
     eventPlayer.isViewingRunCompletionText = false
     newRun()
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
     eventPlayer.isLoading = false
 
 
@@ -945,10 +895,10 @@ rule "22.6.1: Freemode Input":
             eventPlayer.runMistakes++
         eventPlayer.setSecondaryFireEnabled(true)
         eventPlayer.allowButton(Button.CROUCH)
+        eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
         eventPlayer.isInFreemode = true
     else:
         eventPlayer.isLoading = true
-        eventPlayer.isInFreemode = false
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             cpResetPlayer()
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
@@ -956,9 +906,10 @@ rule "22.6.1: Freemode Input":
             eventPlayer.disallowButton(Button.CROUCH)
         else:
             eventPlayer.allowButton(Button.CROUCH)
+        eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
+        eventPlayer.isInFreemode = false
         eventPlayer.isLoading = false
-    destroyInWorldText(eventPlayer.nameplateObject)
-    loadNameplate()
+
 
 
 rule "22.6.2.1: Load Freemode HUD":
@@ -992,7 +943,6 @@ rule "22.7: Lobby Input":
         eventPlayer.isRunPaused = true
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
-    unloadCpObjects()
     eventPlayer.isViewingRunCompletionText = false
     loadLobby()
     eventPlayer.isLoading = false

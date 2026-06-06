@@ -88,18 +88,16 @@ playervar isViewingCtrlsHud 26
 playervar cpCtrlsInputLocked 27
 playervar index 100
 
-subroutine loadNameplate 0
-subroutine loadLobby 1
-subroutine formatLbString 2
-subroutine newRun 3
-subroutine loadCp 4
-subroutine loadCpData 5
-subroutine loadCpObjects 6
-subroutine unloadCpObjects 7
-subroutine setCpAbilities 8
-subroutine cpResetPlayer 9
-subroutine finalCpReached 10
-subroutine updateStats 11
+subroutine loadLobby 0
+subroutine formatLbString 1
+subroutine newRun 2
+subroutine loadCpData 3
+subroutine loadCpObjects 4
+subroutine unloadCpObjects 5
+subroutine setCpAbilities 6
+subroutine cpResetPlayer 7
+subroutine finalCpReached 8
+subroutine updateStats 9
 
 #!optimizeStrict
 
