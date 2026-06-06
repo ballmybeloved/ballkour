@@ -267,7 +267,7 @@ rule "14.1: Start/Resume Run":
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isRunPaused == true
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isRunPaused = false
     chaseAtRate(eventPlayer.runTime, 99999999, 1)
@@ -320,7 +320,7 @@ rule "15.1: Start Checkpoint Time Timer":
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isCpTimerActive = true
     chaseAtRate(eventPlayer.cpTime, 99999999, 1)
@@ -352,7 +352,7 @@ rule "16.1: Grappling":
         if eventPlayer.getSpeed() > 5:
             waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 8.5)
         eventPlayer.cpData[8] = false
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[9] = true
         else:
             eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
@@ -377,12 +377,12 @@ rule "16.2.2: Bhopping":
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isInLobby == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) >= eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
     
     if not eventPlayer.cpData[12]:
         waitUntil(eventPlayer.isOnGround(), 99999999)
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[12] = true
 
 
@@ -420,8 +420,8 @@ rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[10] and eventPlayer.cpData[12]) == true
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isDummy() == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) >= eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
     
     eventPlayer.isLoading = true
     eventPlayer.runMistakes++
@@ -439,8 +439,8 @@ rule "17.2: Checkpoint Mistake: Already Bhopped":
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.cpData[12] == true
     @Condition eventPlayer.cpData[4] == null
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) >= eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
     
     eventPlayer.isLoading = true
     eventPlayer.runMistakes++
@@ -488,7 +488,7 @@ rule "18.2: Bounce Checkpoint Mistake: No Grapple":
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.cpData[8] == false
     @Condition eventPlayer.cpData[9] == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isLoading = true
     eventPlayer.runMistakes++
@@ -504,7 +504,7 @@ rule "18.3: Bounce Checkpoint Mistake: Too Slow":
     @Condition (not eventPlayer.cpData[13] or (eventPlayer.cpData[13] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5])) == true
     @Condition eventPlayer.getSpeed() <= 10
     @Condition eventPlayer.isInFreemode == false
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.runMistakes++
     eventPlayer.isLoading = true
@@ -530,8 +530,8 @@ rule "18.5: Bounce Checkpoint Mistake: Improperly Airborne":
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.cpData[13] == false
     @Condition eventPlayer.isJumping() == true
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]
-    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) >= eventPlayer.cpData[5]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
+    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) > eventPlayer.cpData[5]
     
     eventPlayer.runMistakes++
     eventPlayer.isLoading = true
@@ -594,7 +594,7 @@ rule "20: Checkpoint Completed (No Skipping)":
     loadCpData()
     setCpAbilities()
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.isLoading = true
             eventPlayer.teleport(eventPlayer.cpData[0])
             eventPlayer.applyImpulse(eventPlayer.getVelocity() * -0.001, 0.001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
@@ -768,7 +768,7 @@ rule "22.2: Go Back Checkpoint Input":
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp--
     loadCpData()
@@ -803,7 +803,7 @@ rule "22.3: Skip Checkpoint Input":
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp++
     loadCpData()
@@ -839,7 +839,7 @@ rule "22.4: Restart Checkpoint Input":
     if not eventPlayer.isHoldingButton(Button.RELOAD) and eventPlayer.runCurrentCp < len(cps) - 1:
         return
     if not eventPlayer.isRunPaused:
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.isLoading = true
     cpResetPlayer()
@@ -877,7 +877,7 @@ rule "22.6.1: Freemode Input":
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
         eventPlayer.isRunLegit = false
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
         eventPlayer.setSecondaryFireEnabled(true)
         eventPlayer.allowButton(Button.CROUCH)
@@ -885,7 +885,7 @@ rule "22.6.1: Freemode Input":
         eventPlayer.isInFreemode = true
     else:
         eventPlayer.isLoading = true
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             cpResetPlayer()
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
         if not eventPlayer.cpData[3]:
@@ -927,7 +927,7 @@ rule "22.7: Lobby Input":
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.isViewingRunCompletionText = false
     loadLobby()
