@@ -137,7 +137,7 @@ rule "2: Leaderboard (LB)":
     lb[5] = "GAMINGCHAIR, 5:08.37, 16, '          '"
     lb[6] = "CHESSISFUN, 7:54.96, 85, '                '"
     lb[7] = "JAKOBONEDGE, 7:57.30, 53, '          '"
-    lb[8] = "KILROY, 8:50.38, 69, '                        '"
+    lb[8] = "KILROY, 8:50.38, 69, '                         '"
     lb[9] = "PETUNCO, 9:58.47, 65, '                     '"
     lb[10] = "KINGO, 13:11.17, 174, '                    '"
     timeToBeatInMs = 0
