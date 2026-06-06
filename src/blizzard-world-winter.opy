@@ -65,9 +65,9 @@ playervar nameplate 2
 playervar nameplateObject 3
 playervar isRunLoaded 4
 playervar runCurrentCp 5
-playervar runMistakes 6
-playervar runTime 7
-playervar runTimeFormatted 8
+playervar runTime 6
+playervar runTimeFormatted 7
+playervar runMistakes 8
 playervar cpData 9
 playervar cpEffects 10
 playervar cpIcons 11
