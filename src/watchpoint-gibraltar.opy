@@ -113,7 +113,7 @@ subroutine updateStats 18
 
 rule "0: Contact & Course Info":
     logToInspector("Hello! Welcome to Ballkour's Watchpoint: Gibraltar course!")
-    logToInspector("This updated version of code \"W1RWY\" is developed by ballmybeloved, with lobby help from Kalaziel64.")
+    logToInspector("Original course (W1RWY) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo from Madje.")
     logToInspector("This route was slightly adjusted for quality purposes, and also because this map was updated in Feb, 2026.")
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
