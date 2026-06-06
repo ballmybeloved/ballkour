@@ -218,7 +218,7 @@ def newRun():
 def loadCpData():
     @Name "13.2: Load Checkpoint Data"
     
-    #Event Player.cpData[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving [15]deathLocation
+    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving [15]deathLocation
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
     if eventPlayer.runCurrentCp == len(cps) - 1:
