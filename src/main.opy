@@ -8,7 +8,7 @@ rule "6.1: Initialize Match":
         disableInspector()
     if settings_[1]:
         players = []
-        #Global.lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
+        #lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
         lobbyStats = []
         lobbyStats[0] = 0
         lobbyStats[1] = 0
@@ -112,7 +112,7 @@ rule "8.3: Load Leaderboard Area":
 def formatLbString():
     @Name "8.3.1: Format Leaderboard String"
     
-    #Global.lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
+    #lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lbObj = lb[index].split(",")
     lbObj[3] = lbObj[3].replace("'", "")
     lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
