@@ -915,6 +915,7 @@ rule "22.5: Restart Input":
     
     eventPlayer.isLoading = true
     stopChasingVariable(eventPlayer.runTime)
+    eventPlayer.isViewingRunCompletionText = false
     newRun()
     destroyInWorldText(eventPlayer.nameplateObject)
     loadNameplate()
@@ -987,6 +988,7 @@ rule "22.7: Lobby Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) >= eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     unloadCpObjects()
+    eventPlayer.isViewingRunCompletionText = false
     loadLobby()
     eventPlayer.isLoading = false
 
