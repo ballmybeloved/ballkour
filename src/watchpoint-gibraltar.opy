@@ -131,15 +131,15 @@ rule "2: Leaderboard (LB)":
     #Global.lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lb = []
     lb[1] = "BALLMYBLOVED, 3:54.23, 5, '           '"
-    lb[2] = "COLDSKIN, 4:30.11, 10, '                  '"
-    lb[3] = "BACKLINEREIN, 4:34.15, 15, '           '"
-    lb[4] = "DVD, 5:02.50, 15, '                             '"
-    lb[5] = "GAMINGCHAIR, 5:08.37, 16, '          '"
-    lb[6] = "CHESSISFUN, 7:54.96, 85, '                '"
-    lb[7] = "JAKOBONEDGE, 7:57.30, 53, '          '"
-    lb[8] = "KILROY, 8:50.38, 69, '                         '"
-    lb[9] = "PETUNCO, 9:58.47, 65, '                     '"
-    lb[10] = "KINGO, 13:11.17, 174, '                    '"
+    lb[2] = "JAKOBONEDGE, 4:21.96, 12, '         '"
+    lb[3] = "COLDSKIN, 4:30.11, 10, '                  '"
+    lb[4] = "BACKLINEREIN, 4:34.15, 15, '           '"
+    lb[5] = "DVD, 5:02.50, 15, '                             '"
+    lb[6] = "GAMINGCHAIR, 5:08.37, 16, '         '"
+    lb[7] = "BLOWSKI, 6:18.52, 41, '                    '"
+    lb[8] = "KINGO, 6:26.18, 37, '                       '"
+    lb[9] = "ABIKE, 7:38.38, 46, '                          '"
+    lb[10] = "安宁, 7:40.02, 71, '                          '"
     timeToBeatInMs = 0
 
 
