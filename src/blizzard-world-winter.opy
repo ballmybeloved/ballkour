@@ -123,7 +123,6 @@ rule "2: Leaderboard (LB)":
     #lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lb = []
     lb[1] = "BALLMYBLOVED, 7:14.76, 16, '        '"
-    timeToBeatInMs = 0
 
 
 rule "3.1: Checkpoints (CPs)":

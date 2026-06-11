@@ -20,6 +20,34 @@ rule "6.1: Initialize Match":
         lobbyStats[7] = "00:00.00"
         lobbyStats[8] = 0
     playersUnpaused = 0
+    lbObj = lb[10].split(",")[1].replace(" ", "").split(":")
+    lbObjFormatted = lbObj[len(lbObj) - 1].split(".")
+    timeToBeatInMs = (
+        (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(0, 1))
+        ) * 3600000 if len(lbObj) >= 3 else 0
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(0, 1))
+        ) * 60000
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(0, 1))
+        ) * 1000
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(0, 1))
+        ) * 10
+    )
 
 rule "6.2: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
@@ -644,17 +672,17 @@ rule "21.2.2: Run Completion Text":
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
             "{}:{}:{}".format(
-                floor(elapsedTime / 3600000),
-                (elapsedTime % 3600000 / 60000 + 100).substring(1, 2),
-                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
-            ) if elapsedTime >= 3600000 else
+                floor(timeToBeatInMs / 3600000),
+                (timeToBeatInMs % 3600000 / 60000 + 100).substring(1, 2),
+                (timeToBeatInMs % 60000 / 1000 + 100).substring(1, 9999)
+            ) if timeToBeatInMs >= 3600000 else
             "{}:{}".format(
-                floor(elapsedTime / 60000),
-                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
-            ) if elapsedTime >= 60000 else
+                floor(timeToBeatInMs / 60000),
+                (timeToBeatInMs % 60000 / 1000 + 100).substring(1, 9999)
+            ) if timeToBeatInMs >= 60000 else
             "{}.{}".format(
-                floor(elapsedTime / 1000),
-                (elapsedTime % 1000 / 10 + 100).substring(1, 2)
+                floor(timeToBeatInMs / 1000),
+                (timeToBeatInMs % 1000 / 10 + 100).substring(1, 2)
             )
         ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
     )
