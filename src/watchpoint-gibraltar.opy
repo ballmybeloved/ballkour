@@ -140,7 +140,6 @@ rule "2: Leaderboard (LB)":
     lb[8] = "KINGO, 6:26.18, 37, '                       '"
     lb[9] = "ABIKE, 7:38.38, 46, '                          '"
     lb[10] = "安宁, 7:40.02, 71, '                          '"
-    timeToBeatInMs = 0
 
 
 rule "3: Checkpoints (CPs)":
