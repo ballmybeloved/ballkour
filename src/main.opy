@@ -557,6 +557,7 @@ rule "18.1: Bounce Checkpoints: Grapple Use":
     @Event eachPlayer
     @Condition eventPlayer.cpData[4] != null
     @Condition eventPlayer.cpData[9] == true
+    @Condition eventPlayer.isInFreemode == true
     
     if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]:
         eventPlayer.cpData[8] = false
