@@ -423,13 +423,15 @@ rule "16.3: Shield Bounce Use":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    @Condition ((eventPlayer.cpData[3] and not eventPlayer.cpData[14]) or eventPlayer.runCurrentCp == len(cps) - 1 or eventPlayer.isInFreemode) == true
 
-    eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    if eventPlayer.runCurrentCp < len(cps) - 1 and not eventPlayer.isInFreemode:
-        eventPlayer.setAbility2Enabled(false)
-        waitUntil(not eventPlayer.isOnGround(), 99999999)
-        eventPlayer.cpData[14] = true
+    if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
+        if (eventPlayer.cpData[3] and not eventPlayer.cpData[14]):
+            eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+            eventPlayer.setAbility2Enabled(false)
+            waitUntil(not eventPlayer.isOnGround(), 99999999)
+            eventPlayer.cpData[14] = true
+    else:
+        eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
     eventPlayer.setHealth(575)
 
