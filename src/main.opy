@@ -428,7 +428,7 @@ rule "16.3: Shield Bounce Use":
         if (eventPlayer.cpData[3] and not eventPlayer.cpData[14]):
             eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
             eventPlayer.setAbility2Enabled(false)
-            waitUntil(not eventPlayer.isOnGround(), 99999999)
+            waitUntil(eventPlayer.isOnGround(), 99999999)
             eventPlayer.cpData[14] = true
     else:
         eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
