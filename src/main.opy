@@ -411,7 +411,7 @@ rule "16.2: Grapple Use":
         eventPlayer.cpData[12] = false
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[13] = true
-    if eventPlayer.cpData[5] != null:
+    if (not eventPlayer.isInLobby and eventPlayer.cpData[5] != null and not eventPlayer.isInFreemode):
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.setSecondaryFireEnabled(false)
         else:
