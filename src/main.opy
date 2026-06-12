@@ -8,7 +8,7 @@ rule "6.1: Initialize Match":
         disableInspector()
     if settings_[1]:
         players = []
-        #Global.lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
+        #lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
         lobbyStats = []
         lobbyStats[0] = 0
         lobbyStats[1] = 0
@@ -20,6 +20,34 @@ rule "6.1: Initialize Match":
         lobbyStats[7] = "00:00.00"
         lobbyStats[8] = 0
     playersUnpaused = 0
+    lbObj = lb[10].split(",")[1].replace(" ", "").split(":")
+    lbObjFormatted = lbObj[len(lbObj) - 1].split(".")
+    timeToBeatInMs = (
+        (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[0].substring(0, 1))
+        ) * 3600000 if len(lbObj) >= 3 else 0
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObj[len(lbObj) - 2].substring(0, 1))
+        ) * 60000
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[0].substring(0, 1))
+        ) * 1000
+        + (
+            (["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(0, 1)) * 10
+             + ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(1, 1)))
+            if ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(1, 1)) >= 0 else
+            ["0","1","2","3","4","5","6","7","8","9"].index(lbObjFormatted[1].substring(0, 1))
+        ) * 10
+    )
 
 rule "6.2: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
@@ -112,7 +140,7 @@ rule "8.3: Load Leaderboard Area":
 def formatLbString():
     @Name "8.3.1: Format Leaderboard String"
     
-    #Global.lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
+    #lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lbObj = lb[index].split(",")
     lbObj[3] = lbObj[3].replace("'", "")
     lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
@@ -159,22 +187,22 @@ rule "8.5.2: Resume Run Circle Entry":
     setCpAbilities()
     loadCpObjects()
     eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
-    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][6]), Relativity.TO_WORLD)
+    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][7]), Relativity.TO_WORLD)
     eventPlayer.isLoading = false
 
 
 rule "8.6: Load Lobby Stats":
     @Condition settings_[1] == true
     
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Stats", lobbyData[14], 1.2, Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[15], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[16], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[17], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[18], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[19], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[20], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[21], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[8]), lobbyData[22], 0.85, Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Stats", lobbyData[14], lobbyData[15], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[17], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[18], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[19], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[20], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[21], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[22], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[23], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Mistakes: {}".format(lobbyStats[8]), lobbyData[24], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
 
 
 rule "9: Clear Unused Variables":
@@ -212,17 +240,15 @@ def newRun():
     wait()
     cpResetPlayer()
     setCpAbilities()
-    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][6]), Relativity.TO_WORLD)
+    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][7]), Relativity.TO_WORLD)
 
 
 def loadCpData():
     @Name "12.1: Load Checkpoint Data"
     
-    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]grappleAllowed [3]piledriverAllowed [4]bounceLocation [5]bounceSize [6]nextCpLocation [7]nextCpSize [8]grappling [9]grappleUsed [10]jumping [11]jumped [12]bhopped [13]bounceUsed [14]piledriving [15]deathLocation
+    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasUsedShieldBounce [15]isPiledriving [16]hasUsedBounceJump [17]deathLocation
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
-    if eventPlayer.runCurrentCp == len(cps) - 1:
-        return
     eventPlayer.cpData[1] = cps[eventPlayer.runCurrentCp][1]
     eventPlayer.cpData[2] = cps[eventPlayer.runCurrentCp][2]
     eventPlayer.cpData[3] = cps[eventPlayer.runCurrentCp][3]
@@ -230,10 +256,12 @@ def loadCpData():
     eventPlayer.cpData[5] = cps[eventPlayer.runCurrentCp][5]
     eventPlayer.cpData[6] = cps[eventPlayer.runCurrentCp][6]
     eventPlayer.cpData[7] = cps[eventPlayer.runCurrentCp][7]
-    eventPlayer.cpData[9] = false
+    eventPlayer.cpData[8] = cps[eventPlayer.runCurrentCp][8]
+    eventPlayer.cpData[10] = false
     eventPlayer.cpData[11] = false
-    eventPlayer.cpData[12] = false
     eventPlayer.cpData[13] = false
+    eventPlayer.cpData[14] = false
+    eventPlayer.cpData[16] = false
     eventPlayer.cpTime = 0
 
 
@@ -242,22 +270,24 @@ def setCpAbilities():
     
     if eventPlayer.runCurrentCp < len(cps) - 1 and not eventPlayer.isInFreemode:
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
-        if not eventPlayer.cpData[3]:
+        eventPlayer.setAbility2Enabled(eventPlayer.cpData[3])
+        if not eventPlayer.cpData[4]:
             eventPlayer.disallowButton(Button.CROUCH)
         else:
             eventPlayer.allowButton(Button.CROUCH)
     else:
         eventPlayer.setSecondaryFireEnabled(true)
+        eventPlayer.setAbility2Enabled(true)
         eventPlayer.allowButton(Button.CROUCH)
 
 
 rule "13: Load Checkpoint Objects":
     createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.GREEN, localPlayer.cpData[0], localPlayer.cpData[1], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.ORANGE, localPlayer.cpData[4], localPlayer.cpData[5], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[4] != null and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[4], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
-    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[6] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
-    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[6], localPlayer.cpData[7], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[5] != null and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.ORANGE, localPlayer.cpData[5], localPlayer.cpData[6], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.cpData[5] != null and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[5], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, localPlayer.cpData[7], localPlayer.cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+    createIcon(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), localPlayer.cpData[7] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
+    createEffect(getAllPlayers().filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.runCurrentCp == len(cps) - 1), Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[7], localPlayer.cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 
 rule "14.1: Start/Resume Run":
@@ -339,51 +369,69 @@ rule "15.2: Restart Checkpoint Time Timer":
     stopChasingVariable(eventPlayer.cpTime)
     eventPlayer.cpTime = 0
 
-rule "16.1: Grappling":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    
-    if eventPlayer.isInLobby or eventPlayer.cpData[4] == null or eventPlayer.isInFreemode:
-        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
-    else:
-        eventPlayer.cpData[8] = true
-        waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.getSpeed() > 5, 99999999)
-        if eventPlayer.getSpeed() > 5:
-            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 8.5)
-        eventPlayer.cpData[8] = false
-        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
-            eventPlayer.cpData[9] = true
-        else:
-            eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
 
-
-rule "16.2.1: Jumping":
+rule "16.1.1: Jumping":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isJumping() == true
     
+    eventPlayer.cpData[9] = true
     eventPlayer.cpData[10] = true
-    eventPlayer.cpData[11] = true
     waitUntil(eventPlayer.isOnGround(), 0.016)
-    eventPlayer.cpData[10] = false
+    eventPlayer.cpData[9] = false
 
 
-rule "16.2.2: Bhopping":
+rule "16.1.2: Bhopping":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isInLobby == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) > eventPlayer.cpData[8]
     
-    if not eventPlayer.cpData[12]:
+    if not eventPlayer.cpData[11]:
         waitUntil(eventPlayer.isOnGround(), 99999999)
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
-            eventPlayer.cpData[12] = true
+            eventPlayer.cpData[11] = true
+
+
+rule "16.2: Grapple Use":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
+    
+    if not (eventPlayer.isInLobby or eventPlayer.cpData[5] == null or eventPlayer.isInFreemode):
+        eventPlayer.cpData[12] = true
+        waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.getSpeed() >= 15, 99999999)
+        if eventPlayer.getSpeed() >= 15:
+            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 8.5)
+        eventPlayer.cpData[12] = false
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
+            eventPlayer.cpData[13] = true
+    if (not eventPlayer.isInLobby and eventPlayer.cpData[5] != null and not eventPlayer.isInFreemode):
+        if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
+            eventPlayer.setSecondaryFireEnabled(false)
+        else:
+            eventPlayer.cpData[13] = false
+    eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+
+
+rule "16.3: Shield Bounce Use":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
+    @Condition ((eventPlayer.cpData[3] and not eventPlayer.cpData[14]) or eventPlayer.runCurrentCp == len(cps) - 1 or eventPlayer.isInFreemode) == true
+
+    eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    if eventPlayer.runCurrentCp < len(cps) - 1 and not eventPlayer.isInFreemode:
+        eventPlayer.setAbility2Enabled(false)
+        waitUntil(not eventPlayer.isOnGround(), 99999999)
+        eventPlayer.cpData[14] = true
+    eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
+    eventPlayer.setHealth(575)
 
 
 rule "16.3: Piledriving":
@@ -391,37 +439,40 @@ rule "16.3: Piledriving":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
     
-    eventPlayer.cpData[14] = true
+    eventPlayer.cpData[15] = true
     waitUntil(eventPlayer.isOnGround(), 99999999)
-    eventPlayer.cpData[14] = false
+    eventPlayer.cpData[15] = false
 
 
-rule "16.4: Reset Useless Grapple/Jump/Bhop":
+rule "16.4: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
-    @Condition (eventPlayer.cpData[9] or eventPlayer.cpData[11] or eventPlayer.cpData[12]) == true
+    @Condition (eventPlayer.cpData[10] or eventPlayer.cpData[11] or eventPlayer.cpData[13] or eventPlayer.cpData[14]) == true
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.isOnGround() == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]
     
     if eventPlayer.cpData[2]:
-        eventPlayer.cpData[9] = false
+        eventPlayer.cpData[13] = false
         eventPlayer.setSecondaryFireEnabled(true)
-        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+    if eventPlayer.cpData[3]:
+        eventPlayer.cpData[14] = false
+        eventPlayer.setAbility2Enabled(true)
+        eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
+    eventPlayer.cpData[10] = false
     eventPlayer.cpData[11] = false
-    eventPlayer.cpData[12] = false
-    eventPlayer.cpData[13] = false
+    eventPlayer.cpData[16] = false
 
 
 rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     @Event eachPlayer
     @Condition eventPlayer.isInFreemode == false
-    @Condition (eventPlayer.cpData[4] == null or (not eventPlayer.cpData[8] and not eventPlayer.cpData[9]) or (eventPlayer.cpData[13] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) > eventPlayer.cpData[5])) == true
-    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[10] and eventPlayer.cpData[12]) == true
+    @Condition (eventPlayer.cpData[5] == null or (not eventPlayer.cpData[12] and not eventPlayer.cpData[13]) or (eventPlayer.cpData[16] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) > eventPlayer.cpData[6])) == true
+    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9] and eventPlayer.cpData[11]) == true
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isDummy() == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) > eventPlayer.cpData[8]
     
     eventPlayer.isLoading = true
     eventPlayer.runMistakes++
@@ -437,10 +488,10 @@ rule "17.2: Checkpoint Mistake: Already Bhopped":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isJumping() == true
-    @Condition eventPlayer.cpData[12] == true
-    @Condition eventPlayer.cpData[4] == null
+    @Condition eventPlayer.cpData[11] == true
+    @Condition eventPlayer.cpData[5] == null
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) > eventPlayer.cpData[7]
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) > eventPlayer.cpData[8]
     
     eventPlayer.isLoading = true
     eventPlayer.runMistakes++
@@ -453,41 +504,26 @@ rule "17.3: Checkpoint Mistake: Environment Death":
     
     eventPlayer.isLoading = true
     if not eventPlayer.isInLobby:
-        eventPlayer.cpData[15] = eventPlayer.getPosition()
+        eventPlayer.cpData[17] = eventPlayer.getPosition()
         eventPlayer.respawn()
         if not eventPlayer.isInFreemode:
             cpResetPlayer()
             eventPlayer.runMistakes++
         else:
-            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.cpData[15]))
+            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.cpData[17]))
     else:
         eventPlayer.respawn()
         loadLobby()
     eventPlayer.isLoading = false
 
 
-rule "18.1: Bounce Checkpoints: Grapple Use":
-    @Event eachPlayer
-    @Condition eventPlayer.cpData[4] != null
-    @Condition eventPlayer.cpData[9] == true
-    
-    if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]:
-        eventPlayer.cpData[8] = false
-        eventPlayer.cpData[9] = false
-        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
-    else:
-        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
-        eventPlayer.setSecondaryFireEnabled(false)
-        wait()
-
-
-rule "18.2: Bounce Checkpoint Mistake: No Grapple":
+rule "18.1: Bounce Checkpoint Mistake: No Grapple":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInFreemode == false
-    @Condition eventPlayer.cpData[4] != null
-    @Condition eventPlayer.cpData[8] == false
-    @Condition eventPlayer.cpData[9] == false
+    @Condition eventPlayer.cpData[5] != null
+    @Condition eventPlayer.cpData[12] == false
+    @Condition eventPlayer.cpData[13] == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isLoading = true
@@ -496,12 +532,12 @@ rule "18.2: Bounce Checkpoint Mistake: No Grapple":
     eventPlayer.isLoading = false
 
 
-rule "18.3: Bounce Checkpoint Mistake: Too Slow":
+rule "18.2: Bounce Checkpoint Mistake: Too Slow":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
-    @Condition eventPlayer.cpData[4] != null
-    @Condition eventPlayer.cpData[9] == true
-    @Condition (not eventPlayer.cpData[13] or (eventPlayer.cpData[13] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5])) == true
+    @Condition eventPlayer.cpData[5] != null
+    @Condition eventPlayer.cpData[13] == true
+    @Condition (not eventPlayer.cpData[16] or (eventPlayer.cpData[16] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) <= eventPlayer.cpData[6])) == true
     @Condition eventPlayer.getSpeed() <= 10
     @Condition eventPlayer.isInFreemode == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
@@ -512,26 +548,26 @@ rule "18.3: Bounce Checkpoint Mistake: Too Slow":
     eventPlayer.isLoading = false
 
 
-rule "18.4: Bounce Checkpoint: Bounce Used Properly":
+rule "18.3: Bounce Checkpoint: Bounce Used Properly":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
-    @Condition eventPlayer.cpData[4] != null
+    @Condition eventPlayer.cpData[5] != null
     @Condition eventPlayer.isJumping() == true
     @Condition eventPlayer.isInFreemode == false
-    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) <= eventPlayer.cpData[5]
+    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) <= eventPlayer.cpData[6]
     
-    eventPlayer.cpData[13] = true
+    eventPlayer.cpData[16] = true
 
 
-rule "18.5: Bounce Checkpoint Mistake: Improperly Airborne":
+rule "18.4: Bounce Checkpoint Mistake: Improperly Airborne":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInFreemode == false
-    @Condition eventPlayer.cpData[4] != null
-    @Condition eventPlayer.cpData[13] == false
+    @Condition eventPlayer.cpData[5] != null
+    @Condition eventPlayer.cpData[16] == false
     @Condition eventPlayer.isJumping() == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
-    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[4].y, eventPlayer.getPosition().z), eventPlayer.cpData[4]) > eventPlayer.cpData[5]
+    @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) > eventPlayer.cpData[6]
     
     eventPlayer.runMistakes++
     eventPlayer.isLoading = true
@@ -545,21 +581,19 @@ def cpResetPlayer():
     eventPlayer.isLoading = true
     stopChasingVariable(eventPlayer.cpTime)
     eventPlayer.cpTime = 0
-    if eventPlayer.isHoldingButton(Button.SECONDARY_FIRE):
-        eventPlayer.disallowButton(Button.SECONDARY_FIRE)
-        eventPlayer.allowButton(Button.SECONDARY_FIRE)
     eventPlayer.teleport(eventPlayer.cpData[0])
     eventPlayer.applyImpulse(eventPlayer.getVelocity() * -0.001, 0.001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
     eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
     if eventPlayer.runCurrentCp < len(cps) - 1:
-        if eventPlayer.cpData[4] != null:
-            eventPlayer.cpData[8] = false
-            eventPlayer.cpData[9] = false
+        if eventPlayer.cpData[5] != null:
             eventPlayer.cpData[13] = false
             eventPlayer.setSecondaryFireEnabled(true)
-            eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+            eventPlayer.cpData[14] = false
+            eventPlayer.cpData[16] = false
+        eventPlayer.cpData[10] = false
         eventPlayer.cpData[11] = false
-        eventPlayer.cpData[12] = false
+        eventPlayer.cpData[14] = false
+        eventPlayer.setAbility2Enabled(eventPlayer.cpData[3])
     eventPlayer.isLoading = false
 
 
@@ -569,8 +603,8 @@ rule "20: Checkpoint Completed (No Skipping)":
     @Condition eventPlayer.isRunLoaded == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isRunPaused == false
-    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[10] or eventPlayer.getAltitude() <= 0.02 and not eventPlayer.cpData[14]) == true
-    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[6]) <= eventPlayer.cpData[7]
+    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9] or eventPlayer.getAltitude() <= 0.02 and not eventPlayer.cpData[15]) == true
+    @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) <= eventPlayer.cpData[8]
     
     stopChasingVariable(eventPlayer.cpTime)
     eventPlayer.cpTimeFormatted = (
@@ -638,17 +672,17 @@ rule "21.2.2: Run Completion Text":
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
             "{}:{}:{}".format(
-                floor(elapsedTime / 3600000),
-                (elapsedTime % 3600000 / 60000 + 100).substring(1, 2),
-                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
-            ) if elapsedTime >= 3600000 else
+                floor(timeToBeatInMs / 3600000),
+                (timeToBeatInMs % 3600000 / 60000 + 100).substring(1, 2),
+                (timeToBeatInMs % 60000 / 1000 + 100).substring(1, 9999)
+            ) if timeToBeatInMs >= 3600000 else
             "{}:{}".format(
-                floor(elapsedTime / 60000),
-                (elapsedTime % 60000 / 1000 + 100).substring(1, 9999)
-            ) if elapsedTime >= 60000 else
+                floor(timeToBeatInMs / 60000),
+                (timeToBeatInMs % 60000 / 1000 + 100).substring(1, 9999)
+            ) if timeToBeatInMs >= 60000 else
             "{}.{}".format(
-                floor(elapsedTime / 1000),
-                (elapsedTime % 1000 / 10 + 100).substring(1, 2)
+                floor(timeToBeatInMs / 1000),
+                (timeToBeatInMs % 1000 / 10 + 100).substring(1, 2)
             )
         ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
     )
@@ -773,7 +807,8 @@ rule "22.2: Go Back Checkpoint Input":
     eventPlayer.runCurrentCp--
     loadCpData()
     cpResetPlayer()
-    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
+    setCpAbilities()
+    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE), 0.25)
     if eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.runCurrentCp > 0:
         eventPlayer.isLoading = true
@@ -783,7 +818,7 @@ rule "22.2: Go Back Checkpoint Input":
             wait(0.02)
         loadCpData()
         cpResetPlayer()
-        eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
+        eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
 
 
 rule "22.3: Skip Checkpoint Input":
@@ -808,7 +843,8 @@ rule "22.3: Skip Checkpoint Input":
     eventPlayer.runCurrentCp++
     loadCpData()
     cpResetPlayer()
-    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
+    setCpAbilities()
+    eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 0.25)
     if eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.runCurrentCp < len(cps) - 1:
         eventPlayer.isLoading = true
@@ -818,7 +854,7 @@ rule "22.3: Skip Checkpoint Input":
             wait(0.02)
         loadCpData()
         cpResetPlayer()
-        eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[6]), Relativity.TO_WORLD)
+        eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
 
@@ -888,7 +924,7 @@ rule "22.6.1: Freemode Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             cpResetPlayer()
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
-        if not eventPlayer.cpData[3]:
+        if not eventPlayer.cpData[4]:
             eventPlayer.disallowButton(Button.CROUCH)
         else:
             eventPlayer.allowButton(Button.CROUCH)
