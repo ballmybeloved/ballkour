@@ -115,6 +115,7 @@ def loadLobby():
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), lobbyData[1]), Relativity.TO_WORLD)
     eventPlayer.isInFreemode = false
     eventPlayer.setSecondaryFireEnabled(true)
+    eventPlayer.setAbility2Enabled(true)
     eventPlayer.allowButton(Button.CROUCH)
     eventPlayer.nameplate = "{}".format(eventPlayer)
 
