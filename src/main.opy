@@ -92,7 +92,6 @@ rule "7.1: Player Joins":
     eventPlayer.disableNameplatesFor(getAllPlayers())
     getAllPlayers().disableNameplatesFor(eventPlayer)
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
-    eventPlayer.nameplateObject = getLastCreatedText()
     wait()
     loadLobby()
     wait(0.1)
@@ -163,7 +162,7 @@ rule "8.4.2: Start Run Circle Entry":
     eventPlayer.isInLobby = false
     eventPlayer.isLoading = true
     newRun()
-    eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
+    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
     eventPlayer.isLoading = false
 
 
@@ -187,7 +186,7 @@ rule "8.5.2: Resume Run Circle Entry":
     cpResetPlayer()
     setCpAbilities()
     loadCpObjects()
-    eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
+    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), cps[eventPlayer.runCurrentCp][7]), Relativity.TO_WORLD)
     eventPlayer.isLoading = false
 
@@ -628,6 +627,7 @@ rule "20: Checkpoint Completed (No Skipping)":
     smallMessage(eventPlayer, "Time: {}".format(eventPlayer.cpTimeFormatted))
     eventPlayer.isLoading = true
     eventPlayer.runCurrentCp++
+    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
     loadCpData()
     setCpAbilities()
     if eventPlayer.runCurrentCp < len(cps) - 1:
@@ -659,7 +659,7 @@ def finalCpReached():
         eventPlayer.runFinalMistakes = eventPlayer.runMistakes
         eventPlayer.isViewingRunCompletionText = true
     eventPlayer.isInFreemode = true
-    eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
+    eventPlayer.nameplate = "{} | FREEMODE".format(eventPlayer)
 
 
 rule "21.2.1: Load Run Completion Text":
@@ -808,6 +808,7 @@ rule "22.2: Go Back Checkpoint Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp--
+    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
     loadCpData()
     cpResetPlayer()
     setCpAbilities()
@@ -818,6 +819,7 @@ rule "22.2: Go Back Checkpoint Input":
         while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and eventPlayer.runCurrentCp > 0:
             eventPlayer.runCurrentCp--
             eventPlayer.teleport(cps[eventPlayer.runCurrentCp][0])
+            eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
             wait(0.02)
         loadCpData()
         cpResetPlayer()
@@ -844,6 +846,7 @@ rule "22.3: Skip Checkpoint Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
     eventPlayer.runCurrentCp++
+    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
     loadCpData()
     cpResetPlayer()
     setCpAbilities()
@@ -854,6 +857,7 @@ rule "22.3: Skip Checkpoint Input":
         while eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) and eventPlayer.runCurrentCp < len(cps) - 1:
             eventPlayer.runCurrentCp++
             eventPlayer.teleport(cps[eventPlayer.runCurrentCp][0])
+            eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
             wait(0.02)
         loadCpData()
         cpResetPlayer()
@@ -920,7 +924,7 @@ rule "22.6.1: Freemode Input":
             eventPlayer.runMistakes++
         eventPlayer.setSecondaryFireEnabled(true)
         eventPlayer.allowButton(Button.CROUCH)
-        eventPlayer.nameplate = "{} | FREEMODE".format("{}".format(eventPlayer))
+        eventPlayer.nameplate = "{} | FREEMODE".format(eventPlayer)
         eventPlayer.isInFreemode = true
     else:
         eventPlayer.isLoading = true
@@ -931,7 +935,7 @@ rule "22.6.1: Freemode Input":
             eventPlayer.disallowButton(Button.CROUCH)
         else:
             eventPlayer.allowButton(Button.CROUCH)
-        eventPlayer.nameplate = "{} | {}".format("{}".format(eventPlayer), eventPlayer.runCurrentCp)
+        eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
         eventPlayer.isInFreemode = false
         eventPlayer.isLoading = false
 
