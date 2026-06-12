@@ -110,6 +110,8 @@ def loadLobby():
     @Name "8.1: Load Lobby"
     
     eventPlayer.teleport(lobbyData[0])
+    eventPlayer.applyImpulse(eventPlayer.getVelocity() * -0.001, 0.001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    eventPlayer.setStatusEffect(null, Status.ROOTED, 0.3)
     eventPlayer.isInLobby = true
     eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), lobbyData[1]), Relativity.TO_WORLD)
     eventPlayer.isInFreemode = false
