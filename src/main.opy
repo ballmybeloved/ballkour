@@ -433,16 +433,23 @@ rule "16.3: Shield Bounce Use":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
+    @Condition eventPlayer.getAbilityCooldown(Button.ABILITY_2) == 0
 
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
         if (eventPlayer.cpData[3]):
-            eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+            while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+                eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+                eventPlayer.setHealth(575)
+                eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
+                wait(0.25)
     else:
-        eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
-    eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
-    eventPlayer.setHealth(575)
+        while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+            eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+            eventPlayer.setHealth(575)
+            eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
+            wait(0.25)
 
 
 rule "16.3: Piledriving":
