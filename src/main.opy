@@ -452,7 +452,7 @@ rule "16.3: Shield Bounce Use":
             wait(0.25)
 
 
-rule "16.3: Piledriving":
+rule "16.4: Piledriving":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
@@ -462,7 +462,7 @@ rule "16.3: Piledriving":
     eventPlayer.cpData[14] = false
 
 
-rule "16.4: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
+rule "16.5: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition (eventPlayer.cpData[10] or eventPlayer.cpData[11] or eventPlayer.cpData[13]) == true
