@@ -402,14 +402,14 @@ rule "16.1.2: Bhopping":
 
 rule "16.2: Grapple Use":
     @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == true
+    @Condition eventPlayer.isFiringSecondaryFire()
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
     
     if not (eventPlayer.isInLobby or eventPlayer.cpData[5] == null or eventPlayer.isInFreemode):
         eventPlayer.cpData[12] = true
-        waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) or eventPlayer.getSpeed() >= 15, 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire() or eventPlayer.getSpeed() >= 15, 99999999)
         if eventPlayer.getSpeed() >= 15:
-            waitUntil(not eventPlayer.isHoldingButton(Button.SECONDARY_FIRE), 8.5)
+            waitUntil(not eventPlayer.isFiringSecondaryFire(), 8.5)
         eventPlayer.cpData[12] = false
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[13] = true
