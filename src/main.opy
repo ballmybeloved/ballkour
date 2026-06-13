@@ -248,7 +248,7 @@ def newRun():
 def loadCpData():
     @Name "12.1: Load Checkpoint Data"
     
-    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasUsedShieldBounce [15]isPiledriving [16]hasUsedBounceJump [17]deathLocation
+    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]isPiledriving [15]hasUsedBounceJump [16]deathLocation
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
     eventPlayer.cpData[1] = cps[eventPlayer.runCurrentCp][1]
@@ -262,8 +262,7 @@ def loadCpData():
     eventPlayer.cpData[10] = false
     eventPlayer.cpData[11] = false
     eventPlayer.cpData[13] = false
-    eventPlayer.cpData[14] = false
-    eventPlayer.cpData[16] = false
+    eventPlayer.cpData[15] = false
     eventPlayer.cpTime = 0
 
 
@@ -434,17 +433,23 @@ rule "16.3: Shield Bounce Use":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
+    @Condition eventPlayer.getAbilityCooldown(Button.ABILITY_2) == 0
 
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
-        if (eventPlayer.cpData[3] and not eventPlayer.cpData[14]):
-            eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-            eventPlayer.setAbility2Enabled(false)
-            waitUntil(eventPlayer.isOnGround(), 99999999)
-            eventPlayer.cpData[14] = true
+        if (eventPlayer.cpData[3]):
+            while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+                eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+                eventPlayer.setHealth(575)
+                eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
+                wait(0.25)
     else:
-        eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
-    eventPlayer.setHealth(575)
+        while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+            eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+            eventPlayer.setHealth(575)
+            eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
+            wait(0.25)
 
 
 rule "16.3: Piledriving":
@@ -452,15 +457,15 @@ rule "16.3: Piledriving":
     @Condition eventPlayer.isHoldingButton(Button.CROUCH) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
     
-    eventPlayer.cpData[15] = true
+    eventPlayer.cpData[14] = true
     waitUntil(eventPlayer.isOnGround(), 99999999)
-    eventPlayer.cpData[15] = false
+    eventPlayer.cpData[14] = false
 
 
 rule "16.4: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
-    @Condition (eventPlayer.cpData[10] or eventPlayer.cpData[11] or eventPlayer.cpData[13] or eventPlayer.cpData[14]) == true
+    @Condition (eventPlayer.cpData[10] or eventPlayer.cpData[11] or eventPlayer.cpData[13]) == true
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.isOnGround() == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]
@@ -469,18 +474,17 @@ rule "16.4: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
         eventPlayer.cpData[13] = false
         eventPlayer.setSecondaryFireEnabled(true)
     if eventPlayer.cpData[3]:
-        eventPlayer.cpData[14] = false
         eventPlayer.setAbility2Enabled(true)
         eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
     eventPlayer.cpData[10] = false
     eventPlayer.cpData[11] = false
-    eventPlayer.cpData[16] = false
+    eventPlayer.cpData[15] = false
 
 
 rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     @Event eachPlayer
     @Condition eventPlayer.isInFreemode == false
-    @Condition (eventPlayer.cpData[5] == null or (not eventPlayer.cpData[12] and not eventPlayer.cpData[13]) or (eventPlayer.cpData[16] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) > eventPlayer.cpData[6])) == true
+    @Condition (eventPlayer.cpData[5] == null or (not eventPlayer.cpData[12] and not eventPlayer.cpData[13]) or (eventPlayer.cpData[15] and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) > eventPlayer.cpData[6])) == true
     @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9] and eventPlayer.cpData[11]) == true
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isDummy() == false
@@ -517,13 +521,13 @@ rule "17.3: Checkpoint Mistake: Environment Death":
     
     eventPlayer.isLoading = true
     if not eventPlayer.isInLobby:
-        eventPlayer.cpData[17] = eventPlayer.getPosition()
+        eventPlayer.cpData[16] = eventPlayer.getPosition()
         eventPlayer.respawn()
         if not eventPlayer.isInFreemode:
             cpResetPlayer()
             eventPlayer.runMistakes++
         else:
-            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.cpData[17]))
+            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.cpData[16]))
     else:
         eventPlayer.respawn()
         loadLobby()
@@ -550,7 +554,7 @@ rule "18.2: Bounce Checkpoint Mistake: Too Slow":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.cpData[5] != null
     @Condition eventPlayer.cpData[13] == true
-    @Condition (not eventPlayer.cpData[16] or (eventPlayer.cpData[16] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) <= eventPlayer.cpData[6])) == true
+    @Condition (not eventPlayer.cpData[15] or (eventPlayer.cpData[15] and eventPlayer.isOnGround() and distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) <= eventPlayer.cpData[6])) == true
     @Condition eventPlayer.getSpeed() <= 10
     @Condition eventPlayer.isInFreemode == false
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
@@ -569,7 +573,7 @@ rule "18.3: Bounce Checkpoint: Bounce Used Properly":
     @Condition eventPlayer.isInFreemode == false
     @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) <= eventPlayer.cpData[6]
     
-    eventPlayer.cpData[16] = true
+    eventPlayer.cpData[15] = true
 
 
 rule "18.4: Bounce Checkpoint Mistake: Improperly Airborne":
@@ -577,7 +581,7 @@ rule "18.4: Bounce Checkpoint Mistake: Improperly Airborne":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.isInLobby and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.cpData[5] != null
-    @Condition eventPlayer.cpData[16] == false
+    @Condition eventPlayer.cpData[15] == false
     @Condition eventPlayer.isJumping() == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     @Condition distance(vect(eventPlayer.getPosition().x, eventPlayer.cpData[5].y, eventPlayer.getPosition().z), eventPlayer.cpData[5]) > eventPlayer.cpData[6]
@@ -601,11 +605,9 @@ def cpResetPlayer():
         if eventPlayer.cpData[5] != null:
             eventPlayer.cpData[13] = false
             eventPlayer.setSecondaryFireEnabled(true)
-            eventPlayer.cpData[14] = false
-            eventPlayer.cpData[16] = false
+            eventPlayer.cpData[15] = false
         eventPlayer.cpData[10] = false
         eventPlayer.cpData[11] = false
-        eventPlayer.cpData[14] = false
         eventPlayer.setAbility2Enabled(eventPlayer.cpData[3])
     eventPlayer.isLoading = false
 
@@ -616,7 +618,7 @@ rule "20: Checkpoint Completed (No Skipping)":
     @Condition eventPlayer.isRunLoaded == true
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.isRunPaused == false
-    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9] or eventPlayer.getAltitude() <= 0.02 and not eventPlayer.cpData[15]) == true
+    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9] or eventPlayer.getAltitude() <= 0.02 and not eventPlayer.cpData[14]) == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) <= eventPlayer.cpData[8]
     
     stopChasingVariable(eventPlayer.cpTime)
