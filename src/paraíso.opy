@@ -279,7 +279,7 @@ rule "3.2: Break Disruptive Environment":
 rule "4: Lobby":
     #Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]statsSignSize [16]statsSize [17]elapsedTime [18]newPlayers [19]rejoins [20]legitRuns [21]totalRunTime [22]totalMistakes [23]avgRunTime [24]avgMistakes
     lobbyData = []
-    lobbyData[0] = vect(-39.98, 6.01, -97.32)
+    lobbyData[0] = vect(-38.33, 6.01, -96.34)
     lobbyData[5] = vect(-27.165, 6.01, -89.69)
     lobbyData[6] = lobbyData[5] + vect(0, -1, 0)
     lobbyData[7] = lobbyData[5] + vect(0, 1.5, 0)
