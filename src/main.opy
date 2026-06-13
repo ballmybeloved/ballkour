@@ -402,7 +402,7 @@ rule "16.1.2: Bhopping":
 
 rule "16.2: Grapple Use":
     @Event eachPlayer
-    @Condition eventPlayer.isFiringSecondaryFire()
+    @Condition eventPlayer.isFiringSecondaryFire() == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
     
     if not (eventPlayer.isInLobby or eventPlayer.cpData[5] == null or eventPlayer.isInFreemode):
@@ -413,12 +413,21 @@ rule "16.2: Grapple Use":
         eventPlayer.cpData[12] = false
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[13] = true
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+    elif not eventPlayer.isInLobby and not eventPlayer.isInFreemode:
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
     if (not eventPlayer.isInLobby and eventPlayer.cpData[5] != null and not eventPlayer.isInFreemode):
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.setSecondaryFireEnabled(false)
         else:
             eventPlayer.cpData[13] = false
-    eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
+    elif (eventPlayer.isInLobby):
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
 
 
 rule "16.3: Shield Bounce Use":
