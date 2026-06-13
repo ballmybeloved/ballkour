@@ -934,6 +934,7 @@ rule "22.6.1: Freemode Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.runMistakes++
         eventPlayer.setSecondaryFireEnabled(true)
+        eventPlayer.setAbility2Enabled(true)
         eventPlayer.allowButton(Button.CROUCH)
         eventPlayer.nameplate = "{} | FREEMODE".format(eventPlayer)
         eventPlayer.isInFreemode = true
@@ -942,6 +943,7 @@ rule "22.6.1: Freemode Input":
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             cpResetPlayer()
         eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
+        eventPlayer.setAbility2Enabled(eventPlayer.cpData[3])
         if not eventPlayer.cpData[4]:
             eventPlayer.disallowButton(Button.CROUCH)
         else:
