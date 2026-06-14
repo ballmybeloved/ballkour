@@ -141,7 +141,7 @@ rule "3: Checkpoints (CPs)":
     cpDefaults[2] = 2.5
     #cps[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize
     cps = []
-    cps[0] = [vect(30.354, 5, -151.022), cpDefaults[0], false, false, true, null, null, vect(35.5, 5, -145.9), cpDefaults[2]]
+    cps[0] = [vect(30.354, 5, -151.022), cpDefaults[0], false, false, true, null, null, vect(36.24, 5.00, -145.78), cpDefaults[2]]
     cps[1] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(42.536, 3.218, -140.939), (cps[len(cps) - 2])[8]]
     cps[2] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(36.938, 4.01, -124.67), cpDefaults[2]]
     cps[3] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(19.895, 6, -130.757), cpDefaults[2]]
