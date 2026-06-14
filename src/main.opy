@@ -434,7 +434,6 @@ rule "16.3: Shield Bounce Use":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    @Condition eventPlayer.getAbilityCooldown(Button.ABILITY_2) == 0
 
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
         if (eventPlayer.cpData[3] and not eventPlayer.cpData[14]):
