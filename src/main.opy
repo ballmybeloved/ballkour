@@ -881,7 +881,8 @@ rule "22.3: Skip Checkpoint Input":
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
-    eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
+    if eventPlayer.cpData[2] or eventPlayer.isInFreemode:
+        eventPlayer.setSecondaryFireEnabled(true)
 
 
 rule "22.4: Restart Checkpoint Input":
