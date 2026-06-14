@@ -839,7 +839,6 @@ rule "22.2: Go Back Checkpoint Input":
         loadCpData()
         cpResetPlayer()
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
-    wait()
     eventPlayer.setPrimaryFireEnabled(true)
 
 
@@ -882,7 +881,6 @@ rule "22.3: Skip Checkpoint Input":
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
-    wait()
     eventPlayer.setSecondaryFireEnabled(false)
 
 
@@ -961,7 +959,6 @@ rule "22.6.1: Freemode Input":
         eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
         eventPlayer.isInFreemode = false
         eventPlayer.isLoading = false
-    wait()
     eventPlayer.allowButton(Button.MELEE)
 
 
@@ -1001,7 +998,6 @@ rule "22.7: Lobby Input":
     eventPlayer.isViewingRunCompletionText = false
     loadLobby()
     eventPlayer.isLoading = false
-    wait()
     eventPlayer.setAbility2Enabled(false)
 
 
