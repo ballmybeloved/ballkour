@@ -248,7 +248,7 @@ def newRun():
 def loadCpData():
     @Name "12.1: Load Checkpoint Data"
     
-    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump [17]deathLocation [18]isCpResetting
+    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump [17]deathLocation
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
     eventPlayer.cpData[1] = cps[eventPlayer.runCurrentCp][1]
@@ -436,17 +436,20 @@ rule "16.3: Shield Bounce Use":
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
 
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
-        if (eventPlayer.cpData[3] and not eventPlayer.cpData[14] and not eventPlayer.cpData[18]):
-            eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() <= 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
-            eventPlayer.setHealth(575)
-            eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
-            eventPlayer.setAbility2Enabled(false)
-            eventPlayer.cpData[14] = true
+        if (eventPlayer.cpData[3]):
+            if eventPlayer.cpData[14] and not eventPlayer.isOnGround():
+                waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.ABILITY_2), 99999)
+            if (not eventPlayer.cpData[14] or eventPlayer.isOnGround()) and eventPlayer.isHoldingButton(Button.ABILITY_2):
+                eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() < 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+                eventPlayer.setHealth(575)
+                eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
+                eventPlayer.setAbility2Enabled(false)
+                eventPlayer.cpData[14] = true
     else:
         eventPlayer.setAbility2Enabled(true)
-        eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() <= 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() < 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
         eventPlayer.setHealth(575)
         eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
 
@@ -478,7 +481,8 @@ rule "16.5: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     wait()
     if eventPlayer.cpData[3] and eventPlayer.isOnGround():
         eventPlayer.cpData[14] = false
-        eventPlayer.setAbility2Enabled(true)
+        if not eventPlayer.isHoldingButton(Button.ABILITY_2):
+            eventPlayer.setAbility2Enabled(true)
         eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
 
 
@@ -597,7 +601,6 @@ def cpResetPlayer():
     @Name "19: Checkpoint Reset Player"
     
     eventPlayer.isLoading = true
-    eventPlayer.cpData[18] = true
     stopChasingVariable(eventPlayer.cpTime)
     eventPlayer.cpTime = 0
     eventPlayer.teleport(eventPlayer.cpData[0])
@@ -613,8 +616,6 @@ def cpResetPlayer():
         eventPlayer.cpData[14] = false
         eventPlayer.setAbility2Enabled(eventPlayer.cpData[3])
     eventPlayer.isLoading = false
-    wait(0.032)
-    eventPlayer.cpData[18] = false
 
 
 rule "20: Checkpoint Completed (No Skipping)":
