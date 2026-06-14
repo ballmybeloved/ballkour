@@ -136,7 +136,7 @@ rule "3: Checkpoints (CPs)":
     cps[0] = [vect(9.18, 4.99, -91.19), cpDefaults[0], false, false, true, null, null, vect(17.75, 5.00, -93.00), cpDefaults[2]]
     cps[1] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(34.19, 5.00, -106.95), (cps[len(cps) - 2])[8]]
     cps[2] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(14.04, 4.88, -107.30), cpDefaults[2]]
-    cps[3] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-0.04, 11.00, -82.11), cpDefaults[2]]
+    cps[3] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-1.69, 11.00, -84.34), cpDefaults[2]]
     cps[4] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(24.98, 2.00, -78.46), cpDefaults[2]]
     cps[5] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(19.48, -0.00, -58.19), cpDefaults[2]]
     cps[6] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(12.30, 1.78, -43.47), cpDefaults[2]]
@@ -237,8 +237,6 @@ rule "3: Checkpoints (CPs)":
 
 
 rule "3.2: Break Disruptive Environment":
-    #Checkpoint 4
-    createDummy(Hero.REINHARDT, Team.1, -1, vect(-0.04, 11.00, -82.11), directionTowards(vect(-0.04, 11.00, -82.11), vect(18.36, 12.27, -101.60)))
     #Checkpoint 9
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-5.84, 5.00, 5.80), directionTowards(vect(-5.84, 5.00, 5.80), vect(-2.98, 4.32, 34.96)))
     #Checkpoint 11
@@ -257,13 +255,14 @@ rule "3.2: Break Disruptive Environment":
     #Checkpoint 44
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-7.72, 6.75, -147.60), directionTowards(vect(-7.72, 6.75, -147.60), vect(-2.16, 7.63, -132.99)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(2.21, 5.75, -131.61), directionTowards(vect(2.21, 5.75, -131.61), vect(-7.09, 6.82, -126.19)))
+    #Checkpoint 46
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     wait()
     getPlayersOnHero(Hero.REINHARDT, Team.ALL).forceButtonPress(Button.ABILITY_1)
     wait(1)
     destroyAllDummies()
     wait(1)
     #Checkpoint 46
-    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-30.76, 4.75, -132.82), directionTowards(vect(-30.76, 4.75, -132.82), vect(-38.27, 5.04, -133.76)))
     #Checkpoint 48
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-10.97, 6.99, -104.05), directionTowards(vect(-10.97, 6.99, -104.05), vect(-26.00, 5.05, -156.74)))
