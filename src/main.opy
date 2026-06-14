@@ -438,15 +438,18 @@ rule "16.3: Shield Bounce Use":
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
         if (eventPlayer.cpData[3] and not eventPlayer.cpData[14] and not eventPlayer.cpData[18]):
             eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() <= 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
             eventPlayer.setHealth(575)
             eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
             eventPlayer.setAbility2Enabled(false)
             eventPlayer.cpData[14] = true
+        elif not eventPlayer.cpData[18]:
+            eventPlayer.setHealth(575)
+            eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
     else:
         eventPlayer.setAbility2Enabled(true)
         eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() <= 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) * 0.5, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
         eventPlayer.setHealth(575)
         eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
 
