@@ -814,6 +814,7 @@ rule "22.2: Go Back Checkpoint Input":
     @Condition eventPlayer.runCurrentCp > 0
     @Condition eventPlayer.isInLobby == false
     
+    eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.isLoading = true
     eventPlayer.isRunLegit = false
     if not eventPlayer.isRunPaused:
@@ -838,6 +839,8 @@ rule "22.2: Go Back Checkpoint Input":
         loadCpData()
         cpResetPlayer()
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
+    wait()
+    eventPlayer.setPrimaryFireEnabled(false)
 
 
 rule "22.3: Skip Checkpoint Input":
@@ -852,6 +855,7 @@ rule "22.3: Skip Checkpoint Input":
     @Condition eventPlayer.isInLobby == false
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading) == true
     
+    eventPlayer.setSecondaryFireEnabled(true)
     eventPlayer.isLoading = true
     eventPlayer.isRunLegit = false
     if not eventPlayer.isRunPaused:
@@ -878,6 +882,8 @@ rule "22.3: Skip Checkpoint Input":
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
+    wait()
+    eventPlayer.setSecondaryFireEnabled(false)
 
 
 rule "22.4: Restart Checkpoint Input":
@@ -930,6 +936,7 @@ rule "22.6.1: Freemode Input":
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
     
+    eventPlayer.disallowButton(Button.MELEE)
     if not eventPlayer.isInFreemode:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
@@ -954,6 +961,8 @@ rule "22.6.1: Freemode Input":
         eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
         eventPlayer.isInFreemode = false
         eventPlayer.isLoading = false
+    wait()
+    eventPlayer.allowButton(Button.MELEE)
 
 
 
@@ -983,6 +992,7 @@ rule "22.7: Lobby Input":
     @Condition eventPlayer.isInLobby == false
     
     eventPlayer.isLoading = true
+    eventPlayer.setAbility2Enabled(true)
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
@@ -991,6 +1001,8 @@ rule "22.7: Lobby Input":
     eventPlayer.isViewingRunCompletionText = false
     loadLobby()
     eventPlayer.isLoading = false
+    wait()
+    eventPlayer.setAbility2Enabled(false)
 
 
 rule "23.1: Auto-Restart Server":
