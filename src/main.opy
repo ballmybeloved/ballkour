@@ -472,13 +472,14 @@ rule "16.5: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     if eventPlayer.cpData[2]:
         eventPlayer.cpData[13] = false
         eventPlayer.setSecondaryFireEnabled(true)
-    if eventPlayer.cpData[3]:
-        eventPlayer.cpData[14] = false
-        eventPlayer.setAbility2Enabled(true)
-        eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
     eventPlayer.cpData[10] = false
     eventPlayer.cpData[11] = false
     eventPlayer.cpData[16] = false
+    wait()
+    if eventPlayer.cpData[3] and eventPlayer.isOnGround():
+        eventPlayer.cpData[14] = false
+        eventPlayer.setAbility2Enabled(true)
+        eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
 
 
 rule "17.1: Checkpoint Mistake: Missed Checkpoint":
