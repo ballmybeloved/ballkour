@@ -881,7 +881,7 @@ rule "22.3: Skip Checkpoint Input":
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     if eventPlayer.runCurrentCp == len(cps) - 1:
         finalCpReached()
-    eventPlayer.setSecondaryFireEnabled(true)
+    eventPlayer.setSecondaryFireEnabled(eventPlayer.cpData[2])
 
 
 rule "22.4: Restart Checkpoint Input":
@@ -988,7 +988,7 @@ rule "22.7: Lobby Input":
     @Condition eventPlayer.isInLobby == false
     
     eventPlayer.isLoading = true
-    eventPlayer.setAbility2Enabled(true)
+    eventPlayer.setAbility2Enabled(false)
     if not eventPlayer.isRunPaused:
         stopChasingVariable(eventPlayer.runTime)
         eventPlayer.isRunPaused = true
@@ -997,7 +997,7 @@ rule "22.7: Lobby Input":
     eventPlayer.isViewingRunCompletionText = false
     loadLobby()
     eventPlayer.isLoading = false
-    eventPlayer.setAbility2Enabled(false)
+    eventPlayer.setAbility2Enabled(true)
 
 
 rule "23.1: Auto-Restart Server":
