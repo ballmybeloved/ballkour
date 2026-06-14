@@ -109,7 +109,7 @@ rule "0: Contact & Course Info":
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
     logToInspector("Set a top-10 time? Submit a video with your run in our Discord or open an issue at ballkour.com/github!")
-    logToInspector("Course playthrough: ballkour.com/gibraltar/run")
+    logToInspector("Course playthrough: ballkour.com/gibraltar")
 
 
 rule "1: Settings":
@@ -127,10 +127,10 @@ rule "2: Leaderboard (LB)":
     lb[4] = "BACKLINEREIN, 4:34.15, 15, '           '"
     lb[5] = "DVD, 5:02.50, 15, '                             '"
     lb[6] = "GAMINGCHAIR, 5:08.37, 16, '         '"
-    lb[7] = "BLOWSKI, 6:18.52, 41, '                    '"
-    lb[8] = "KINGO, 6:26.18, 37, '                       '"
-    lb[9] = "ABIKE, 7:38.38, 46, '                          '"
-    lb[10] = "安宁, 7:40.02, 71, '                          '"
+    lb[7] = "安宁, 5:50.20, 40, '                           '"
+    lb[8] = "BLOWSKI, 6:18.52, 41, '                    '"
+    lb[9] = "KINGO, 6:26.18, 37, '                       '"
+    lb[10] = "ABIKE, 7:38.38, 46, '                        '"
 
 
 rule "3: Checkpoints (CPs)":
