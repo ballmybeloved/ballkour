@@ -436,20 +436,25 @@ rule "16.3: Shield Bounce Use":
     @Condition eventPlayer.getAbilityCooldown(Button.ABILITY_2) == 0
 
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
-        if (eventPlayer.cpData[3]):
             while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+                if (eventPlayer.cpData[3]):
+                    eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                    eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+                    eventPlayer.setHealth(575)
+                    eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
+                    wait(0.25)
+                else:
+                    return
+    else:
+        while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
+            if (eventPlayer.cpData[3]):
                 eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
                 eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
                 eventPlayer.setHealth(575)
                 eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
                 wait(0.25)
-    else:
-        while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
-            eventPlayer.applyImpulse(vect(0, 10, 0), max(0, 15 - eventPlayer.getSpeed()), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-            eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
-            eventPlayer.setHealth(575)
-            eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
-            wait(0.25)
+            else:
+                return
 
 
 rule "16.4: Piledriving":
