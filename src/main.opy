@@ -840,7 +840,7 @@ rule "22.2: Go Back Checkpoint Input":
         cpResetPlayer()
         eventPlayer.setFacing(directionTowards(eventPlayer.getEyePosition(), eventPlayer.cpData[7]), Relativity.TO_WORLD)
     wait()
-    eventPlayer.setPrimaryFireEnabled(false)
+    eventPlayer.setPrimaryFireEnabled(true)
 
 
 rule "22.3: Skip Checkpoint Input":
