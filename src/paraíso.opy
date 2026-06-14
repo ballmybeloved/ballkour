@@ -104,13 +104,13 @@ subroutine updateStats 9
 
 
 rule "0: Contact & Course Info":
-    logToInspector("Hello! Welcome to Ballkour's Watchpoint: Gibraltar course!")
+    logToInspector("Hello! Welcome to Ballkour's Paraíso course!")
     logToInspector("Original course (3700E) by Spiz. Redeveloped by ballmybeloved. Math help from Kalaziel64. workshop.codes logo by Madje.")
     logToInspector("This route was slightly adjusted for quality purposes and also because this map was updated in Feb, 2026. Checkpoints are slightly bigger too.")
     logToInspector("Discord: ballkour.com/discord")
     logToInspector("Found a bug or have a suggestion? Please let us know in our Discord or open an issue at ballkour.com/github!")
     logToInspector("Set a top-10 time? Submit a video with your run in our Discord or open an issue at ballkour.com/github!")
-    logToInspector("Course playthrough: ballkour.com/gibraltar/run")
+    logToInspector("Course playthrough: ballkour.com/paraiso")
 
 
 rule "1: Settings":
