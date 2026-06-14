@@ -445,6 +445,7 @@ rule "16.3: Shield Bounce Use":
             eventPlayer.setAbility2Enabled(false)
             eventPlayer.cpData[14] = true
     else:
+        eventPlayer.setAbility2Enabled(true)
         eventPlayer.applyImpulse(vect(0, 10, 0), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
         eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
         eventPlayer.setHealth(575)
