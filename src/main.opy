@@ -438,7 +438,7 @@ rule "16.3: Shield Bounce Use":
     if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
             while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
                 if (eventPlayer.cpData[3]):
-                    eventPlayer.applyImpulse(vect(0, 10, 0), max(0, min(15 - eventPlayer.getSpeed() * 0.5, 20 - eventPlayer.getSpeed())), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                    eventPlayer.applyImpulse(vect(0, 10, 0), max(6, 10 - eventPlayer.getSpeed() * 0.4), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
                     eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
                     eventPlayer.setHealth(575)
                     eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
@@ -448,7 +448,7 @@ rule "16.3: Shield Bounce Use":
     else:
         while(eventPlayer.isHoldingButton(Button.ABILITY_2)):
             if (eventPlayer.cpData[3] or eventPlayer.isInFreemode):
-                eventPlayer.applyImpulse(vect(0, 10, 0), max(0, min(15 - eventPlayer.getSpeed() * 0.5, 20 - eventPlayer.getSpeed())), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+                eventPlayer.applyImpulse(vect(0, 10, 0), max(6, 10 - eventPlayer.getSpeed() * 0.4), Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
                 eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), eventPlayer.getSpeed() * 0.25, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
                 eventPlayer.setHealth(575)
                 eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0.25)
