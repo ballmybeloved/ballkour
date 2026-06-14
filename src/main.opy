@@ -854,7 +854,7 @@ rule "22.3: Skip Checkpoint Input":
     @Condition eventPlayer.isInLobby == false
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading) == true
     
-    eventPlayer.setSecondaryFireEnabled(true)
+    eventPlayer.setSecondaryFireEnabled(false)
     eventPlayer.isLoading = true
     eventPlayer.isRunLegit = false
     if not eventPlayer.isRunPaused:
@@ -960,7 +960,6 @@ rule "22.6.1: Freemode Input":
         eventPlayer.isInFreemode = false
         eventPlayer.isLoading = false
     eventPlayer.allowButton(Button.MELEE)
-
 
 
 rule "22.6.2: Load Freemode HUD":
