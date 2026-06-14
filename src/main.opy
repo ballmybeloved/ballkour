@@ -424,7 +424,7 @@ rule "16.2: Grapple Use":
             eventPlayer.cpData[13] = false
         waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
-    elif (eventPlayer.isInLobby):
+    elif (eventPlayer.isInLobby or eventPlayer.isInFreemode):
         waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
 
