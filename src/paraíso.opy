@@ -140,12 +140,12 @@ rule "3: Checkpoints (CPs)":
     cps[4] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(24.98, 2.00, -78.46), cpDefaults[2]]
     cps[5] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(19.48, -0.00, -58.19), cpDefaults[2]]
     cps[6] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(12.30, 1.78, -43.47), cpDefaults[2]]
-    cps[7] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-2.41, 8.00, -20.74), cpDefaults[2]]
-    cps[8] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-5.84, 5.00, 5.80), cpDefaults[2]]
+    cps[7] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-2.86, 8.00, -20.14), cpDefaults[2]]
+    cps[8] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-3.55, 5.00, 2.99), cpDefaults[2]]
     cps[9] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(-4.85, 3.67, 17.88), cpDefaults[2]]
     cps[10] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-18.65, 8.00, -21.92), cpDefaults[2]]
     cps[11] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(-28.33, 6.00, -8.23), cpDefaults[2]]
-    cps[12] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(-8.02, 5.00, -4.32), cpDefaults[2]]
+    cps[12] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(-7.58, 5.00, -3.61), cpDefaults[2]]
     cps[13] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-16.00, 5.75, 22.64), cpDefaults[2]]
     cps[14] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-27.16, -2.14, 53.44), cpDefaults[2]]
     cps[15] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-48.31, 2.14, 45.07), cpDefaults[2]]
@@ -205,7 +205,7 @@ rule "3: Checkpoints (CPs)":
     cps[69] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-23.91, 11.18, -55.47), cpDefaults[2]]
     cps[70] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-9.88, 5.00, -78.57), cpDefaults[2]]
     cps[71] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-17.63, 8.00, -22.52), cpDefaults[2]]
-    cps[72] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(0.89, 5.00, 1.07), cpDefaults[2]]
+    cps[72] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-4.12, 5.00, 2.39), cpDefaults[2]]
     cps[73] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(10.08, 10.81, -47.47), cpDefaults[2]]
     cps[74] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, true, true, null, null, vect(-29.35, 10.52, -59.43), cpDefaults[2]]
     cps[75] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(16.84, 4.88, -100.58), cpDefaults[2]]
@@ -237,6 +237,8 @@ rule "3: Checkpoints (CPs)":
 
 
 rule "3.2: Break Disruptive Environment":
+    #Checkpoint 8
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-3.84, 8.00, -22.12), directionTowards(vect(-3.84, 8.00, -22.12), vect(-3.78, 9.09, -7.57)))
     #Checkpoint 9
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-5.84, 5.00, 5.80), directionTowards(vect(-5.84, 5.00, 5.80), vect(-2.98, 4.32, 34.96)))
     #Checkpoint 11
@@ -255,14 +257,13 @@ rule "3.2: Break Disruptive Environment":
     #Checkpoint 44
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-7.72, 6.75, -147.60), directionTowards(vect(-7.72, 6.75, -147.60), vect(-2.16, 7.63, -132.99)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(2.21, 5.75, -131.61), directionTowards(vect(2.21, 5.75, -131.61), vect(-7.09, 6.82, -126.19)))
-    #Checkpoint 46
-    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     wait()
     getPlayersOnHero(Hero.REINHARDT, Team.ALL).forceButtonPress(Button.ABILITY_1)
     wait(1)
     destroyAllDummies()
     wait(1)
     #Checkpoint 46
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-30.76, 4.75, -132.82), directionTowards(vect(-30.76, 4.75, -132.82), vect(-38.27, 5.04, -133.76)))
     #Checkpoint 48
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-10.97, 6.99, -104.05), directionTowards(vect(-10.97, 6.99, -104.05), vect(-26.00, 5.05, -156.74)))
@@ -285,7 +286,7 @@ rule "3.2: Break Disruptive Environment":
 
 
 rule "4: Lobby":
-    #Global.lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]statsSignSize [16]statsSize [17]elapsedTime [18]newPlayers [19]rejoins [20]legitRuns [21]totalRunTime [22]totalMistakes [23]avgRunTime [24]avgMistakes
+    #lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]statsSignSize [16]statsSize [17]elapsedTime [18]newPlayers [19]rejoins [20]legitRuns [21]totalRunTime [22]totalMistakes [23]avgRunTime [24]avgMistakes
     lobbyData = []
     lobbyData[0] = vect(-38.33, 6.01, -96.34)
     lobbyData[5] = vect(-27.165, 6.01, -89.69)
