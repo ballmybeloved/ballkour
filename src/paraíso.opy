@@ -237,6 +237,8 @@ rule "3: Checkpoints (CPs)":
 
 
 rule "3.2: Break Disruptive Environment":
+    #Checkpoint 8
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-3.84, 8.00, -22.12), directionTowards(vect(-3.84, 8.00, -22.12), vect(-3.78, 9.09, -7.57)))
     #Checkpoint 9
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-5.84, 5.00, 5.80), directionTowards(vect(-5.84, 5.00, 5.80), vect(-2.98, 4.32, 34.96)))
     #Checkpoint 11
@@ -255,14 +257,13 @@ rule "3.2: Break Disruptive Environment":
     #Checkpoint 44
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-7.72, 6.75, -147.60), directionTowards(vect(-7.72, 6.75, -147.60), vect(-2.16, 7.63, -132.99)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(2.21, 5.75, -131.61), directionTowards(vect(2.21, 5.75, -131.61), vect(-7.09, 6.82, -126.19)))
-    #Checkpoint 46
-    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     wait()
     getPlayersOnHero(Hero.REINHARDT, Team.ALL).forceButtonPress(Button.ABILITY_1)
     wait(1)
     destroyAllDummies()
     wait(1)
     #Checkpoint 46
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-36.17, 2.75, -126.62), directionTowards(vect(-36.17, 2.75, -126.62), vect(-26.00, 5.05, -156.74)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-30.76, 4.75, -132.82), directionTowards(vect(-30.76, 4.75, -132.82), vect(-38.27, 5.04, -133.76)))
     #Checkpoint 48
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-10.97, 6.99, -104.05), directionTowards(vect(-10.97, 6.99, -104.05), vect(-26.00, 5.05, -156.74)))
