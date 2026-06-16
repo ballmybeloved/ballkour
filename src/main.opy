@@ -315,18 +315,7 @@ rule "14.2: Update Run Timer Format":
     playersUnpaused++
     eventPlayer.isTimerActive = true
     while not eventPlayer.isRunPaused:
-        if playersUnpaused >= 10:
-            wait(0.096 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 8:
-            wait(0.08 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 6:
-            wait(0.064 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 4:
-            wait(0.048 + getServerLoad() * 0.0006)
-        elif playersUnpaused >= 2:
-            wait(0.032 + getServerLoad() * 0.0008)
-        else:
-            wait(0.016 + getServerLoad() * 0.001)
+        wait(0.016 + getServerLoad() * 0.001)
         eventPlayer.runTimeFormatted = (
             "{}:{}:{}".format(
                 floor(eventPlayer.runTime / 3600),
@@ -709,7 +698,13 @@ rule "21.2.2: Run Completion Text":
         ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
     )
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText and (localPlayer.runTime * 1000 > timeToBeatInMs and timeToBeatInMs > 0)), 
+        "<fgA52A2AFF>Submit a Video of Your Run\n"
+        "                        @\n"
+        "              ballkour.com</fg>\n\n"
+        "       <fg00E697FF>Thanks for Playing!</fg>"
+    , HudPosition.TOP, 6, Color.WHITE, HudReeval.VISIBILITY)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText and (localPlayer.runTime * 1000 < timeToBeatInMs or timeToBeatInMs == 0)), 
         "                <fgEC9900FF>Top-10 Time!</fg>\n"
         "<fgA52A2AFF>Submit a Video of Your Run\n"
         "                        @\n"
@@ -775,14 +770,31 @@ rule "22.1.1: Controls HUD Input":
 
 
 rule "22.1.2: Controls HUD":
-    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp == 0), 
         (
-            "Go Back CP:          {} + {}\n"
-            "Skip CP:                   {} + {}\n"
-            "Restart CP:        {} (Hold)\n"
-            "Restart Run:           {} + {}\n"
-            "Freemode:              {} + {}\n"
-            "Lobby/Pause:         {} + {}"
+            "Skip CP:                          {} + {}\n"
+            "Restart CP:               {} (Hold)\n"
+            "Restart Run:    {} + {} (Hold)\n"
+            "Freemode:                     {} + {}\n"
+            "Lobby/Pause:                {} + {}"
+        )
+        .format(
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE), 
+            inputBindingString(Button.RELOAD),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+        ), 
+        HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING
+    )
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp > 0 and localPlayer.runCurrentCp < len(cps) - 1), 
+        (
+            "Go Back CP:                 {} + {}\n"
+            "Skip CP:                          {} + {}\n"
+            "Restart CP:               {} (Hold)\n"
+            "Restart Run:    {} + {} (Hold)\n"
+            "Freemode:                     {} + {}\n"
+            "Lobby/Pause:                {} + {}"
         )
         .format(
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
@@ -795,9 +807,9 @@ rule "22.1.2: Controls HUD":
         HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING
     )
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp == len(cps) - 1), 
-        "Go Back CP:          {} + {}\n"
-        "Restart Run:           {} + {}\n"
-        "Lobby/Pause:         {} + {}"
+        "Go Back CP:                 {} + {}\n"
+        "Restart Run:    {} + {} (Hold)\n"
+        "Lobby/Pause:                {} + {}"
         .format(
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
@@ -893,11 +905,7 @@ rule "22.3: Skip Checkpoint Input":
 rule "22.4: Restart Checkpoint Input":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
     @Condition eventPlayer.isInLobby == false
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading) == true
@@ -912,7 +920,7 @@ rule "22.4: Restart Checkpoint Input":
     cpResetPlayer()
 
 
-rule "22.5: Restart Input":
+rule "22.5: Restart Run Input":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
@@ -922,6 +930,9 @@ rule "22.5: Restart Input":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.isInLobby == false
     
+    waitUntil(not (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.RELOAD)), 0.35)
+    if not (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.RELOAD)) and eventPlayer.runCurrentCp < len(cps) - 1:
+        return
     eventPlayer.isLoading = true
     stopChasingVariable(eventPlayer.runTime)
     eventPlayer.isViewingRunCompletionText = false
@@ -969,18 +980,12 @@ rule "22.6.1: Freemode Input":
 
 
 rule "22.6.2: Load Freemode HUD":
-    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
-    (
-        "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
-        "\n<fgA52A2AFF>Disable: {} + {}</fg>"
-    )
-    .format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 11, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp == len(cps) - 1), 
-    (
-        "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
-        "\n<fgA52A2AFF>Restart: {} + {}</fg>"
-    )
-    .format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 11, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode), 
+    ("\n\n\n\n\nFreemode On"), HudPosition.LEFT, 11, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
+    ("Disable: {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp == len(cps) - 1), 
+    ("Restart: {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
 
 
 rule "22.7: Lobby Input":

@@ -240,7 +240,7 @@ rule "3.2: Break Disruptive Environment":
     #Checkpoint 8
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-3.84, 8.00, -22.12), directionTowards(vect(-3.84, 8.00, -22.12), vect(-3.78, 9.09, -7.57)))
     #Checkpoint 9
-    createDummy(Hero.REINHARDT, Team.1, -1, vect(-5.84, 5.00, 5.80), directionTowards(vect(-5.84, 5.00, 5.80), vect(-2.98, 4.32, 34.96)))
+    createDummy(Hero.REINHARDT, Team.1, -1, vect(-3.55, 5.00, 2.99), directionTowards(vect(-3.55, 5.00, 2.99), vect(-2.98, 4.32, 34.96)))
     #Checkpoint 11
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-18.65, 8.00, -21.92), directionTowards(vect(-18.65, 8.00, -21.92), vect(-30.13, 7.53, -3.30)))
     createDummy(Hero.REINHARDT, Team.1, -1, vect(-28.33, 6.00, -8.23), directionTowards(vect(-28.33, 6.00, -8.23), vect(-5.20, 7.37, -22.06)))
