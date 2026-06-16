@@ -3,7 +3,7 @@
 settings {
     "main": {
         "description": f"Watchpoint: Gibraltar \n\nv{VERSION} \n\nLatest Code: 59W28",
-        "modeName": "Ball Parkour ● ballkour.com"
+        "modeName": "Ball Parkour 1 ● ballkour.com"
     },
     "lobby": {
         "allowPlayersInQueue": true,

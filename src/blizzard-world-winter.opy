@@ -3,7 +3,7 @@
 settings {
     "main": {
         "description": f"Blizzard World (Winter) \n\nv{VERSION} \n\nLatest Code: GMWRF",
-        "modeName": "Ball Parkour ● ballkour.com"
+        "modeName": "Ball Parkour 2 ● ballkour.com"
     },
     "lobby": {
         "allowPlayersInQueue": true,
