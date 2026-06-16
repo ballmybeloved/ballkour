@@ -954,18 +954,12 @@ rule "22.6.1: Freemode Input":
 
 
 rule "22.6.2: Load Freemode HUD":
-    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
-    (
-        "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
-        "\n<fgA52A2AFF>Disable: {} + {}</fg>"
-    )
-    .format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 11, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
-    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp == len(cps) - 1), 
-    (
-        "\n\n\n\n\n<fgEC9900FF>Freemode On</fg>"
-        "\n<fgA52A2AFF>Restart: {} + {}</fg>"
-    )
-    .format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 11, Color.WHITE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode), 
+    ("\n\n\n\n\nFreemode On"), HudPosition.LEFT, 11, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp < len(cps) - 1), 
+    ("Disable: {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and localPlayer.runCurrentCp == len(cps) - 1), 
+    ("Restart: {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
 
 
 rule "22.7: Lobby Input":
