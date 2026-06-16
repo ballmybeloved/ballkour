@@ -766,12 +766,12 @@ rule "22.1.1: Controls HUD Input":
 rule "22.1.2: Controls HUD":
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1), 
         (
-            "Go Back CP:          {} + {}\n"
-            "Skip CP:                   {} + {}\n"
-            "Restart CP:        {} (Hold)\n"
-            "Restart Run:           {} + {}\n"
-            "Freemode:              {} + {}\n"
-            "Lobby/Pause:         {} + {}"
+            "Go Back CP:                 {} + {}\n"
+            "Skip CP:                          {} + {}\n"
+            "Restart CP:               {} (Hold)\n"
+            "Restart Run:    {} + {} (Hold)\n"
+            "Freemode:                     {} + {}\n"
+            "Lobby/Pause:                {} + {}"
         )
         .format(
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
@@ -897,7 +897,7 @@ rule "22.4: Restart Checkpoint Input":
     cpResetPlayer()
 
 
-rule "22.5: Restart Input":
+rule "22.5: Restart Run Input":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
@@ -907,6 +907,9 @@ rule "22.5: Restart Input":
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.isInLobby == false
     
+    waitUntil(not (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.RELOAD)), 0.35)
+    if not (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.RELOAD)) and eventPlayer.runCurrentCp < len(cps) - 1:
+        return
     eventPlayer.isLoading = true
     stopChasingVariable(eventPlayer.runTime)
     eventPlayer.isViewingRunCompletionText = false
