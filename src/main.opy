@@ -764,7 +764,24 @@ rule "22.1.1: Controls HUD Input":
 
 
 rule "22.1.2: Controls HUD":
-    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1), 
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp == 0), 
+        (
+            "Skip CP:                          {} + {}\n"
+            "Restart CP:               {} (Hold)\n"
+            "Restart Run:    {} + {} (Hold)\n"
+            "Freemode:                     {} + {}\n"
+            "Lobby/Pause:                {} + {}"
+        )
+        .format(
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE), 
+            inputBindingString(Button.RELOAD),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT),
+            inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
+        ), 
+        HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING
+    )
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp > 0 and localPlayer.runCurrentCp < len(cps) - 1), 
         (
             "Go Back CP:                 {} + {}\n"
             "Skip CP:                          {} + {}\n"
