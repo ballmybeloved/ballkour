@@ -801,9 +801,9 @@ rule "22.1.2: Controls HUD":
         HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING
     )
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp == len(cps) - 1), 
-        "Go Back CP:          {} + {}\n"
-        "Restart Run:           {} + {}\n"
-        "Lobby/Pause:         {} + {}"
+        "Go Back CP:                 {} + {}\n"
+        "Restart Run:    {} + {} (Hold)\n"
+        "Lobby/Pause:                {} + {}"
         .format(
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.PRIMARY_FIRE),
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD),
