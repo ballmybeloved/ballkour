@@ -315,18 +315,7 @@ rule "14.2: Update Run Timer Format":
     playersUnpaused++
     eventPlayer.isTimerActive = true
     while not eventPlayer.isRunPaused:
-        if playersUnpaused >= 10:
-            wait(0.096 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 8:
-            wait(0.08 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 6:
-            wait(0.064 + getServerLoad() * 0.0004)
-        elif playersUnpaused >= 4:
-            wait(0.048 + getServerLoad() * 0.0006)
-        elif playersUnpaused >= 2:
-            wait(0.032 + getServerLoad() * 0.0008)
-        else:
-            wait(0.016 + getServerLoad() * 0.001)
+        wait(0.016 + getServerLoad() * 0.001)
         eventPlayer.runTimeFormatted = (
             "{}:{}:{}".format(
                 floor(eventPlayer.runTime / 3600),
