@@ -882,11 +882,7 @@ rule "22.3: Skip Checkpoint Input":
 rule "22.4: Restart Checkpoint Input":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
-    @Condition eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) == false
-    @Condition eventPlayer.isHoldingButton(Button.SECONDARY_FIRE) == false
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
-    @Condition eventPlayer.isHoldingButton(Button.INTERACT) == false
-    @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == false
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
     @Condition eventPlayer.isInLobby == false
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading) == true
