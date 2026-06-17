@@ -351,6 +351,7 @@ rule "15.2: Restart Checkpoint Time Timer":
     @Event eachPlayer
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition eventPlayer.isCpTimerActive == true
+    @Condition eventPlayer.isOnGround() == true
     @Condition eventPlayer.isInLobby == false
     @Condition eventPlayer.isInFreemode == false
     @Condition eventPlayer.runCurrentCp < len(cps) - 1
