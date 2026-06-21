@@ -2,8 +2,8 @@
 
 settings {
     "main": {
-        "description": f"Watchpoint: Gibraltar (Course 1) \n\nv{VERSION} \n\nLatest Code: 59W28",
-        "modeName": "Ball Parkour 1 ● ballkour.com"
+        "description": f"Watchpoint: Gibraltar \n\nv{VERSION} \n\nLatest Code: 59W28",
+        "modeName": "Ball Parkour ● ballkour.com"
     },
     "lobby": {
         "allowPlayersInQueue": true,
@@ -30,13 +30,20 @@ settings {
             "wreckingBall": {
                 "ability2Cooldown%": 0,
                 "secondaryFireCooldown%": 0,
-                "enableInfiniteAmmo": true,
-                "ability3Cooldown%": 0,
-                "passiveUltGen%": 0
+                "ability3Cooldown%": 0
+            },
+            "jetpackCat": {
+                "enablePassiveUnlimitedFuel": true,
+                "enableAbility1": false,
+                "enableAbility2": false
             },
             "enabledHeroes": [
                 "wreckingBall"
-            ]
+            ],
+            "general": {
+                "enableInfiniteAmmo": true,
+                "passiveUltGen%": 0
+            }
         }
     }
 }
@@ -85,7 +92,7 @@ playervar statToFormat 23
 playervar statFormatted 24
 playervar isInFreemode 25
 playervar isViewingCtrlsHud 26
-playervar cpCtrlsInputLocked 27
+playervar spectating 27
 playervar index 100
 
 subroutine loadLobby 0
@@ -98,6 +105,8 @@ subroutine setCpAbilities 6
 subroutine cpResetPlayer 7
 subroutine finalCpReached 8
 subroutine updateStats 9
+subroutine reattachToSpectatingTarget 10
+subroutine disableSpectatorMode 11
 
 #!optimizeStrict
 
@@ -114,8 +123,8 @@ rule "0: Contact & Course Info":
 
 rule "1: Settings":
     settings_ = []
-    settings_[0] = createWorkshopSettingBool("Settings", "Debug", false, 1)
-    settings_[1] = createWorkshopSettingBool("Settings", "Lobby Stats", false)
+    settings_[0] = createWorkshopSettingBool("Settings", "Debug", true, 1)
+    settings_[1] = createWorkshopSettingBool("Settings", "Lobby Stats", false, 0)
 
 
 rule "2: Leaderboard (LB)":
