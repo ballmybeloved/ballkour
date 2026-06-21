@@ -424,24 +424,17 @@ rule "16.3: Shield Bounce Use":
     @Event eachPlayer
     @Condition eventPlayer.isHoldingButton(Button.ABILITY_2) == true
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == false
+    @Condition ((eventPlayer.isInLobby or eventPlayer.isInFreemode) or (eventPlayer.cpData[3] and not eventPlayer.cpData[14])) == true
 
-    if not (eventPlayer.isInLobby or eventPlayer.isInFreemode):
-        if (eventPlayer.cpData[3]):
-            if eventPlayer.cpData[14] and not eventPlayer.isOnGround():
-                waitUntil(eventPlayer.isOnGround() or not eventPlayer.isHoldingButton(Button.ABILITY_2), 99999)
-            if (not eventPlayer.cpData[14] or eventPlayer.isOnGround()) and eventPlayer.isHoldingButton(Button.ABILITY_2):
-                eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() < 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-                eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
-                eventPlayer.setHealth(575)
-                eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
-                eventPlayer.setAbility2Enabled(false)
-                eventPlayer.cpData[14] = true
-    else:
+    eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() < 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
+    eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
+    eventPlayer.setHealth(575)
+    eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
+    if eventPlayer.isInLobby or eventPlayer.isInFreemode:
         eventPlayer.setAbility2Enabled(true)
-        eventPlayer.applyImpulse(Vector.UP, (10 - 1.25 * max(0, eventPlayer.getSpeed() - 10)) if eventPlayer.getSpeed() < 18 else 0, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-        eventPlayer.applyImpulse(normalize(vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 10) * 0.5 + max(0, min(distance(vect(0,0,0), vect(eventPlayer.getVelocity().x, 0, eventPlayer.getVelocity().z)), 20) - 10) * 0.2, Relativity.TO_WORLD, Impulse.INCORPORATE_CONTRARY_MOTION)
-        eventPlayer.setHealth(575)
-        eventPlayer.setAbilityCooldown(Button.ABILITY_2, 0)
+    elif eventPlayer.cpData[3] and not eventPlayer.cpData[14]:
+        eventPlayer.cpData[14] = true
+        eventPlayer.setAbility2Enabled(false)
 
 
 rule "16.4: Piledriving":
@@ -459,9 +452,9 @@ rule "16.5: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     @Condition (eventPlayer.hasSpawned() and not eventPlayer.isLoading and not eventPlayer.hasStatus(Status.ROOTED)) == true
     @Condition (eventPlayer.cpData[10] or eventPlayer.cpData[11] or eventPlayer.cpData[13] or eventPlayer.cpData[14]) == true
     @Condition eventPlayer.isInLobby == false
-    @Condition eventPlayer.isOnGround() == true
+    @Condition (eventPlayer.isOnGround() or eventPlayer.cpData[9]) == true
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) <= eventPlayer.cpData[1]
-    
+
     if eventPlayer.cpData[2]:
         eventPlayer.cpData[13] = false
         eventPlayer.setSecondaryFireEnabled(true)
@@ -469,7 +462,7 @@ rule "16.5: Reset Useless Jump/Grapple/Shield Bounce/Bhop":
     eventPlayer.cpData[11] = false
     eventPlayer.cpData[16] = false
     wait()
-    if eventPlayer.cpData[3] and eventPlayer.isOnGround():
+    if eventPlayer.cpData[3]:
         eventPlayer.cpData[14] = false
         if not eventPlayer.isHoldingButton(Button.ABILITY_2):
             eventPlayer.setAbility2Enabled(true)
