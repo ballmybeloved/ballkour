@@ -1,3 +1,4 @@
+#!mainFile "main.opy"
 #!setupTags
 
 rule "6.1: Initialize Match":

@@ -308,4 +308,4 @@ rule "5: Lobby Boundary":
     eventPlayer.applyImpulse(directionTowards(eventPlayer.getPosition(), lobbyData[0]), 10, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
 
 
-#!include "main.opy"
+#!include "ballkour.opy"
