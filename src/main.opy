@@ -88,6 +88,7 @@ rule "7.1: Player Joins":
     eventPlayer.disableKillFeed()
     eventPlayer.disableGamemodeInWorldUi()
     eventPlayer.disablePlayerCollision()
+    eventPlayer.setDamageDealt(false)
     eventPlayer.disableNameplatesFor(getAllPlayers())
     getAllPlayers().disableNameplatesFor(eventPlayer)
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer != eventPlayer), eventPlayer.nameplate, eventPlayer, 1, Clip.SURFACES, WorldTextReeval.VISIBILITY_POSITION_AND_STRING)
@@ -102,14 +103,7 @@ rule "7.1: Player Joins":
 rule "7.2: Player Leaves":
     @Event playerLeft
     
-    for index in range(len(getAllPlayers())):
-        if getAllPlayers()[index].spectating[1] == eventPlayer:
-            if getAllPlayers()[index].spectating[0] == true:
-                getAllPlayers()[index].stopCamera()
-                getAllPlayers()[index].stopForcingPosition()
-                getAllPlayers()[index].spectating[4] = true
-            getAllPlayers()[index].spectating[1] = null
-            getAllPlayers()[index].spectating[7] = false
+    enableFreecamForAffectedSpecs()
             
 
 def loadLobby():
@@ -605,6 +599,7 @@ rule "17.2: Checkpoint Mistake: Already Bhopped":
 rule "17.3: Checkpoint Mistake: Environment Death":
     @Event playerDied
     @Condition (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.ABILITY_1)) == false
+    @Condition eventPlayer.spectating[0] == false
     
     eventPlayer.isLoading = true
     if not eventPlayer.isInLobby:
@@ -1187,45 +1182,56 @@ rule "22.7.2.1: Enable Spectator Mode":
         eventPlayer.spectating[4] = true
         eventPlayer.nameplate = "{} | FREECAM".format(eventPlayer)
         return
-    eventPlayer.nameplate = null
-    eventPlayer.setInvisibility(Invis.ALL)
     if len(getAllPlayers().filter(lambda p: p != eventPlayer and p == eventPlayer.spectating[1])) == 0:
         eventPlayer.spectating[1] = getAllPlayers()[(getAllPlayers().index(eventPlayer) - 1 + len(getAllPlayers())) % len(getAllPlayers())]
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 500)
     eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
+    eventPlayer.setInvisibility(Invis.ALL)
     eventPlayer.setPrimaryFireEnabled(false)
     eventPlayer.disallowButton(Button.CROUCH)
+    eventPlayer.nameplate = ""
+    enableFreecamForAffectedSpecs()
     eventPlayer.spectating[7] = true
+
+
+rule "22.7.2.3: Spectating Camera Loop":
+    @Event eachPlayer
+    @Condition eventPlayer.spectating[0] == true
+    @Condition eventPlayer.spectating[2] == false
+    @Condition eventPlayer.spectating[1] != null
+    @Condition eventPlayer.spectating[6] == false
+
+    while eventPlayer.spectating[0] and not eventPlayer.spectating[2] and eventPlayer.spectating[1] != null and not eventPlayer.spectating[6]:
+        eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
+        eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 500)
+        wait()
 
 
 def disableSpectatorMode():
     @Name "22.7.2.2: Disable Spectator Mode"
     
     eventPlayer.spectating[0] = false
-    if eventPlayer.spectating[2]:
-        eventPlayer.spectating[2] = false
-    if eventPlayer.spectating[4]:
-        eventPlayer.spectating[4] = false
+    eventPlayer.spectating[2] = false
+    eventPlayer.spectating[4] = false
     eventPlayer.enableEnvironmentCollision()
     eventPlayer.setMoveSpeed(100)
     eventPlayer.stopForcingPosition()
     eventPlayer.stopCamera()
     eventPlayer.setInvisibility(Invis.NONE)
+    eventPlayer.startForcingHero(Hero.WRECKING_BALL)
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     eventPlayer.allowButton(Button.SECONDARY_FIRE)
     eventPlayer.allowButton(Button.CROUCH)
     eventPlayer.allowButton(Button.ABILITY_1)
+    eventPlayer.setAbility1Enabled(true)
     eventPlayer.allowButton(Button.ABILITY_2)
-    if eventPlayer.isInLobby:
-        return
     if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
         if not eventPlayer.isInFreemode:
             cpResetPlayer()
+            eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
         else:
             eventPlayer.teleport(eventPlayer.spectating[5])
-    eventPlayer.nameplate = "{} | {}".format(eventPlayer, eventPlayer.runCurrentCp)
-    wait()
-    eventPlayer.startForcingHero(Hero.WRECKING_BALL)
+            eventPlayer.nameplate = "{} | FREEMODE".format(eventPlayer)
     
 
 rule "22.7.3: Track If Anyone Is Spectatable":
@@ -1252,8 +1258,8 @@ rule "22.7.4: Spectate Prev. Player Input":
     @Condition len(getAllPlayers().filter(lambda p: p != eventPlayer and (not p.spectating[0] or p == eventPlayer.spectating[1]))) > 0
 
     if eventPlayer.spectating[2]:
-        eventPlayer.enableEnvironmentCollision()
         eventPlayer.startForcingHero(Hero.WRECKING_BALL)
+        eventPlayer.setInvisibility(Invis.ALL)
         eventPlayer.disallowButton(Button.PRIMARY_FIRE)
         eventPlayer.disallowButton(Button.SECONDARY_FIRE)
         eventPlayer.disallowButton(Button.CROUCH)
@@ -1268,7 +1274,7 @@ rule "22.7.4: Spectate Prev. Player Input":
             (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
                 + 1)
             % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
 
 
 rule "22.7.5: Spectate Next Player Input":
@@ -1287,14 +1293,14 @@ rule "22.7.5: Spectate Next Player Input":
     @Condition len(getAllPlayers().filter(lambda p: p != eventPlayer and (not p.spectating[0] or p == eventPlayer.spectating[1]))) > 0
 
     if eventPlayer.spectating[2]:
-        eventPlayer.enableEnvironmentCollision()
+        eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
         eventPlayer.startForcingHero(Hero.WRECKING_BALL)
+        eventPlayer.setInvisibility(Invis.ALL)
         eventPlayer.disallowButton(Button.PRIMARY_FIRE)
         eventPlayer.disallowButton(Button.SECONDARY_FIRE)
         eventPlayer.disallowButton(Button.CROUCH)
         eventPlayer.disallowButton(Button.ABILITY_1)
         eventPlayer.disallowButton(Button.ABILITY_2)
-        eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
         eventPlayer.spectating[2] = false
         eventPlayer.spectating[4] = false
     else:
@@ -1302,7 +1308,7 @@ rule "22.7.5: Spectate Next Player Input":
             (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
                 + len(getAllPlayers().filter(lambda p: p != eventPlayer)) - 1)
             % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
 
 
 rule "22.7.6: Spectate Crosshair (X-Hair) Player Input":
@@ -1320,21 +1326,22 @@ rule "22.7.6: Spectate Crosshair (X-Hair) Player Input":
     @Condition eventPlayer.spectating[6] == false
     @Condition len(getAllPlayers().filter(lambda p: p != eventPlayer and (not p.spectating[0] or p == eventPlayer.spectating[1]))) > 0
     
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
     if eventPlayer.spectating[2]:
         eventPlayer.spectating[9] = getAllPlayers().filter(lambda p: p != eventPlayer and not p.spectating[0] and angleBetweenVectors(eventPlayer.getFacingDirection(), directionTowards(eventPlayer.getEyePosition(), p.getEyePosition())) < 20)[0]
-        if eventPlayer.spectating[9] != null:
-            eventPlayer.spectating[1] = eventPlayer.spectating[9]
-        eventPlayer.enableEnvironmentCollision()
+        if eventPlayer.spectating[9] == null:
+            return
+        eventPlayer.spectating[1] = eventPlayer.spectating[9]
+        eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
         eventPlayer.startForcingHero(Hero.WRECKING_BALL)
+        eventPlayer.setInvisibility(Invis.ALL)
         eventPlayer.disallowButton(Button.PRIMARY_FIRE)
         eventPlayer.disallowButton(Button.SECONDARY_FIRE)
         eventPlayer.disallowButton(Button.CROUCH)
         eventPlayer.disallowButton(Button.ABILITY_1)
         eventPlayer.disallowButton(Button.ABILITY_2)
-        eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
         eventPlayer.spectating[2] = false
         eventPlayer.spectating[4] = false
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
     
 
 rule "22.7.7.1: Freecam Input":
@@ -1351,15 +1358,19 @@ rule "22.7.7.2: Freecam Enabled":
     @Event eachPlayer
     @Condition eventPlayer.spectating[2] == true
 
-    eventPlayer.startForcingHero(Hero.JETPACK_CAT)
     eventPlayer.stopCamera()
     eventPlayer.stopForcingPosition()
+    eventPlayer.startForcingHero(Hero.JETPACK_CAT)
+    eventPlayer.setInvisibility(Invis.NONE)
     eventPlayer.disableEnvironmentCollision(true)
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     eventPlayer.allowButton(Button.SECONDARY_FIRE)
     eventPlayer.allowButton(Button.CROUCH)
     eventPlayer.disallowButton(Button.ABILITY_1)
+    eventPlayer.setAbility1Enabled(false)
     eventPlayer.disallowButton(Button.ABILITY_2)
+    eventPlayer.setAbility2Enabled(false)
+    eventPlayer.nameplate = "{} | FREECAM".format(eventPlayer)
 
 
 rule "22.7.7.3: Freecam Detached Input":
@@ -1400,9 +1411,24 @@ rule "22.7.7.6: Freecam Environment Death":
     @Event playerDied
     @Condition eventPlayer.getHero() == Hero.JETPACK_CAT
     
+    
     eventPlayer.resurrect()
+    eventPlayer.teleport(nearestWalkablePosition(eventPlayer.getPosition()))
     if not eventPlayer.spectating[4]:
         reattachToSpectatingTarget()
+
+
+def enableFreecamForAffectedSpecs():
+    @Name "22.7.7.7: Enable Freecam for Players Spectating a Leaver or Someone Who Enables Spectator Mode"
+
+    for index in range(len(getAllPlayers())):
+        if getAllPlayers()[index].spectating[1] == eventPlayer:
+            if getAllPlayers()[index].spectating[0] == true:
+                getAllPlayers()[index].stopCamera()
+                getAllPlayers()[index].stopForcingPosition()
+                getAllPlayers()[index].spectating[4] = true
+            getAllPlayers()[index].spectating[1] = null
+            getAllPlayers()[index].spectating[7] = false
 
 
 rule "22.7.8.1: Reattach Input":
@@ -1427,17 +1453,18 @@ rule "22.7.8.1: Reattach Input":
 def reattachToSpectatingTarget():
     @Name "22.7.8.2: Reattach"
     
-    eventPlayer.enableEnvironmentCollision()
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
+    eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
     eventPlayer.startForcingHero(Hero.WRECKING_BALL)
     eventPlayer.setInvisibility(Invis.ALL)
     eventPlayer.applyImpulse(eventPlayer.getVelocity() * -0.001, 0.001, Relativity.TO_WORLD, Impulse.CANCEL_CONTRARY_MOTION)
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
-    eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
     eventPlayer.disallowButton(Button.PRIMARY_FIRE)
     eventPlayer.disallowButton(Button.SECONDARY_FIRE)
     eventPlayer.disallowButton(Button.CROUCH)
     eventPlayer.disallowButton(Button.ABILITY_1)
+    eventPlayer.setAbility1Enabled(false)
     eventPlayer.disallowButton(Button.ABILITY_2)
+    eventPlayer.setAbility2Enabled(false)
     eventPlayer.spectating[2] = false
     eventPlayer.spectating[4] = false
 
@@ -1474,7 +1501,9 @@ rule "22.7.9.2: Enable First Person Spectate":
     eventPlayer.setRespawnTime(99999999)
     kill(eventPlayer)
     eventPlayer.enableDeathSpectateTargetHud()
-    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
+    eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
+    eventPlayer.spectating[2] = false
+    eventPlayer.spectating[4] = false
     waitUntil(
         not eventPlayer.isHoldingButton(Button.ULTIMATE) and
         not eventPlayer.isHoldingButton(Button.PRIMARY_FIRE) and
@@ -1558,7 +1587,7 @@ rule "22.7.10: Exit First Person Spectate Input":
     ) == true:
         eventPlayer.resurrect()
         eventPlayer.disableDeathSpectateTargetHud()
-        eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection())
+        eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
         eventPlayer.spectating[6] = false
 
 
