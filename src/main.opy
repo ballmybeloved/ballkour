@@ -287,7 +287,7 @@ def newRun():
 def loadCpData():
     @Name "12.1: Load Checkpoint Data"
     
-    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump [17]deathLocation
+    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
     eventPlayer.cpData[1] = cps[eventPlayer.runCurrentCp][1]
@@ -604,19 +604,18 @@ rule "17.2: Checkpoint Mistake: Already Bhopped":
 
 rule "17.3: Checkpoint Mistake: Environment Death":
     @Event playerDied
-    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.ABILITY_1) == false
+    @Condition (eventPlayer.isHoldingButton(Button.ULTIMATE) and eventPlayer.isHoldingButton(Button.ABILITY_1)) == false
     
     eventPlayer.isLoading = true
     if not eventPlayer.isInLobby:
-        eventPlayer.cpData[17] = eventPlayer.getPosition()
-        eventPlayer.respawn()
         if not eventPlayer.isInFreemode and not eventPlayer.spectating[0]:
             cpResetPlayer()
             eventPlayer.runMistakes++
         else:
-            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.cpData[17]))
+            eventPlayer.teleport(nearestWalkablePosition(eventPlayer.getPosition()))
+        eventPlayer.resurrect()
     else:
-        eventPlayer.respawn()
+        eventPlayer.resurrect()
         loadLobby()
     eventPlayer.isLoading = false
 
