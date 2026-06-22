@@ -129,37 +129,43 @@ def loadLobby():
 
 
 rule "8.2: Load Welcome Area":
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Welcome to", lobbyData[2], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Ballkour!", lobbyData[3], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.ORANGE)
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Welcome to", lobbyData[2], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(230, 151, 0))
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Ballkour!", lobbyData[3], lobbyData[4], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(230, 151, 0))
 
 
 rule "8.3: Load Leaderboard Area":
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Leaderboard", lobbyData[11], lobbyData[12], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
+    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "Leaderboard", lobbyData[11], lobbyData[12], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(230, 151, 0))
+    # 1st-9th Position Placeholder"
+    lb[11] = "---, -:--.--, -, '                                               '"
+    # 10th Position Placeholder"
+    lb[12] = "---, -:--.--, -, '                                              '"
     for index in range(1, 11):
-        if lb[index] != null:
-            formatLbString()
-            createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
-        else:
-            if lb[index] <= 9:
-                createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "<fgA52A2AFF>{}</fg>. <fgEC9900FF>---</fg>                                               <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(index, iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
+        if lb[index] == null:
+            if index <= 9:
+                lbObj = lb[11]
             else:
-                createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "<fgA52A2AFF>10</fg>. <fgEC9900FF>---</fg>                                              <fgA52A2AFF>(</fg>{}<fgEC9900FF>-:--.--, {}-</fg><fgA52A2AFF>)</fg>".format(iconString(Icon.BOLT), iconString(Icon.SKULL)), lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.WHITE)
-
-
-def formatLbString():
-    @Name "8.3.1: Format Leaderboard String"
-    
-    #lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
-    lbObj = lb[index].split(",")
-    lbObj[3] = lbObj[3].replace("'", "")
-    lbObjFormatted = "<fgA52A2AFF>{}</fg>. <fgEC9900FF>{}</fg>{}<fgA52A2AFF>(</fg>{}<fgEC9900FF>{}, {}{}</fg><fgA52A2AFF>)</fg>".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
+                lbObj = lb[12]
+        else:
+            lbObj = lb[index]
+        # lbObj[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
+        lbObj = lbObj.split(",")
+        lbObj[3] = lbObj[3].replace("'", "")
+        if index == 1:
+            lbObjFormatted = "{}. <fgFFFF00FF>{}</fg>{}({}<fgFFFF00FF>{}, {}{}</fg>)".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
+        elif index == 2:
+            lbObjFormatted = "{}. <fgC0C0C0FF>{}</fg>{}({}<fgC0C0C0FF>{}, {}{}</fg>)".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
+        elif index == 3:
+            lbObjFormatted = "{}. <fgCD7F32FF>{}</fg>{}({}<fgCD7F32FF>{}, {}{}</fg>)".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
+        elif index >= 4:
+            lbObjFormatted = "{}. <fg00E697FF>{}</fg>{}({}<fg00E697FF>{}, {}{}</fg>)".format(index, lbObj[0], lbObj[3], iconString(Icon.BOLT), lbObj[1], iconString(Icon.SKULL), lbObj[2])
+        createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lbObjFormatted, lbPos[index], lobbyData[13], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(230, 151, 0))
 
 
 rule "8.4.1: Load Start Run Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), "New Run", lobbyData[7], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
-    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.RING, Color.SKY_BLUE, lobbyData[5], 1.6, EffectReeval.VISIBILITY)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.RING, Color.AQUA, lobbyData[5], 1.6, EffectReeval.VISIBILITY)
     createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), lobbyData[6], Icon.FLAG, IconReeval.VISIBILITY, Color.GREEN, false)
-    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.SPARKLES, Color.ORANGE, lobbyData[5] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby), Effect.SPARKLES, rgb(230, 151, 0), lobbyData[5] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
 rule "8.4.2: Start Run Circle Entry":
@@ -179,7 +185,7 @@ rule "8.5.1: Load Resume Run Area":
     createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), "Resume Run", lobbyData[10], 1, Clip.SURFACES, WorldTextReeval.VISIBILITY, Color.TURQUOISE)
     createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.RING, Color.GREEN, lobbyData[8], 1.6, EffectReeval.VISIBILITY)
     createIcon(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), lobbyData[9], Icon.RECYCLE, IconReeval.VISIBILITY, Color.GREEN, false)
-    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.SPARKLES, Color.ORANGE, lobbyData[8] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
+    createEffect(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and localPlayer.isRunLoaded and not localPlayer.isRunFinished), Effect.SPARKLES, rgb(230, 151, 0), lobbyData[8] + vect(0, -0.85, 0), 1.6, EffectReeval.VISIBILITY)
 
 
 rule "8.5.2: Resume Run Circle Entry":
@@ -203,15 +209,33 @@ rule "8.5.2: Resume Run Circle Entry":
 rule "8.6: Load Lobby Stats":
     @Condition settings_[1] == true
     
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Stats", lobbyData[14], lobbyData[15], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(165, 42, 42))
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[17], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "New Players: {}".format(lobbyStats[0]), lobbyData[18], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Rejoins: {}".format(lobbyStats[1]), lobbyData[19], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Legit Runs: {}".format(lobbyStats[2]), lobbyData[20], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Run Time: {}".format(lobbyStats[4]), lobbyData[21], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[22], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[23], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
-    createInWorldText(getAllPlayers().filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), "Avg Mistakes: {}".format(lobbyStats[8]), lobbyData[24], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.ORANGE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Stats", lobbyData[14], lobbyData[15], Clip.SURFACES, WorldTextReeval.VISIBILITY, rgb(230, 151, 0))
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Elapsed Time: {}".format(elapsedTimeFormatted if not settings_[0] else elapsedTime), lobbyData[17], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "New Players: {}".format(lobbyStats[0]), lobbyData[18], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Rejoins: {}".format(lobbyStats[1]), lobbyData[19], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Legit Runs: {}".format(lobbyStats[2]), lobbyData[20], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Total Run Time: {}".format(lobbyStats[4]), lobbyData[21], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Total Mistakes: {}".format(lobbyStats[5]), lobbyData[22], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Avg Run Time: {}".format(lobbyStats[7]), lobbyData[23], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
+    createInWorldText(getAllPlayers()
+        .filter(lambda localPlayer: localPlayer.isInLobby and "{}".format(localPlayer) == hostPlayerName), 
+        "Avg Mistakes: {}".format(lobbyStats[8]), lobbyData[24], lobbyData[16], Clip.SURFACES, WorldTextReeval.VISIBILITY_AND_STRING, Color.TURQUOISE)
 
 
 rule "9: Clear Unused Variables":
@@ -222,45 +246,45 @@ rule "9: Clear Unused Variables":
 
 
 rule "10: Load Run HUD":
-    hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(165, 42, 42), HudReeval.VISIBILITY)
+    hudSubtext(getAllPlayers(), "ballkour.com", HudPosition.TOP, 0, rgb(230, 36, 0), HudReeval.VISIBILITY)
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby), 
-        ("\n\n\n\nControls: {}").format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("\n\n\n\nControls: {}").format(inputBindingString(Button.ULTIMATE)), HudPosition.LEFT, 0, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     # Non-Spectating HUD
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0]), 
-        ("{}/{}").format(localPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("{}/{}").format(localPlayer.runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     if not settings_[0]:
         hudSubtext(getAllPlayers()
             .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0]), 
-            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.runTimeFormatted), HudPosition.RIGHT, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     else:
         hudSubtext(getAllPlayers()
             .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0]), 
-            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.runTime), HudPosition.RIGHT, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0]), 
-        ("{} {}").format(iconString(Icon.SKULL), localPlayer.runMistakes), HudPosition.RIGHT, 2, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("{} {}").format(iconString(Icon.SKULL), localPlayer.runMistakes), HudPosition.RIGHT, 2, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     # Spectating HUD
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.spectating[0] and not localPlayer.spectating[4]),
-        ("{}/{}").format(localPlayer.spectating[1].runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
+        ("{}/{}").format(localPlayer.spectating[1].runCurrentCp, len(cps) - 1), HudPosition.TOP, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING
     )
     if not settings_[0]:
         hudSubtext(getAllPlayers()
             .filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.spectating[0] and not localPlayer.spectating[4]), 
-            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.spectating[1].runTimeFormatted), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.spectating[1].runTimeFormatted), HudPosition.RIGHT, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     else:
         hudSubtext(getAllPlayers()
             .filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.spectating[0] and not localPlayer.spectating[4]), 
-            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.spectating[1].runTime), HudPosition.RIGHT, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+            ("\n\n\n\n{} {}\n").format(iconString(Icon.BOLT), localPlayer.spectating[1].runTime), HudPosition.RIGHT, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.spectating[0] and not localPlayer.spectating[4]), 
-        ("{} {}").format(iconString(Icon.SKULL), localPlayer.spectating[1].runMistakes), HudPosition.RIGHT, 2, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("{} {}").format(iconString(Icon.SKULL), localPlayer.spectating[1].runMistakes), HudPosition.RIGHT, 2, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     # Spectating HUD — Freecam Detached
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and localPlayer.spectating[0] and localPlayer.spectating[4]), 
-        ("{}/{}").format(localPlayer.spectating[3], len(cps) - 1), HudPosition.TOP, 1, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("{}/{}").format(localPlayer.spectating[3], len(cps) - 1), HudPosition.TOP, 1, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
 
 
 def newRun():
@@ -336,14 +360,14 @@ rule "13: Load Checkpoint Objects":
         .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0] and localPlayer.cpData[5] != null and not localPlayer.runCurrentCp == len(cps) - 1), 
         localPlayer.cpData[5], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
     createEffect(getAllPlayers()
-        .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0] and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.SKY_BLUE, 
+        .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0] and not localPlayer.runCurrentCp == len(cps) - 1), Effect.RING, Color.AQUA, 
         localPlayer.cpData[7], localPlayer.cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0] and not localPlayer.runCurrentCp == len(cps) - 1), 
         localPlayer.cpData[7] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: not localPlayer.isInLobby and not localPlayer.spectating[0] and not localPlayer.runCurrentCp == len(cps) - 1), 
-        Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.cpData[7], localPlayer.cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        Effect.LIGHT_SHAFT, Color.GRAY, localPlayer.cpData[7], localPlayer.cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     # Spectating Objects
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and not localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
@@ -356,13 +380,13 @@ rule "13: Load Checkpoint Objects":
         localPlayer.spectating[1].cpData[5], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and not localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
-        Effect.RING, Color.SKY_BLUE, localPlayer.spectating[1].cpData[7], localPlayer.spectating[1].cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        Effect.RING, Color.AQUA, localPlayer.spectating[1].cpData[7], localPlayer.spectating[1].cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and not localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
         localPlayer.spectating[1].cpData[7] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and not localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
-        Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), localPlayer.spectating[1].cpData[7], localPlayer.spectating[1].cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        Effect.LIGHT_SHAFT, Color.GRAY, localPlayer.spectating[1].cpData[7], localPlayer.spectating[1].cpData[8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     # Spectating Objects — Freecam Detached
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
@@ -375,13 +399,13 @@ rule "13: Load Checkpoint Objects":
         cps[localPlayer.spectating[3]][5], Icon.ARROW_UP, IconReeval.VISIBILITY_AND_POSITION, Color.YELLOW, false)
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
-        Effect.RING, Color.SKY_BLUE, cps[localPlayer.spectating[3]][7], cps[localPlayer.spectating[3]][8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        Effect.RING, Color.AQUA, cps[localPlayer.spectating[3]][7], cps[localPlayer.spectating[3]][8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
     createIcon(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
         cps[localPlayer.spectating[3]][7] - vect(0, 0.5, 0), Icon.FLAG, IconReeval.VISIBILITY_AND_POSITION, Color.GREEN)
     createEffect(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and localPlayer.spectating[4] and not localPlayer.spectating[1].runCurrentCp == len(cps) - 1), 
-        Effect.LIGHT_SHAFT, rgb(72, 127, 163, 0), cps[localPlayer.spectating[3]][7], cps[localPlayer.spectating[3]][8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
+        Effect.LIGHT_SHAFT, Color.GRAY, cps[localPlayer.spectating[3]][7], cps[localPlayer.spectating[3]][8], EffectReeval.VISIBILITY_POSITION_AND_RADIUS)
 
 
 rule "14.1: Start/Resume Run":
@@ -754,7 +778,7 @@ rule "20: Checkpoint Completed (No Skipping)":
 def finalCpReached():
     @Name "21.1: Final Checkpoint Reached"
     
-    playEffect(eventPlayer, DynamicEffect.BAD_PICKUP_EFFECT, Color.LIME_GREEN, eventPlayer, 200)
+    playEffect(eventPlayer, DynamicEffect.BAD_PICKUP_EFFECT, Color.GREEN, eventPlayer, 200)
     playEffect(eventPlayer, DynamicEffect.BUFF_IMPACT_SOUND, null, eventPlayer, 100)
     if eventPlayer.spectating[0]:
         return
@@ -783,7 +807,7 @@ rule "21.2.1: Load Run Completion Text":
 
 rule "21.2.2: Run Completion Text":
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "\n\nCongrats, {}!\n".format(localPlayer), HudPosition.TOP, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)    
-    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time: {}".format(localPlayer.runFinalTimeFormatted), HudPosition.TOP, 3, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Time to Beat: {}".format("00:00.00" if timeToBeatInMs == 0 else
             "{}:{}:{}".format(
                 floor(timeToBeatInMs / 3600000),
@@ -798,16 +822,16 @@ rule "21.2.2: Run Completion Text":
                 floor(timeToBeatInMs / 1000),
                 (timeToBeatInMs % 1000 / 10 + 100).substring(1, 2)
             )
-        ), HudPosition.TOP, 4, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING
+        ), HudPosition.TOP, 4, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING
     )
-    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), "Mistakes: {}\n".format(localPlayer.runFinalMistakes), HudPosition.TOP, 5, rgb(230, 151, 0), HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers().filter(lambda localPlayer: localPlayer.isViewingRunCompletionText), 
-        "                <fgEC9900FF>Top-10 Time!</fg>\n"
-        "<fgA52A2AFF>Submit a Video of Your Run\n"
+        "                Top-10 Time!</fg>\n"
+        "<fgEC2300FF>Submit a Video of Your Run\n"
         "                        @\n"
         "              ballkour.com</fg>\n\n"
         "       <fg00E697FF>Thanks for Playing!</fg>"
-    , HudPosition.TOP, 6, Color.WHITE, HudReeval.VISIBILITY)
+    , HudPosition.TOP, 6, rgb(230, 151, 0), HudReeval.VISIBILITY)
 
         
 def updateStats():
@@ -872,7 +896,7 @@ rule "22.1.1: Controls HUD Input":
 rule "22.1.2: Load Controls HUD":
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp != 0), 
-        ("Prev CP:                             {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE)), HudPosition.LEFT, 1, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("Prev CP:                             {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE)), HudPosition.LEFT, 1, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1), 
             (
@@ -881,13 +905,13 @@ rule "22.1.2: Load Controls HUD":
             ).format(
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.SECONDARY_FIRE),
                 inputBindingString(Button.RELOAD)
-            ), HudPosition.LEFT, 2, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+            ), HudPosition.LEFT, 2, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud), 
-        ("New Run:               {} + {} (Hold)").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 3, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("New Run:               {} + {} (Hold)").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 3, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.runCurrentCp < len(cps) - 1 and not localPlayer.spectating[0]), 
-        ("Freemode:                          {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 4, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("Freemode:                          {} + {}").format(inputBindingString(Button.ULTIMATE), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 4, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud), 
             (
@@ -896,7 +920,7 @@ rule "22.1.2: Load Controls HUD":
             ).format(
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_1),
                 inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_2)
-            ), HudPosition.LEFT, 5, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+            ), HudPosition.LEFT, 5, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.spectating[0]),
         (
@@ -905,7 +929,7 @@ rule "22.1.2: Load Controls HUD":
             "Disable:                        {} + {}"
         ).format(
             inputBindingString(Button.ULTIMATE), inputBindingString(Button.ABILITY_1)
-        ), HudPosition.LEFT, 6, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ), HudPosition.LEFT, 6, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.spectating[0] and localPlayer.spectating[8]),
         (
@@ -916,16 +940,16 @@ rule "22.1.2: Load Controls HUD":
             inputBindingString(Button.ABILITY_1), inputBindingString(Button.PRIMARY_FIRE),
             inputBindingString(Button.ABILITY_1), inputBindingString(Button.SECONDARY_FIRE),
             inputBindingString(Button.ABILITY_1), inputBindingString(Button.JUMP)
-        ), HudPosition.LEFT, 7, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ), HudPosition.LEFT, 7, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.spectating[0] and not localPlayer.spectating[2]),
         (
             "First Person:              {} + {}\n"
             "Freecam:                             Move"
-        ).format(inputBindingString(Button.ABILITY_1), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 8, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ).format(inputBindingString(Button.ABILITY_1), inputBindingString(Button.INTERACT)), HudPosition.LEFT, 8, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.isViewingCtrlsHud and localPlayer.spectating[0] and localPlayer.spectating[1] != null and localPlayer.spectating[2]),
-        ("Reattach:                     {} + {}").format(inputBindingString(Button.ABILITY_1), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 9, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("Reattach:                     {} + {}").format(inputBindingString(Button.ABILITY_1), inputBindingString(Button.RELOAD)), HudPosition.LEFT, 9, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
 
 
 rule "22.2: Prev. Checkpoint Input":
@@ -1135,7 +1159,7 @@ rule "22.6.1: Freemode Input":
 
 rule "22.6.2: Load Freemode HUD":
     hudSubtext(getAllPlayers().filter(lambda localPlayer: localPlayer.isInFreemode and not localPlayer.spectating[0]), 
-    ("\n\n\nFreemode On"), HudPosition.LEFT, 10, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+    ("\n\n\nFreemode On"), HudPosition.LEFT, 10, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
 
 
 rule "22.7.1.1: Spectator Mode Input":
@@ -1162,16 +1186,16 @@ rule "22.7.1.1: Spectator Mode Input":
 rule "22.7.1.2: Load Spectate HUD":
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[0] and (localPlayer.spectating[1] != null and not localPlayer.spectating[4])), 
-        ("\n\nSpectating {}").format(localPlayer.spectating[1]), HudPosition.LEFT, 10, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("\n\nSpectating {}").format(localPlayer.spectating[1]), HudPosition.LEFT, 10, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubtext(getAllPlayers()
         .filter(lambda localPlayer: (localPlayer.spectating[0] and localPlayer.spectating[1] == null) or (localPlayer.spectating[2] and localPlayer.spectating[4])), 
-        ("\n\nFreecam On").format(localPlayer.spectating[1]), HudPosition.LEFT, 11, Color.ORANGE, HudReeval.VISIBILITY_AND_STRING)
+        ("\n\nFreecam On").format(localPlayer.spectating[1]), HudPosition.LEFT, 11, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: localPlayer.spectating[2] and not localPlayer.spectating[4]), 
-        ("Freecam On").format(localPlayer.spectating[1]), HudPosition.LEFT, 11, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("Freecam On").format(localPlayer.spectating[1]), HudPosition.LEFT, 11, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
     hudSubheader(getAllPlayers()
         .filter(lambda localPlayer: (localPlayer.spectating[0] and localPlayer.spectating[1] == null) or (localPlayer.spectating[2] and localPlayer.spectating[4])), 
-        ("(Detached)").format(localPlayer.spectating[1]), HudPosition.LEFT, 12, rgb(165, 42, 42), HudReeval.VISIBILITY_AND_STRING)
+        ("(Detached)").format(localPlayer.spectating[1]), HudPosition.LEFT, 12, Color.TURQUOISE, HudReeval.VISIBILITY_AND_STRING)
 
 
 rule "22.7.2.1: Enable Spectator Mode":
