@@ -105,8 +105,9 @@ subroutine setCpAbilities 6
 subroutine cpResetPlayer 7
 subroutine finalCpReached 8
 subroutine updateStats 9
-subroutine reattachToSpectatingTarget 10
-subroutine disableSpectatorMode 11
+subroutine disableSpectatorMode 10
+subroutine reattachToSpectatingTarget 11
+subroutine enableFreecamForAffectedSpecs 12
 
 #!optimizeStrict
 
@@ -123,7 +124,7 @@ rule "0: Contact & Course Info":
 
 rule "1: Settings":
     settings_ = []
-    settings_[0] = createWorkshopSettingBool("Settings", "Debug", true, 1)
+    settings_[0] = createWorkshopSettingBool("Settings", "Debug", false, 1)
     settings_[1] = createWorkshopSettingBool("Settings", "Lobby Stats", false, 0)
 
 

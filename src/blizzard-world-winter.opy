@@ -106,8 +106,9 @@ subroutine setCpAbilities 6
 subroutine cpResetPlayer 7
 subroutine finalCpReached 8
 subroutine updateStats 9
-subroutine reattachToSpectatingTarget 10
-subroutine disableSpectatorMode 11
+subroutine disableSpectatorMode 10
+subroutine reattachToSpectatingTarget 11
+subroutine enableFreecamForAffectedSpectators 12
 
 #!optimizeStrict
 
