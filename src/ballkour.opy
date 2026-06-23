@@ -53,6 +53,7 @@ rule "6.2: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
     if settings_[1] and not settings_[0]:
         while true:
+            wait(0.1)
             elapsedTimeFormatted = (
                 "{}:{}:{}".format(
                     floor(elapsedTime / 3600),
@@ -68,8 +69,6 @@ rule "6.2: Start Elapsed Timer":
                     (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
                 )
             )
-            wait(0.1)
-            loop()
 
 
 rule "7.1: Player Joins":
