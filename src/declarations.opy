@@ -1,20 +1,20 @@
 globalvar settings_ 0
 globalvar lb 1
 globalvar timeToBeatInMs 2
-globalvar cps 3
-globalvar cpDefaults 4
-globalvar hostPlayerName 5
-globalvar elapsedTime 6
-globalvar elapsedTimeFormatted 7
-globalvar players 8
-globalvar lobbyStats 9
-globalvar lobbyData 10
-globalvar lbPos 11
-globalvar lbObj 12
-globalvar lbObjFormatted 13
-globalvar playersUnpaused 14
-globalvar index 100
-globalvar bots 110
+globalvar cpDefaults 3
+globalvar cps 4
+globalvar bots 5
+globalvar hostPlayerName 6
+globalvar elapsedTime 7
+globalvar elapsedTimeFormatted 8
+globalvar players 9
+globalvar lobbyStats 10
+globalvar lobbyData 11
+globalvar lbPos 12
+globalvar lbObj 13
+globalvar lbObjFormatted 14
+globalvar playersUnpaused 15
+globalvar index 127
 
 playervar isLoading 0
 playervar isInLobby 1
@@ -44,7 +44,7 @@ playervar statFormatted 24
 playervar isInFreemode 25
 playervar isViewingCtrlsHud 26
 playervar spectating 27
-playervar index 100
+playervar index 127
 
 subroutine loadLobby 0
 subroutine newRun 1
