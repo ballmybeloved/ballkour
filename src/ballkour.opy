@@ -77,15 +77,20 @@ rule "6.4: Destroy Disruptive Environment":
         botIndex = 1
         while botIndex < len(bots):
             batchSize = 12 - len(getAllPlayers())
-            for index in range(botIndex, min(botIndex + batchSize, len(bots))):
-                createDummy(Hero.REINHARDT, bots[0], -1, bots[index][0], directionTowards(bots[index][0], bots[index][1]))
-            wait(1)
-            getPlayersOnHero(Hero.REINHARDT, bots[0]).forceButtonPress(Button.ABILITY_1)
-            wait(1)
-            destroyAllDummies()
-            botIndex = botIndex + batchSize
+            if batchSize <= 0:
+                wait(1)
+            else:
+                for index in range(botIndex, min(botIndex + batchSize, len(bots))):
+                    createDummy(Hero.REINHARDT, bots[0], -1, bots[index][0], directionTowards(bots[index][0], bots[index][1]))
+                    getLastCreatedEntity().startForcingName("Disruption Destruction")
+                    wait()
+                wait(1)
+                getPlayersOnHero(Hero.REINHARDT, bots[0]).forceButtonPress(Button.ABILITY_1)
+                wait(2)
+                destroyAllDummies()
+                botIndex = botIndex + batchSize
+                wait(1)
         return
-
 
 
 rule "7.1: Player Joins":
