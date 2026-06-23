@@ -49,7 +49,8 @@ rule "6.1: Initialize Match":
         ) * 10
     )
 
-rule "6.2: Start Elapsed Timer":
+
+rule "6.3: Start Elapsed Timer":
     chaseAtRate(elapsedTime, 14340, 1)
     if settings_[1] and not settings_[0]:
         while true:
@@ -69,6 +70,22 @@ rule "6.2: Start Elapsed Timer":
                     (round(elapsedTime % 1 * 100) + 100).substring(1, 2)
                 )
             )
+
+
+rule "6.4: Destroy Disruptive Environment":
+    while true:
+        botIndex = 1
+        while botIndex < len(bots):
+            batchSize = 12 - len(getAllPlayers())
+            for index in range(botIndex, min(botIndex + batchSize, len(bots))):
+                createDummy(Hero.REINHARDT, bots[0], -1, bots[index][0], directionTowards(bots[index][0], bots[index][1]))
+            wait(1)
+            getPlayersOnHero(Hero.REINHARDT, bots[0]).forceButtonPress(Button.ABILITY_1)
+            wait(1)
+            destroyAllDummies()
+            botIndex = botIndex + batchSize
+        return
+
 
 
 rule "7.1: Player Joins":
