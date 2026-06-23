@@ -197,21 +197,22 @@ rule "3.1: Checkpoints (CPs)":
 
 
 rule "3.2: Break Disruptive Environment":
+    # bots[0]: team; bots[i > 0]: [0]spawnLocation [1]facingDirection
+    bots = []
+    bots[0] = Team.2
     # Checkpoint 39
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.674, -4.25, 111.782), directionTowards(vect(-109.674, -4.25, 111.782), vect(-98.37, -2.17, 114.92)))
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.674, -4.25, 111.782), directionTowards(vect(-109.674, -4.25, 111.782), vect(-94.55, -2.83, 103.54)))
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-108.22, -4.13, 107.72), directionTowards(vect(-108.22, -4.13, 107.72), vect(-104.33, -2.83, 101.1)))
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-103.549, -2.25, 100.17), directionTowards(vect(-103.549, -2.25, 100.17), vect(-108.92, -5.08, 120.59)))
+    bots[1] = [vect(-3.84, 8.00, -22.12), vect(-3.78, 9.09, -7.57)]
+    # Checkpoint 39
+    bots[2] = [vect(-109.674, -4.25, 111.782), vect(-98.37, -2.17, 114.92)]
+    bots[3] = [vect(-109.674, -4.25, 111.782), vect(-94.55, -2.83, 103.54)]
+    bots[4] = [vect(-108.22, -4.13, 107.72), vect(-104.33, -2.83, 101.1)]
+    bots[5] = [vect(-103.549, -2.25, 100.17), vect(-108.92, -5.08, 120.59)]
     # Checkpoint 45
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-96.88, -1.25, 111.06), directionTowards(vect(-96.88, -1.25, 111.06), vect(-112.62, -3.65, 107.32)))
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-97.41, -1.25, 114.94), directionTowards(vect(-97.41, -1.25, 114.94), vect(-111.9, 0.21, 111.15)))
+    bots[6] = [vect(-96.88, -1.25, 111.06), vect(-112.62, -3.65, 107.32)]
+    bots[7] = [vect(-97.41, -1.25, 114.94), vect(-111.9, 0.21, 111.15)]
     # Checkpoint 46
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.511, -4.25, 121.231), directionTowards(vect(-109.511, -4.25, 121.231), vect(-97.74, -2.56, 114.55)))
-    createDummy(Hero.REINHARDT, Team.2, -1, vect(-97.917, -1.253, 116.947), directionTowards(vect(-97.917, -1.253, 116.947), vect(-112.85, 0.12, 112.92)))
-    wait()
-    getPlayersOnHero(Hero.REINHARDT, Team.ALL).forceButtonPress(Button.ABILITY_1)
-    wait(1)
-    destroyAllDummies()
+    bots[8] = [vect(-109.511, -4.25, 121.231), vect(-97.74, -2.56, 114.55)]
+    bots[9] = [vect(-97.917, -1.253, 116.947), vect(-112.85, 0.12, 112.92)]
 
 
 rule "4: Lobby":
