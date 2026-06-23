@@ -84,7 +84,7 @@ rule "7.1: Player Joins":
         players[len(players)] = "{}".format(eventPlayer)
     else:
         lobbyStats[1]++
-    waitUntil(eventPlayer.hasSpawned(), 99999999)
+    waitUntil(eventPlayer.hasSpawned(), Math.INFINITY)
     eventPlayer.disableGamemodeHud()
     eventPlayer.disableKillFeed()
     eventPlayer.disableGamemodeInWorldUi()
@@ -414,7 +414,7 @@ rule "14.1: Start/Resume Run":
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isRunPaused = false
-    chaseAtRate(eventPlayer.runTime, 99999999, 1)
+    chaseAtRate(eventPlayer.runTime, Math.INFINITY, 1)
 
 
 rule "14.2: Update Run Timer Format":
@@ -455,7 +455,7 @@ rule "15.1: Start Checkpoint Time Timer":
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]
     
     eventPlayer.isCpTimerActive = true
-    chaseAtRate(eventPlayer.cpTime, 99999999, 1)
+    chaseAtRate(eventPlayer.cpTime, Math.INFINITY, 1)
 
 
 rule "15.2: Restart Checkpoint Time Timer":
@@ -497,7 +497,7 @@ rule "16.1.2: Bhopping":
     @Condition distance(eventPlayer.getPosition(), eventPlayer.cpData[7]) > eventPlayer.cpData[8]
     
     if not eventPlayer.cpData[11]:
-        waitUntil(eventPlayer.isOnGround(), 99999999)
+        waitUntil(eventPlayer.isOnGround(), Math.INFINITY)
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[11] = true
 
@@ -510,26 +510,26 @@ rule "16.2: Grapple Use":
     
     if not (eventPlayer.isInLobby or eventPlayer.cpData[5] == null or eventPlayer.isInFreemode):
         eventPlayer.cpData[12] = true
-        waitUntil(not eventPlayer.isFiringSecondaryFire() or eventPlayer.getSpeed() >= 15, 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire() or eventPlayer.getSpeed() >= 15, Math.INFINITY)
         if eventPlayer.getSpeed() >= 15:
             waitUntil(not eventPlayer.isFiringSecondaryFire(), 8.5)
         eventPlayer.cpData[12] = false
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.cpData[13] = true
-        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), Math.INFINITY)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
     elif not eventPlayer.isInLobby and not eventPlayer.isInFreemode:
-        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), Math.INFINITY)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
     if (not eventPlayer.isInLobby and eventPlayer.cpData[5] != null and not eventPlayer.isInFreemode):
         if distance(eventPlayer.getPosition(), eventPlayer.cpData[0]) > eventPlayer.cpData[1]:
             eventPlayer.setSecondaryFireEnabled(false)
         else:
             eventPlayer.cpData[13] = false
-        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), Math.INFINITY)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
     elif (eventPlayer.isInLobby or eventPlayer.isInFreemode):
-        waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+        waitUntil(not eventPlayer.isFiringSecondaryFire(), Math.INFINITY)
         eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
 
 
@@ -557,7 +557,7 @@ rule "16.4: Piledriving":
     @Condition eventPlayer.spectating[0] == false
     
     eventPlayer.cpData[15] = true
-    waitUntil(eventPlayer.isOnGround(), 99999999)
+    waitUntil(eventPlayer.isOnGround(), Math.INFINITY)
     eventPlayer.cpData[15] = false
 
 
@@ -600,7 +600,7 @@ rule "17.1: Checkpoint Mistake: Missed Checkpoint":
     cpResetPlayer()
     if eventPlayer.isRunPaused:
         eventPlayer.isRunPaused = false
-        chaseAtRate(eventPlayer.runTime, 99999999, 1)
+        chaseAtRate(eventPlayer.runTime, Math.INFINITY, 1)
     eventPlayer.isLoading = false
 
 
@@ -880,7 +880,7 @@ rule "22.1.1: Controls HUD Input":
     eventPlayer.disallowButton(Button.SECONDARY_FIRE)
     eventPlayer.disallowButton(Button.ABILITY_1)
     eventPlayer.disallowButton(Button.ABILITY_2)
-    waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or eventPlayer.isInLobby, 99999999)
+    waitUntil(not eventPlayer.isHoldingButton(Button.ULTIMATE) or eventPlayer.isInLobby, Math.INFINITY)
     eventPlayer.isViewingCtrlsHud = false
     eventPlayer.allowButton(Button.PRIMARY_FIRE)
     eventPlayer.allowButton(Button.SECONDARY_FIRE)
@@ -1428,7 +1428,7 @@ rule "22.7.7.5: Freecam Boost Input":
     @Condition eventPlayer.spectating[0] == true
 
     eventPlayer.setMoveSpeed(400)
-    waitUntil(not eventPlayer.isFiringSecondaryFire(), 99999999)
+    waitUntil(not eventPlayer.isFiringSecondaryFire(), Math.INFINITY)
     eventPlayer.setMoveSpeed(300)
 
 
@@ -1523,7 +1523,7 @@ rule "22.7.9.2: Enable First Person Spectate":
             "Press Space to change perspective"
         )
     )
-    eventPlayer.setRespawnTime(99999999)
+    eventPlayer.setRespawnTime(Math.INFINITY)
     kill(eventPlayer)
     eventPlayer.enableDeathSpectateTargetHud()
     eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
@@ -1649,7 +1649,7 @@ rule "23: Auto-Restart Server":
     # 3hr29min in
     @Condition elapsedTime >= 12540
     
-    chaseAtRate(elapsedTime, 99999999, 1)
+    chaseAtRate(elapsedTime, Math.INFINITY, 1)
     bigMessage(true[0], "Server restart: \n30min")
     wait(900)
     bigMessage(true[0], "Server restart: \n15min")
