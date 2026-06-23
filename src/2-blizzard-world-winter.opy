@@ -97,18 +97,17 @@ playervar spectating 27
 playervar index 100
 
 subroutine loadLobby 0
-subroutine formatLbString 1
-subroutine newRun 2
-subroutine loadCpData 3
-subroutine loadCpObjects 4
-subroutine unloadCpObjects 5
-subroutine setCpAbilities 6
-subroutine cpResetPlayer 7
-subroutine finalCpReached 8
-subroutine updateStats 9
-subroutine disableSpectatorMode 10
-subroutine reattachToSpectatingTarget 11
-subroutine enableFreecamForAffectedSpectators 12
+subroutine newRun 1
+subroutine loadCpData 2
+subroutine loadCpObjects 3
+subroutine unloadCpObjects 4
+subroutine setCpAbilities 5
+subroutine cpResetPlayer 6
+subroutine finalCpReached 7
+subroutine updateStats 8
+subroutine disableSpectatorMode 9
+subroutine reattachToSpectatingTarget 10
+subroutine enableFreecamForAffectedSpecs 11
 
 #!optimizeStrict
 
