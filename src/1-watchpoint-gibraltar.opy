@@ -139,7 +139,7 @@ rule "3: Checkpoints (CPs)":
     cps[44] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(36.26, -0.26, -47.19), cpDefaults[2]]
     cps[45] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(45.993, 3, -36.446), cpDefaults[2]]
     cps[46] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(57.496, 3, -54.121), cpDefaults[2]]
-    cps[47] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(47.01, 6.00, -67.42), cpDefaults[2]]
+    cps[47] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, false, true, null, null, vect(47.01, 6.00, -67.42), cpDefaults[2]]
     cps[48] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(32.38, -5.15, -57.33), cpDefaults[2]]
     cps[49] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(34.29, 1.19, -53.24), cpDefaults[2]]
     cps[50] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], false, false, true, null, null, vect(40.6, -5.01, -51.2), cpDefaults[2]]
