@@ -190,8 +190,8 @@ rule "3.2: Break Disruptive Environment":
     # bots[0]: team; bots[i > 0]: [0]spawnLocation [1]facingDirection
     bots = []
     bots[0] = Team.1
-    # Checkpoint 8
-    bots[1] = [vect(-3.84, 8.00, -22.12), vect(-3.78, 9.09, -7.57)]
+    # Checkpoint 7/8
+    bots[1] = [vect(-2.96, 8.00, -18.76), vect(0.40, 9.02, -20.77)]
     # Checkpoint 9
     bots[2] = [vect(-3.55, 5.00, 2.99), vect(-2.98, 4.32, 34.96)]
     # Checkpoint 11
@@ -227,7 +227,7 @@ rule "3.2: Break Disruptive Environment":
     bots[19] = [vect(-7.84, 10.99, -53.14), vect(-20.91, 9.78, -30.70)]
     # Checkpoint 90
     bots[20] = [vect(-10.91, 5.75, 26.76), vect(19.48, 6.95, 8.30)]
-
+    
 
 rule "4: Lobby":
     # lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]startRunRing [6]startRunIcon [7]startRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]statsSignSize [16]statsSize [17]elapsedTime [18]newPlayers [19]rejoins [20]legitRuns [21]totalRunTime [22]totalMistakes [23]avgRunTime [24]avgMistakes
