@@ -48,66 +48,7 @@ settings {
     }
 }
 
-globalvar settings_ 0
-globalvar lb 1
-globalvar timeToBeatInMs 2
-globalvar cps 3
-globalvar cpDefaults 4
-globalvar hostPlayerName 5
-globalvar elapsedTime 6
-globalvar elapsedTimeFormatted 7
-globalvar players 8
-globalvar lobbyStats 9
-globalvar lobbyData 10
-globalvar lbPos 11
-globalvar lbObj 12
-globalvar lbObjFormatted 13
-globalvar playersUnpaused 14
-globalvar index 100
-globalvar bots 110
-
-playervar isLoading 0
-playervar isInLobby 1
-playervar nameplate 2
-playervar nameplateObject 3
-playervar isRunLoaded 4
-playervar runCurrentCp 5
-playervar runTime 6
-playervar runTimeFormatted 7
-playervar runMistakes 8
-playervar cpData 9
-playervar cpEffects 10
-playervar cpIcons 11
-playervar isCpTimerActive 12
-playervar cpTime 13
-playervar cpTimeFormatted 14
-playervar isRunLegit 15
-playervar isRunPaused 16
-playervar isTimerActive 17
-playervar isRunFinished 18
-playervar runFinalTimeFormatted 19
-playervar runFinalMistakes 20
-playervar isViewingRunCompletionText 21
-playervar runCompletionText 22
-playervar statToFormat 23
-playervar statFormatted 24
-playervar isInFreemode 25
-playervar isViewingCtrlsHud 26
-playervar spectating 27
-playervar index 100
-
-subroutine loadLobby 0
-subroutine newRun 1
-subroutine loadCpData 2
-subroutine loadCpObjects 3
-subroutine unloadCpObjects 4
-subroutine setCpAbilities 5
-subroutine cpResetPlayer 6
-subroutine finalCpReached 7
-subroutine updateStats 8
-subroutine disableSpectatorMode 9
-subroutine reattachToSpectatingTarget 10
-subroutine enableFreecamForAffectedSpecs 11
+#!include "declarations.opy"
 
 #!optimizeStrict
 
