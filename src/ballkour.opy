@@ -9,7 +9,7 @@ rule "6.1: Initialize Match":
         disableInspector()
     if settings_[1]:
         players = []
-        #lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
+        # lobbyStats[i]: [0]players [1]rejoins [2]legitRuns [3]totalRunTime [4]totalRunTimeFormatted [5]totalMistakes [6]avgRunTime [7]avgRunTimeFormatted [8]avgMistakes
         lobbyStats = []
         lobbyStats[0] = 0
         lobbyStats[1] = 0
@@ -306,7 +306,7 @@ def newRun():
 def loadCpData():
     @Name "12.1: Load Checkpoint Data"
     
-    #eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump
+    # eventPlayer.cpData[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize [9]isJumping [10]hasJumped [11]hasBhopped [12]isGrappling [13]hasUsedGrapple [14]hasShieldBounced [15]isPiledriving [16]hasUsedBounceJump
     eventPlayer.cpData = []
     eventPlayer.cpData[0] = cps[eventPlayer.runCurrentCp][0]
     eventPlayer.cpData[1] = cps[eventPlayer.runCurrentCp][1]
@@ -1646,7 +1646,7 @@ rule "22.8: Lobby Input":
 
 rule "23: Auto-Restart Server":
     @SuppressWarnings w_ow2_rule_condition_chase
-    #3hr29min in
+    # 3hr29min in
     @Condition elapsedTime >= 12540
     
     chaseAtRate(elapsedTime, 99999999, 1)
@@ -1658,5 +1658,5 @@ rule "23: Auto-Restart Server":
     wait(240)
     bigMessage(true[0], "Server restart: \n1min")
     wait(60)
-    #3hr59min in
+    # 3hr59min in
     restartMatch()

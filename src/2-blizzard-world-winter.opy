@@ -70,18 +70,18 @@ rule "1: Settings":
 
 
 rule "2: Leaderboard (LB)":
-    #lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
+    # lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lb = []
     lb[1] = "BALLMYBLOVED, 7:14.76, 16, '        '"
 
 
 rule "3.1: Checkpoints (CPs)":
-    #cpDefaults[i]: [0]cpSize [1]bounceSize [2]nextCpSize
+    # cpDefaults[i]: [0]cpSize [1]bounceSize [2]nextCpSize
     cpDefaults = []
     cpDefaults[0] = 2.5
     cpDefaults[1] = 2.5
     cpDefaults[2] = 2.5
-    #cps[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize
+    # cps[i]: [0]cpLocation [1]cpSize [2]isGrappleAllowed [3]isShieldBounceAllowed [4]isPiledriverAllowed [5]bounceLocation [6]bounceSize [7]nextCpLocation [8]nextCpSize
     cps = []
     cps[0] = [vect(3.011, -1.85, -6.987), cpDefaults[0], false, false, true, null, null, vect(3.112, -4.1, -15.46), cpDefaults[2]]
     cps[1] = [(cps[len(cps) - 2])[7], (cps[len(cps) - 2])[8], true, true, true, null, null, vect(-12.488, -4.1, -28.956), cpDefaults[2]]
@@ -197,15 +197,15 @@ rule "3.1: Checkpoints (CPs)":
 
 
 rule "3.2: Break Disruptive Environment":
-    #Checkpoint 39
+    # Checkpoint 39
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.674, -4.25, 111.782), directionTowards(vect(-109.674, -4.25, 111.782), vect(-98.37, -2.17, 114.92)))
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.674, -4.25, 111.782), directionTowards(vect(-109.674, -4.25, 111.782), vect(-94.55, -2.83, 103.54)))
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-108.22, -4.13, 107.72), directionTowards(vect(-108.22, -4.13, 107.72), vect(-104.33, -2.83, 101.1)))
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-103.549, -2.25, 100.17), directionTowards(vect(-103.549, -2.25, 100.17), vect(-108.92, -5.08, 120.59)))
-    #Checkpoint 45
+    # Checkpoint 45
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-96.88, -1.25, 111.06), directionTowards(vect(-96.88, -1.25, 111.06), vect(-112.62, -3.65, 107.32)))
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-97.41, -1.25, 114.94), directionTowards(vect(-97.41, -1.25, 114.94), vect(-111.9, 0.21, 111.15)))
-    #Checkpoint 46
+    # Checkpoint 46
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-109.511, -4.25, 121.231), directionTowards(vect(-109.511, -4.25, 121.231), vect(-97.74, -2.56, 114.55)))
     createDummy(Hero.REINHARDT, Team.2, -1, vect(-97.917, -1.253, 116.947), directionTowards(vect(-97.917, -1.253, 116.947), vect(-112.85, 0.12, 112.92)))
     wait()
@@ -215,7 +215,7 @@ rule "3.2: Break Disruptive Environment":
 
 
 rule "4: Lobby":
-    #lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]newRunRing [6]newRunIcon [7]newRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]newPlayers [17]rejoins [18]legitRuns [19]totalRunTime [20]totalMistakes [21]avgRunTime [22]avgMistakes
+    # lobbyData[i]: [0]spawnpoint [1]facing [2]welcomeSignTop [3]welcomeSignBottom [4]welcomeSignSize [5]newRunRing [6]newRunIcon [7]newRunSign [8]resumeRunRing [9]resumeRunIcon [10]resumeRunSign [11]lbSign [12]lbSignTextSize [13]lbPosTextSize [14]statsSign [15]elapsedTime [16]newPlayers [17]rejoins [18]legitRuns [19]totalRunTime [20]totalMistakes [21]avgRunTime [22]avgMistakes
     lobbyData = []
     lobbyData[0] = vect(2.9, -4.95, -42.38)
     lobbyData[5] = vect(3, -3.99, -22.07)
