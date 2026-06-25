@@ -75,15 +75,16 @@ rule "6.3: Start Elapsed Timer":
 rule "6.4: Destroy Disruptive Environment":
     waitUntil(len(getAllPlayers().filter(lambda p: not p.isDummy())) > 0, Math.INFINITY)
     wait(1)
+    # dd[i]: [0]nextDd [1]batchSize [2]currentDdIndex [3]ddEntity
     dd = [1, 0, 0, 0]
-    while dd[0] < len(bots):
-        dd[1] = min(12 - len(getAllPlayers()), len(bots) - dd[0])
+    while dd[0] < len(ddBots):
+        dd[1] = min(12 - len(getAllPlayers()), len(ddBots) - dd[0])
         if dd[1] <= 0:
             wait(5)
         else:
             dd[2] = 0
             while dd[2] < dd[1]:
-                createDummy(Hero.LUCIO, bots[0], -1, bots[dd[0] + dd[2]][0], directionTowards(bots[dd[0] + dd[2]][0], bots[dd[0] + dd[2]][1]))
+                createDummy(Hero.LUCIO, ddBots[0], -1, ddBots[dd[0] + dd[2]][0], directionTowards(ddBots[dd[0] + dd[2]][0], ddBots[dd[0] + dd[2]][1]))
                 dd[3] = getLastCreatedEntity()
                 dd[3].startForcingName("Disrupter Destructor {}".format(dd[0] + dd[2]))
                 dd[2] = dd[2] + 1
@@ -95,25 +96,6 @@ rule "6.4: Destroy Disruptive Environment":
             wait(1)
             destroyAllDummies()
             dd[0] = dd[0] + dd[1]
-
-
-rule "Ring":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-
-    createEffect(eventPlayer, Effect.RING, Color.RED, eventPlayer.getPosition(), 2.5, EffectReeval.NONE)
-    eventPlayer.object = getLastCreatedEntity()
-    logToInspector("Ring: {}".format(eventPlayer.getPosition()))
-
-
-rule "Facing Location":
-    @Event eachPlayer
-    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
-
-    createEffect(eventPlayer, Effect.SPHERE, Color.RED, raycastHitPosition(eventPlayer.getEyePosition(), eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * 200, null, null, false), 0.5, EffectReeval.NONE)
-    eventPlayer.object = getLastCreatedEntity()
-    logToInspector("Facing: {}".format(raycastHitPosition(eventPlayer.getEyePosition(), eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * 200, null, null, false)))
-
 
 
 rule "7.1: Player Joins":
