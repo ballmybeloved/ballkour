@@ -73,7 +73,7 @@ rule "6.3: Start Elapsed Timer":
 
 
 rule "6.4: Destroy Disruptive Environment":
-    # dd[i]: [0]nextDd [1]batchSize [2]currentDdIndex [3]ddEntity
+    # dd[i]: [0]nextDdInNewBatch [1]batchSize [2]currentDd [3]ddEntity
     dd = [1, 0, 0, 0]
     while dd[0] < len(ddBots):
         dd[1] = min(12 - len(getAllPlayers()), len(ddBots) - dd[0])
