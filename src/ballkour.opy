@@ -73,24 +73,47 @@ rule "6.3: Start Elapsed Timer":
 
 
 rule "6.4: Destroy Disruptive Environment":
-    while true:
-        botIndex = 1
-        while botIndex < len(bots):
-            batchSize = 12 - len(getAllPlayers())
-            if batchSize <= 0:
-                wait(1)
-            else:
-                for index in range(botIndex, min(botIndex + batchSize, len(bots))):
-                    createDummy(Hero.REINHARDT, bots[0], -1, bots[index][0], directionTowards(bots[index][0], bots[index][1]))
-                    getLastCreatedEntity().startForcingName("Disruption Destruction")
-                    wait()
-                wait(1)
-                getPlayersOnHero(Hero.REINHARDT, bots[0]).forceButtonPress(Button.ABILITY_1)
-                wait(2)
-                destroyAllDummies()
-                botIndex = botIndex + batchSize
-                wait(1)
-        return
+    waitUntil(len(getAllPlayers().filter(lambda p: not p.isDummy())) > 0, Math.INFINITY)
+    wait(1)
+    dd = [1, 0, 0, 0]
+    while dd[0] < len(bots):
+        dd[1] = min(12 - len(getAllPlayers()), len(bots) - dd[0])
+        if dd[1] <= 0:
+            wait(5)
+        else:
+            dd[2] = 0
+            while dd[2] < dd[1]:
+                createDummy(Hero.LUCIO, bots[0], -1, bots[dd[0] + dd[2]][0], directionTowards(bots[dd[0] + dd[2]][0], bots[dd[0] + dd[2]][1]))
+                dd[3] = getLastCreatedEntity()
+                dd[3].startForcingName("Disrupter Destructor {}".format(dd[0] + dd[2]))
+                dd[2] = dd[2] + 1
+            dd[2] = 0
+            while dd[2] < dd[1]:
+                waitUntil(getAllPlayers().filter(lambda p: p.isDummy())[dd[2]].hasSpawned(), 5)
+                getAllPlayers().filter(lambda p: p.isDummy())[dd[2]].forceButtonPress(Button.SECONDARY_FIRE)
+                dd[2] = dd[2] + 1
+            wait(1)
+            destroyAllDummies()
+            dd[0] = dd[0] + dd[1]
+
+
+rule "Ring":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+
+    createEffect(eventPlayer, Effect.RING, Color.RED, eventPlayer.getPosition(), 2.5, EffectReeval.NONE)
+    eventPlayer.object = getLastCreatedEntity()
+    logToInspector("Ring: {}".format(eventPlayer.getPosition()))
+
+
+rule "Facing Location":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.CROUCH)
+
+    createEffect(eventPlayer, Effect.SPHERE, Color.RED, raycastHitPosition(eventPlayer.getEyePosition(), eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * 200, null, null, false), 0.5, EffectReeval.NONE)
+    eventPlayer.object = getLastCreatedEntity()
+    logToInspector("Facing: {}".format(raycastHitPosition(eventPlayer.getEyePosition(), eventPlayer.getEyePosition() + eventPlayer.getFacingDirection() * 200, null, null, false)))
+
 
 
 rule "7.1: Player Joins":
