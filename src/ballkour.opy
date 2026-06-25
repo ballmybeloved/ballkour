@@ -92,7 +92,7 @@ rule "6.4: Destroy Disruptive Environment":
                 getAllPlayers().filter(lambda p: p.isDummy())[dd[2]].forceButtonPress(Button.SECONDARY_FIRE)
                 dd[2] = dd[2] + 1
             wait()
-            destroyAllDummies()
+            #destroyAllDummies()
             dd[0] = dd[0] + dd[1]
 
 
@@ -1317,12 +1317,10 @@ rule "22.7.4: Spectate Prev. Player Input":
         eventPlayer.startForcingPosition(eventPlayer.spectating[1].getPosition())
         eventPlayer.spectating[2] = false
         eventPlayer.spectating[4] = false
-    # needed or else this triggers twice from hero change
-    else:
-        eventPlayer.spectating[1] = getAllPlayers().filter(lambda p: p != eventPlayer)[
-            (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
-                + 1)
-            % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
+    eventPlayer.spectating[1] = getAllPlayers().filter(lambda p: p != eventPlayer)[
+        (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
+            + 1)
+        % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
     eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
 
 
@@ -1352,11 +1350,10 @@ rule "22.7.5: Spectate Next Player Input":
         eventPlayer.disallowButton(Button.ABILITY_2)
         eventPlayer.spectating[2] = false
         eventPlayer.spectating[4] = false
-    else:
-        eventPlayer.spectating[1] = getAllPlayers().filter(lambda p: p != eventPlayer)[
-            (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
-                + len(getAllPlayers().filter(lambda p: p != eventPlayer)) - 1)
-            % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
+    eventPlayer.spectating[1] = getAllPlayers().filter(lambda p: p != eventPlayer)[
+        (getAllPlayers().filter(lambda p: p != eventPlayer).index(eventPlayer.spectating[1])
+            + len(getAllPlayers().filter(lambda p: p != eventPlayer)) - 1)
+        % len(getAllPlayers().filter(lambda p: p != eventPlayer))]
     eventPlayer.startCamera(eventPlayer.spectating[1].getEyePosition() - eventPlayer.spectating[1].getFacingDirection() * 2 + vect(0, 0.5, 0), eventPlayer.spectating[1].getEyePosition() + eventPlayer.spectating[1].getFacingDirection(), 200)
 
 
@@ -1397,7 +1394,7 @@ rule "22.7.7.1: Freecam Input":
     @Event eachPlayer
     @Condition eventPlayer.spectating[0] == true
     @Condition eventPlayer.spectating[2] == false
-    @Condition magnitude(eventPlayer.getThrottle()) > 0
+    @Condition (magnitude(eventPlayer.getThrottle()) > 0 or eventPlayer.isHoldingButton(Button.JUMP))
     @Condition eventPlayer.spectating[6] == false
 
     eventPlayer.spectating[2] = true
