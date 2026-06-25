@@ -73,8 +73,6 @@ rule "6.3: Start Elapsed Timer":
 
 
 rule "6.4: Destroy Disruptive Environment":
-    waitUntil(len(getAllPlayers().filter(lambda p: not p.isDummy())) > 0, Math.INFINITY)
-    wait(1)
     # dd[i]: [0]nextDd [1]batchSize [2]currentDdIndex [3]ddEntity
     dd = [1, 0, 0, 0]
     while dd[0] < len(ddBots):
@@ -93,7 +91,7 @@ rule "6.4: Destroy Disruptive Environment":
                 waitUntil(getAllPlayers().filter(lambda p: p.isDummy())[dd[2]].hasSpawned(), 5)
                 getAllPlayers().filter(lambda p: p.isDummy())[dd[2]].forceButtonPress(Button.SECONDARY_FIRE)
                 dd[2] = dd[2] + 1
-            wait(1)
+            wait()
             destroyAllDummies()
             dd[0] = dd[0] + dd[1]
 
