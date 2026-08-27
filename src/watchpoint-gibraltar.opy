@@ -122,8 +122,8 @@ rule "2: Leaderboard (LB)":
     #lb[i]: [0]name [1]time [2]mistakes [3]alignmentSeparator
     lb = []
     lb[1] = "BALLMYBLOVED, 3:54.23, 5, '           '"
-    lb[2] = "JAKOBONEDGE, 4:21.96, 12, '         '"
-    lb[3] = "COLDSKIN, 4:30.11, 10, '                  '"
+    lb[2] = "COLDSKIN, 4:05.81, 2, '                     '"
+    lb[3] = "JAKOBONEDGE, 4:21.96, 12, '         '"
     lb[4] = "BACKLINEREIN, 4:34.15, 15, '           '"
     lb[5] = "DVD, 5:02.50, 15, '                             '"
     lb[6] = "GAMINGCHAIR, 5:08.37, 16, '         '"
