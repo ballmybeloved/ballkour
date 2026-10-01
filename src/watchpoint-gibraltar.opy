@@ -130,7 +130,7 @@ rule "2: Leaderboard (LB)":
     lb[7] = "BLOWSKI, 5:40.50, 24, '                    '"
     lb[8] = "安宁, 5:50.20, 40, '                           '"
     lb[9] = "KINGO, 6:26.18, 37, '                       '"
-    lb[10] = "ABIKE, 7:38.38, 46, '                        '"
+    lb[10] = "VANESSA, 6:59.56, 58, '                 '"
 
 
 rule "3: Checkpoints (CPs)":
